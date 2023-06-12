@@ -34,6 +34,9 @@ public class BattleWorld : World
         GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(group);
         FixedRateUtils.EnableFixedRateWithCatchUp(group, 0.1f);
 
+        group.AddSystemToUpdateList(CreateSystem<UpdateLogicTimeSystem>()); // 更新时间
+
+
         group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
         group.AddSystemToUpdateList(CreateSystem<MonsterAiSytem>());
         group.AddSystemToUpdateList(CreateSystem<MosnterDespawnSystem>());
@@ -44,8 +47,11 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<RecordPrePositionSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByDirSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
-        
+
         group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
+
+        // cal CheckSum
+        group.AddSystemToUpdateList(CreateSystem<CalHashSystem>());
     }
 
     public void InitPresentationSystem()

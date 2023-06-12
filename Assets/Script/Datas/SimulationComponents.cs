@@ -51,3 +51,10 @@ public struct MonsterAutoDespawnComponent : IComponentData
 {
     public float despawnTime;
 }
+
+public struct LogicTime : IComponentData
+{
+    public int frameCount;
+    public float escaped;
+    public float deltaTime;
+}
