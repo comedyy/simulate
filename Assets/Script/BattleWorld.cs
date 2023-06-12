@@ -15,8 +15,11 @@ public class BattleWorld : World
 
     private void InitInititationSystem()
     {
-        var initedGroup = GetOrCreateSystem<InitializationSystemGroup>();
-        initedGroup.AddSystemToUpdateList(CreateSystem<UpdateWorldTimeSystem>());
+        CreateSystem<CreateControllerSystem>();
+
+        var group = GetOrCreateSystem<InitializationSystemGroup>();
+        group.AddSystemToUpdateList(CreateSystem<UpdateWorldTimeSystem>());
+        group.AddSystemToUpdateList(CreateSystem<ControllerMoveSystem>());
     }
 
     public void InitSimulationSystem()
@@ -24,13 +27,7 @@ public class BattleWorld : World
         var group = GetOrCreateSystem<SimulationSystemGroup>();
         FixedRateUtils.EnableFixedRateWithCatchUp(group, 0.1f);
 
-        // add all simulation systems
-        
-        CreateSystem<CreateControllerSystem>();
-
         group.AddSystemToUpdateList(CreateSystem<SpawnTargetSystem>());
-
-        
         group.AddSystemToUpdateList(CreateSystem<InputUserPositionSystem>());
         
         group.AddSystemToUpdateList(CreateSystem<RecordPrePositionSystem>());
@@ -46,6 +43,5 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<VSpawnTargetSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());
         group.AddSystemToUpdateList(CreateSystem<VCameraFollowSystem>());
-        group.AddSystemToUpdateList(CreateSystem<ControllerMoveSystem>());
     }
 }

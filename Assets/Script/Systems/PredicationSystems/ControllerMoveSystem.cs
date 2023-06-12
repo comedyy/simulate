@@ -16,6 +16,8 @@ internal class ControllerMoveSystem : ComponentSystem
             tranCom.rotation = quaternion.AxisAngle(new float3(0, 1, 0), angle);
             var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
             tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
+
+            // create send msg
         });
     }
 

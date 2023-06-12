@@ -9,7 +9,7 @@ internal class VSpawnTargetSystem : ComponentSystem
             var prefab = EntityManager.HasComponent<ControllerTag>(ev.target) ? Resources.Load<GameObject>("Role") : Resources.Load<GameObject>("Monster");
             var lTransformCom = EntityManager.GetComponentData<LTransformComponet>(ev.target);
             var com = new GameObjectBindingComponent(){
-                obj = GameObject.Instantiate(prefab, lTransformCom.position, lTransformCom.rotation)
+                obj = GameObject.Instantiate(prefab, lTransformCom.position, lTransformCom.rotation),
             };
             EntityManager.SetComponentData(ev.target, com);
 
