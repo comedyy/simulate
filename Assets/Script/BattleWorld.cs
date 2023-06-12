@@ -34,7 +34,10 @@ public class BattleWorld : World
         GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(group);
         FixedRateUtils.EnableFixedRateWithCatchUp(group, 0.1f);
 
-        group.AddSystemToUpdateList(CreateSystem<MonsterGenerateSytem>());
+        group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
+        group.AddSystemToUpdateList(CreateSystem<MonsterAiSytem>());
+        group.AddSystemToUpdateList(CreateSystem<MosnterDespawnSystem>());
+        
         group.AddSystemToUpdateList(CreateSystem<SpawnTargetSystem>());
         group.AddSystemToUpdateList(CreateSystem<InputUserPositionSystem>());
         
@@ -50,6 +53,7 @@ public class BattleWorld : World
 
         // add all simulation systems
         group.AddSystemToUpdateList(CreateSystem<VSpawnTargetSystem>());
+        group.AddSystemToUpdateList(CreateSystem<VDespawnSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());
         group.AddSystemToUpdateList(CreateSystem<VCameraFollowSystem>());
     }

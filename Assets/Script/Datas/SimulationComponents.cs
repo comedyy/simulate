@@ -10,7 +10,7 @@ public struct LTransformComponet : IComponentData
 
 public struct LMoveByDirComponent : IComponentData
 {
-    public float dir;
+    public quaternion dir;
 }
 
 public struct LMoveByPosComponent : IComponentData
@@ -28,6 +28,8 @@ public struct SpawnEvent : IComponentData
     public float3 position;
     public quaternion dir;
     public bool isUser;
+    public float aiInterval;
+    public float despawnTime;
 }
 
 public struct SpawnMonsterComponent: IComponentData
@@ -36,4 +38,16 @@ public struct SpawnMonsterComponent: IComponentData
     public int currentCount;
     public float interval;
     public float lastSpawnTime;
+}
+
+
+public struct MonsterAiComponent : IComponentData
+{
+    public float randomTurnInterval;
+    public float lastTurnTime;
+}
+
+public struct MonsterAutoDespawnComponent : IComponentData
+{
+    public float despawnTime;
 }

@@ -8,6 +8,8 @@ internal class SpawnTargetSystem : ComponentSystem
         typeof(LMoveByDirComponent), 
         typeof(MoveSpeedComponent),
         typeof(VLerpTransformCopmnet), 
+        typeof(MonsterAiComponent), 
+        typeof(MonsterAutoDespawnComponent), 
         typeof(GameObjectBindingComponent), 
     };
 
@@ -41,6 +43,15 @@ internal class SpawnTargetSystem : ComponentSystem
             else
             {
                 entity = EntityManager.CreateEntity(_unitArchetype);
+                EntityManager.SetComponentData(entity, new MonsterAiComponent(){
+                    randomTurnInterval = ev.aiInterval
+                });
+                EntityManager.SetComponentData(entity, new MonsterAutoDespawnComponent(){
+                    despawnTime = ev.despawnTime
+                });
+                EntityManager.SetComponentData(entity, new LMoveByDirComponent(){
+                    dir = ev.dir 
+                });
             }
             var transform = EntityManager.GetComponentData<LTransformComponet>(entity);
             transform.position = ev.position;
