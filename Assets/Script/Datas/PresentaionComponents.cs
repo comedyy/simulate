@@ -28,6 +28,7 @@ public class GameObjectBindingComponent : IComponentData, IEquatable<GameObjectB
 public struct VSpawnEvent : IComponentData
 {
     public Entity target;
+    public bool isUser;
 }
 
 public struct VDespawnEvent : IComponentData
@@ -36,4 +37,7 @@ public struct VDespawnEvent : IComponentData
 }
 
 
-public struct ControllerTag : IComponentData{} // 这个组件可能多个客户端不一致。
+public struct ControllerHolder : IComponentData
+{
+    public Entity controller;
+}

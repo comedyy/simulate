@@ -6,7 +6,10 @@ internal class VLerpTransformSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        Entities.WithNone<ControllerTag>().ForEach((GameObjectBindingComponent binding, ref VLerpTransformCopmnet lerp, ref LTransformComponet lTransformCom, ref LMoveByDirComponent dir)=>{
+        var userEntity = GetSingleton<ControllerHolder>().controller;
+        Entities.ForEach((Entity entity, GameObjectBindingComponent binding, ref VLerpTransformCopmnet lerp, ref LTransformComponet lTransformCom, ref LMoveByDirComponent dir)=>{
+            if(entity == userEntity) return;
+
             lerp.lerpTime = math.min(lerp.lerpTime + Time.DeltaTime, 0.1f);
             var lerpValue = lerp.lerpTime / 0.1f;
             var pos = math.lerp(lerp.preLogicPos, lTransformCom.position, lerpValue);

@@ -44,6 +44,8 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<RecordPrePositionSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByDirSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
+        
+        group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
     }
 
     public void InitPresentationSystem()

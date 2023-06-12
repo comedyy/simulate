@@ -64,12 +64,15 @@ internal class SpawnTargetSystem : ComponentSystem
 
             if(ev.isUser)
             {
-                EntityManager.AddComponent<ControllerTag>(entity);
+                EntityManager.AddComponentData(EntityManager.CreateEntity(), new ControllerHolder(){
+                    controller = entity
+                });
             }
 
             var vSpwanEntity = EntityManager.CreateEntity();
             EntityManager.AddComponentData(vSpwanEntity, new VSpawnEvent(){
-                target = entity
+                target = entity,
+                isUser = ev.isUser
             });
 
             EntityManager.DestroyEntity(evEntity);

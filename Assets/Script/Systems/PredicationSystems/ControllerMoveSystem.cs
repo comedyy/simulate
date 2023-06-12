@@ -5,20 +5,24 @@ using UnityEngine;
 internal class ControllerMoveSystem : ComponentSystem
 {
     protected override void OnUpdate()
-    {
-        Entities.ForEach((GameObjectBindingComponent binding, ref ControllerTag tag, ref MoveSpeedComponent moveSpeedComponent)=>{
-            var angle = GetAngle();
+    {   
+        if(!HasSingleton<ControllerHolder>()) return;
 
-            if(angle < 0) return;
+        var controllerHolder = GetSingleton<ControllerHolder>();
+        var controllerEntity = controllerHolder.controller;
+        var binding = EntityManager.GetComponentData<GameObjectBindingComponent>(controllerEntity);
+        var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
 
-            var tranCom = binding.obj.transform;
+        var angle = GetAngle();
 
-            tranCom.rotation = quaternion.AxisAngle(new float3(0, 1, 0), angle);
-            var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
-            tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
+        if(angle < 0) return;
 
-            // create send msg
-        });
+        var tranCom = binding.obj.transform;
+
+        tranCom.rotation = math.nlerp(tranCom.rotation, quaternion.RotateY(angle), 0.05f);
+        var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
+        tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
+
     }
 
     static float GetAngle()

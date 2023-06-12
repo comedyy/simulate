@@ -6,11 +6,13 @@ internal class InputUserPositionSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        Entities.ForEach((GameObjectBindingComponent binding, ref ControllerTag tag, ref LMoveByPosComponent lMoveByPosComponent)=>{
-            if(binding != null && binding.obj != null) 
-            {
-                lMoveByPosComponent.pos = binding.obj.transform.position;
-            }
-        });
+        var userEntity = GetSingleton<ControllerHolder>().controller;
+        var binding = EntityManager.GetComponentData<GameObjectBindingComponent>(userEntity);
+        if(binding != null && binding.obj != null) 
+        {
+            EntityManager.SetComponentData(userEntity, new LMoveByPosComponent(){
+                pos = binding.obj.transform.position
+            });
+        }
     }
 }
