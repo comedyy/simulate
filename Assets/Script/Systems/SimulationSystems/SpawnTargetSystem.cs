@@ -45,6 +45,7 @@ internal class SpawnTargetSystem : ComponentSystem
             var transform = EntityManager.GetComponentData<LTransformComponet>(entity);
             transform.position = ev.position;
             transform.rotation = ev.dir;
+            EntityManager.SetComponentData(entity, transform);
 
             EntityManager.SetComponentData<MoveSpeedComponent>(entity, new MoveSpeedComponent(){
                 speed = 3f

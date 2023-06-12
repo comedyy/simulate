@@ -29,3 +29,5 @@ public struct VSpawnEvent : IComponentData
 {
     public Entity target;
 }
+
+public struct ControllerTag : IComponentData{} // 这个组件可能多个客户端不一致。

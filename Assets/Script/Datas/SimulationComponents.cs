@@ -30,4 +30,10 @@ public struct SpawnEvent : IComponentData
     public bool isUser;
 }
 
-public struct ControllerTag : IComponentData{} // 这个组件可能多个客户端不一致。
+public struct SpawnMonsterComponent: IComponentData
+{
+    public int maxCount;
+    public int currentCount;
+    public float interval;
+    public float lastSpawnTime;
+}

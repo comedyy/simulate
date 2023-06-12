@@ -11,6 +11,7 @@ internal class VLerpTransformSystem : ComponentSystem
             var lerpValue = lerp.lerpTime / 0.1f;
             var pos = math.lerp(lerp.preLogicPos, lTransformCom.position, lerpValue);
             var rotation = math.nlerp(lerp.preLogicRatation, lTransformCom.rotation, lerpValue);
+            // Debug.LogError(Time.DeltaTime + " " + lerp.lerpTime + " " + lerpValue + " " + pos + " " +  lerp.preLogicPos + " " + lTransformCom.position);
 
             binding.obj.transform.SetPositionAndRotation(pos, rotation);
         });

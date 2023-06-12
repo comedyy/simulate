@@ -10,6 +10,7 @@ internal class RecordPrePositionSystem : ComponentSystem
             lerpComp.lerpTime = 0;
             lerpComp.preLogicPos = tranCom.position;
             lerpComp.preLogicRatation = tranCom.rotation;
+            Debug.LogWarning("====== OnUpdate1 " + Time.ElapsedTime);
         });
     }
 }
