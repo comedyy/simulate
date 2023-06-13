@@ -2,19 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
-using UnityEngine;
+
 
 public class BattleWorld : World
 {
-    System.Random _random;
-
     public BattleWorld(string name) : base(name)
     {
-        _random = new System.Random(0);
+        EntityManager.AddComponentData(EntityManager.CreateEntity(), new RandomComponent(){
+            random = new Random(0)
+        });
 
         InitInititationSystem();
         InitSimulationSystem();
+
+#if !ONLY_LOGIC
         InitPresentationSystem();
+#endif
     }
 
     private void InitInititationSystem()
@@ -25,7 +28,6 @@ public class BattleWorld : World
         GetOrCreateSystem<InitializationSystemGroup>().AddSystemToUpdateList(group);
         
         group.AddSystemToUpdateList(CreateSystem<UpdateWorldTimeSystem>());
-        group.AddSystemToUpdateList(CreateSystem<ControllerMoveSystem>());
     }
 
     public void InitSimulationSystem()
@@ -35,6 +37,7 @@ public class BattleWorld : World
         FixedRateUtils.EnableFixedRateWithCatchUp(group, 0.1f);
 
         group.AddSystemToUpdateList(CreateSystem<UpdateLogicTimeSystem>()); // 更新时间
+        group.AddSystemToUpdateList(CreateSystem<InputUserPositionSystem>()); // 玩家输入
 
 
         group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
@@ -42,7 +45,6 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<MosnterDespawnSystem>());
         
         group.AddSystemToUpdateList(CreateSystem<SpawnTargetSystem>());
-        group.AddSystemToUpdateList(CreateSystem<InputUserPositionSystem>());
         
         group.AddSystemToUpdateList(CreateSystem<RecordPrePositionSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByDirSystem>());
@@ -64,15 +66,6 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<VDespawnSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());
         group.AddSystemToUpdateList(CreateSystem<VCameraFollowSystem>());
-    }
-
-    public float Random()
-    {
-        return _random.Next(0, 10000) / 10000f;
-    }
-
-    public float Random(float random)
-    {
-        return random * Random();
+        group.AddSystemToUpdateList(CreateSystem<ControllerMoveSystem>());
     }
 }
