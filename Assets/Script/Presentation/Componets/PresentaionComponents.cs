@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameObjectBindingComponent : IComponentData, IEquatable<GameObjectBindingComponent>
 {
     public GameObject obj;
+    public GameObject objFollow;
 
     public bool Equals(GameObjectBindingComponent other)
     {

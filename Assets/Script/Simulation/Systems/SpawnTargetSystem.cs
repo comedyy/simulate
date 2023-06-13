@@ -32,7 +32,6 @@ public class SpawnTargetSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
-        Debug.LogError("VSpwan logic");
         Entities.ForEach((Entity evEntity, ref SpawnEvent ev)=>{
             var entity = Entity.Null;
             

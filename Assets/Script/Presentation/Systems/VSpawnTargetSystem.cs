@@ -5,7 +5,6 @@ public class VSpawnTargetSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        Debug.LogError("VSpwan");
         Entities.ForEach((Entity entity, ref VSpawnEvent ev)=>{
             GameObject prefab = null;
             if(ev.isContorller) prefab = Resources.Load<GameObject>("Controller");
@@ -23,6 +22,8 @@ public class VSpawnTargetSystem : ComponentSystem
                 EntityManager.AddComponentData(EntityManager.CreateEntity(), new ControllerHolder(){
                     controller = ev.target
                 });
+
+                com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, lTransformCom.rotation);
             }
 
             EntityManager.DestroyEntity(entity);
