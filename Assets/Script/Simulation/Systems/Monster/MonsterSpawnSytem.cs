@@ -9,20 +9,21 @@ public class MonsterSpawnSytem : ComponentSystem
         base.OnCreate();
         var entity = EntityManager.CreateEntity(typeof(SpawnMonsterComponent));
         EntityManager.SetComponentData(entity, new SpawnMonsterComponent(){
-            maxCount = 1000, interval = 0.0f
+            maxCount = 1000, interval = 0.0f, spawnCountPerInterval = 10
         });
     }
 
     protected override void OnUpdate()
     {
         var monsterSpwan = GetSingleton<SpawnMonsterComponent>();
+        var escaped = GetSingleton<LogicTime>().escaped;
 
         if(monsterSpwan.maxCount <= monsterSpwan.currentCount)
         {
             return;
         } 
 
-        if(Time.ElapsedTime - monsterSpwan.lastSpawnTime < monsterSpwan.interval)
+        if(escaped - monsterSpwan.lastSpawnTime < monsterSpwan.interval)
         {
             return;
         }
@@ -30,16 +31,19 @@ public class MonsterSpawnSytem : ComponentSystem
         var spwanEventEntity = EntityManager.CreateEntity(typeof(SpawnEvent));
         var random = EntityManager.GetComponentObject<RandomComponent>(GetSingletonEntity<RandomComponent>()).random;
 
-        EntityManager.SetComponentData(spwanEventEntity, new SpawnEvent(){
-            isUser = false, 
-            position = new float3(RandomUtils.Random(random, 10), 0, RandomUtils.Random(random, 10)),
-            dir = quaternion.RotateY(RandomUtils.Random(random, 2 * math.PI)),
-            aiInterval = 1f,
-            despawnTime = 5 + (float)Time.ElapsedTime
-        });
+        for(int i = 0; i < monsterSpwan.spawnCountPerInterval; i++)
+        {
+            EntityManager.SetComponentData(spwanEventEntity, new SpawnEvent(){
+                isUser = false, 
+                position = new float3(RandomUtils.Random(random, 10), 0, RandomUtils.Random(random, 10)),
+                dir = quaternion.RotateY(RandomUtils.Random(random, 2 * math.PI)),
+                aiInterval = 1f,
+                despawnTime = 5 + escaped
+            });    
+        }
 
         monsterSpwan.currentCount++;
-        monsterSpwan.lastSpawnTime = (float)Time.ElapsedTime;
+        monsterSpwan.lastSpawnTime = escaped;
 
         SetSingleton(monsterSpwan);
     }

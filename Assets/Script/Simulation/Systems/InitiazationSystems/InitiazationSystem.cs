@@ -18,7 +18,7 @@ public class InitiazationSystem : ComponentSystemBase
 
         // create random
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new RandomComponent(){
-            random = new System.Random(0)
+            random = new System.Random(1)
         });
 
     }

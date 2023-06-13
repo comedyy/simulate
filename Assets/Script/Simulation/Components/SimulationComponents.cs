@@ -37,6 +37,7 @@ public struct SpawnMonsterComponent: IComponentData
     public int maxCount;
     public int currentCount;
     public float interval;
+    public float spawnCountPerInterval;
     public float lastSpawnTime;
 }
 

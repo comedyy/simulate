@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -13,14 +14,20 @@ public class Main : MonoBehaviour
     BattleWorld[] _worlds;
     CheckSum[] _checksums; 
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
         _worlds = new BattleWorld[worldCount];
         _checksums = new CheckSum[worldCount];
         for(int i = 0; i < worldCount; i++)
         {
             _checksums[i] = new CheckSum();
+        }
+
+        for(int i = 0; i < worldCount; i++)
+        {
+            await Task.Delay(i * 10);
             _worlds[i] = new BattleWorld("new " + i, _checksums[i]);
+            Debug.Log(Time.time);
         }
     }
 
@@ -29,7 +36,7 @@ public class Main : MonoBehaviour
     {
         for(int i = 0; i < _worlds.Length; i++)
         {
-            if(!_worlds[i].IsEnd)
+            if(_worlds[i] != null && !_worlds[i].IsEnd)
             {
                 _worlds[i].Update();
             }
@@ -44,9 +51,16 @@ public class Main : MonoBehaviour
 
     private void CheckCheckSumOfAll(CheckSum[] _checksums)
     {
-        foreach(var x in _checksums)
+        var allCheckSums = _checksums.Select(m=>m.GetHistoryCheckSums()).ToArray();
+        Debug.Log(string.Join(",", allCheckSums));
+        if(allCheckSums.Distinct().Count() > 1)
         {
-            Debug.LogError(x.GetHistoryCheckSums());
+            Debug.LogError("发现不同步");
+
+            foreach (var item in _checksums)
+            {
+                Debug.Log(string.Join(",", item.GetHistory()));
+            }
         }
     }
 

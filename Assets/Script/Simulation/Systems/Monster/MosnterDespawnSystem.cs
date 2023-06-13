@@ -1,13 +1,15 @@
 using Unity.Entities;
 using Unity.Mathematics;
-
+using UnityEngine;
 
 public class MosnterDespawnSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
+        var escaped = GetSingleton<LogicTime>().escaped;
+
         Entities.ForEach((Entity entity, ref MonsterAutoDespawnComponent despawnComponent)=>{
-            if(Time.ElapsedTime < despawnComponent.despawnTime)
+            if(escaped < despawnComponent.despawnTime)
             {
                 return;
             }
