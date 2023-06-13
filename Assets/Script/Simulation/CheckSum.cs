@@ -39,5 +39,16 @@ public class CheckSum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SaveCheckSum() => m_HistoryCheckSums.Add(m_HashCode);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public List<int> GetHistoryCheckSums() => m_HistoryCheckSums;
+    public List<int> GetHistory() => m_HistoryCheckSums;
+
+    public int GetHistoryCheckSums()
+    {
+        int checksum = 0;
+        foreach (var item in m_HistoryCheckSums)
+        {
+            checksum = CombineHashCode(checksum, item);
+        }
+
+        return checksum;
+    }
 }

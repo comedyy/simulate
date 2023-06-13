@@ -1,7 +1,8 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using System;
 
-public class CreateControllerSystem : ComponentSystemBase
+public class InitiazationSystem : ComponentSystemBase
 {
     protected override void OnCreate()
     {
@@ -14,6 +15,12 @@ public class CreateControllerSystem : ComponentSystemBase
             dir = quaternion.identity,
             isUser = true
         });
+
+        // create random
+        EntityManager.AddComponentData(EntityManager.CreateEntity(), new RandomComponent(){
+            random = new System.Random(0)
+        });
+
     }
 
     public override void Update()

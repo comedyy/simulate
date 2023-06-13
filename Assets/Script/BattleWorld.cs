@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 
 
 public class BattleWorld : World
 {
-    public BattleWorld(string name) : base(name)
-    {
-        EntityManager.AddComponentData(EntityManager.CreateEntity(), new RandomComponent(){
-            random = new Random(0)
-        });
+    BattleEndFlag flag = new BattleEndFlag();
+    public bool IsEnd => flag.isEnd;
 
+    public BattleWorld(string name, CheckSum checksum) : base(name)
+    {
+        // init systems 
+        CreateSystem<InitiazationSystem>();
+
+        // update systems
         InitInititationSystem();
-        InitSimulationSystem();
+        InitSimulationSystem(checksum);
 
 #if !ONLY_LOGIC
         InitPresentationSystem();
@@ -22,15 +24,13 @@ public class BattleWorld : World
 
     private void InitInititationSystem()
     {
-        CreateSystem<CreateControllerSystem>();
-
         var group = GetOrCreateSystem<CustomSystems1>();
         GetOrCreateSystem<InitializationSystemGroup>().AddSystemToUpdateList(group);
         
         group.AddSystemToUpdateList(CreateSystem<UpdateWorldTimeSystem>());
     }
 
-    public void InitSimulationSystem()
+    public void InitSimulationSystem(CheckSum checksum)
     {
         var group = GetOrCreateSystem<CustomSystems2>();
         GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(group);
@@ -52,8 +52,14 @@ public class BattleWorld : World
 
         group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
 
+        var timeoutSystem = CreateSystem<GameTimeoutSystem>();
+        timeoutSystem.flag = flag;
+        group.AddSystemToUpdateList(timeoutSystem);
+
         // cal CheckSum
-        group.AddSystemToUpdateList(CreateSystem<CalHashSystem>());
+        var checksumSystem = CreateSystem<CalHashSystem>();
+        checksumSystem._checkSum = checksum;
+        group.AddSystemToUpdateList(checksumSystem);
     }
 
     public void InitPresentationSystem()

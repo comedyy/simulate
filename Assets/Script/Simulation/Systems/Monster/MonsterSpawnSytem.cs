@@ -9,7 +9,7 @@ public class MonsterSpawnSytem : ComponentSystem
         base.OnCreate();
         var entity = EntityManager.CreateEntity(typeof(SpawnMonsterComponent));
         EntityManager.SetComponentData(entity, new SpawnMonsterComponent(){
-            maxCount = 5, interval = 2.0f
+            maxCount = 1000, interval = 0.0f
         });
     }
 
@@ -34,7 +34,7 @@ public class MonsterSpawnSytem : ComponentSystem
             isUser = false, 
             position = new float3(RandomUtils.Random(random, 10), 0, RandomUtils.Random(random, 10)),
             dir = quaternion.RotateY(RandomUtils.Random(random, 2 * math.PI)),
-            aiInterval = 3f,
+            aiInterval = 1f,
             despawnTime = 5 + (float)Time.ElapsedTime
         });
 

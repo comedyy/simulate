@@ -1,21 +1,22 @@
 using Unity.Entities;
 using Unity.Mathematics;
-
+using UnityEngine;
 
 public class CalHashSystem : ComponentSystem
 {
     EntityQuery _entityQuery;
-    CheckSum _checkSum;
+    public CheckSum _checkSum;
     protected override void OnCreate()
     {
         base.OnCreate();
 
         _entityQuery = GetEntityQuery(typeof(LTransformComponet));
-        _checkSum = new CheckSum();
     }
 
     protected override void OnUpdate()
     {
+        if(_checkSum == null) return;
+
         int frame = GetSingleton<LogicTime>().frameCount;
         _checkSum.Reset(frame);
         
