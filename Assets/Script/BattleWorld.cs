@@ -14,7 +14,6 @@ public class BattleWorld : World
         CreateSystem<InitiazationSystem>();
 
         // update systems
-        InitInititationSystem();
         InitSimulationSystem(checksum);
 
 #if !ONLY_LOGIC
@@ -22,21 +21,12 @@ public class BattleWorld : World
 #endif
     }
 
-    private void InitInititationSystem()
-    {
-        var group = GetOrCreateSystem<CustomSystems1>();
-        GetOrCreateSystem<InitializationSystemGroup>().AddSystemToUpdateList(group);
-        
-        group.AddSystemToUpdateList(CreateSystem<UpdateWorldTimeSystem>());
-    }
 
     public void InitSimulationSystem(CheckSum checksum)
     {
-        var group = GetOrCreateSystem<CustomSystems2>();
-        GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(group);
-        FixedRateUtils.EnableFixedRateWithCatchUp(group, 0.1f);
+        var group = GetOrCreateSystem<FixedTimeSystemGroup>();
+        GetOrCreateSystem<Unity.Entities.SimulationSystemGroup>().AddSystemToUpdateList(group);
 
-        group.AddSystemToUpdateList(CreateSystem<UpdateLogicTimeSystem>()); // 更新时间
         group.AddSystemToUpdateList(CreateSystem<InputUserPositionSystem>()); // 玩家输入
 
 
@@ -68,6 +58,7 @@ public class BattleWorld : World
         GetOrCreateSystem<PresentationSystemGroup>().AddSystemToUpdateList(group);
 
         // add all simulation systems
+        group.AddSystemToUpdateList(CreateSystem<UpdateWorldTimeSystem>());
         group.AddSystemToUpdateList(CreateSystem<VSpawnTargetSystem>());
         group.AddSystemToUpdateList(CreateSystem<VDespawnSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());

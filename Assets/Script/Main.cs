@@ -8,12 +8,16 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    BattleWorld[] _worlds = new BattleWorld[10];
-    CheckSum[] _checksums = new CheckSum[10];
+    public int worldCount = 1;
+
+    BattleWorld[] _worlds;
+    CheckSum[] _checksums; 
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < 10; i++)
+        _worlds = new BattleWorld[worldCount];
+        _checksums = new CheckSum[worldCount];
+        for(int i = 0; i < worldCount; i++)
         {
             _checksums[i] = new CheckSum();
             _worlds[i] = new BattleWorld("new " + i, _checksums[i]);
