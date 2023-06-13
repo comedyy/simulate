@@ -40,8 +40,6 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<MoveByDirSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
 
-        group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
-
         var timeoutSystem = CreateSystem<GameTimeoutSystem>();
         timeoutSystem.flag = flag;
         group.AddSystemToUpdateList(timeoutSystem);

@@ -8,8 +8,13 @@ public class MoveByPosSystem : ComponentSystem
     {
         Entities.ForEach((ref LTransformComponet tranCom, ref LMoveByPosComponent moveCom)=>{
             var prePos = tranCom.position;
-            tranCom.rotation = quaternion.LookRotation(math.normalize(moveCom.pos - prePos), new float3(0, 1, 0));
-            tranCom.position = moveCom.pos;
+            var diff = moveCom.pos - prePos;
+            if(diff.x != 0 || diff.y != 0 || diff.z != 0)
+            {
+                var dir = math.normalize(diff);
+                tranCom.rotation = quaternion.LookRotation(dir, new float3(0, 1, 0));
+                tranCom.position = moveCom.pos;
+            }
         });
     }
 }

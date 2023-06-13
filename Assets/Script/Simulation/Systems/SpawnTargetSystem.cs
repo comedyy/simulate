@@ -1,5 +1,6 @@
 using System;
 using Unity.Entities;
+using UnityEngine;
 
 public class SpawnTargetSystem : ComponentSystem
 {
@@ -31,12 +32,17 @@ public class SpawnTargetSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
+        Debug.LogError("VSpwan logic");
         Entities.ForEach((Entity evEntity, ref SpawnEvent ev)=>{
             var entity = Entity.Null;
             
             if(ev.isUser)
             {
                 entity = EntityManager.CreateEntity(_controllerArchetype);
+                
+                var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);
+                move.pos = ev.position;
+                EntityManager.SetComponentData(entity, move);
             }
             else
             {
@@ -63,7 +69,8 @@ public class SpawnTargetSystem : ComponentSystem
             var vSpwanEntity = EntityManager.CreateEntity();
             EntityManager.AddComponentData(vSpwanEntity, new VSpawnEvent(){
                 target = entity,
-                isUser = ev.isUser
+                isUser = ev.isUser,
+                isContorller = ev.isController
             });
 
             EntityManager.DestroyEntity(evEntity);

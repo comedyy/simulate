@@ -11,16 +11,25 @@ public class InitiazationSystem : ComponentSystemBase
         var entity = EntityManager.CreateEntity();
         EntityManager.AddComponentData(entity, new SpawnEvent()
         {
-            position = float3.zero,
+            position = new float3(3, 0, 3),
             dir = quaternion.identity,
-            isUser = true
+            isUser = true,
+            isController = true
+        });
+
+        entity = EntityManager.CreateEntity();
+        EntityManager.AddComponentData(entity, new SpawnEvent()
+        {
+            position = new float3(3, 0, 1),
+            dir = quaternion.identity,
+            isUser = true,
+            isController = false
         });
 
         // create random
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new RandomComponent(){
             random = new System.Random(1)
         });
-
     }
 
     public override void Update()

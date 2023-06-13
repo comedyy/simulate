@@ -5,15 +5,20 @@ public class VSpawnTargetSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
+        Debug.LogError("VSpwan");
         Entities.ForEach((Entity entity, ref VSpawnEvent ev)=>{
-            var prefab = ev.isUser ? Resources.Load<GameObject>("Role") : Resources.Load<GameObject>("Monster");
+            GameObject prefab = null;
+            if(ev.isContorller) prefab = Resources.Load<GameObject>("Controller");
+            else if(ev.isUser) prefab = Resources.Load<GameObject>("Role");
+            else prefab = Resources.Load<GameObject>("Monster");
+
             var lTransformCom = EntityManager.GetComponentData<LTransformComponet>(ev.target);
             var com = new GameObjectBindingComponent(){
                 obj = GameObject.Instantiate(prefab, lTransformCom.position, lTransformCom.rotation),
             };
             EntityManager.AddComponentData(ev.target, com);
 
-            if(ev.isUser)
+            if(ev.isContorller)
             {
                 EntityManager.AddComponentData(EntityManager.CreateEntity(), new ControllerHolder(){
                     controller = ev.target

@@ -30,6 +30,7 @@ public struct SpawnEvent : IComponentData
     public bool isUser;
     public float aiInterval;
     public float despawnTime;
+    internal bool isController;
 }
 
 public struct SpawnMonsterComponent: IComponentData
@@ -72,6 +73,7 @@ public struct VSpawnEvent : IComponentData
 {
     public Entity target;
     public bool isUser;
+    public bool isContorller;
 }
 
 
