@@ -8,7 +8,10 @@ public class MosnterDespawnSystem : ComponentSystem
     {
         var escaped = GetSingleton<LogicTime>().escaped;
 
-        Entities.ForEach((Entity entity, ref MonsterAutoDespawnComponent despawnComponent)=>{
+        var rvoEntity = GetSingletonEntity<RvoSimulatorComponet>();
+        var rvoObj = EntityManager.GetComponentObject<RvoSimulatorComponet>(rvoEntity);
+
+        Entities.ForEach((Entity entity, ref MonsterAutoDespawnComponent despawnComponent, ref LRvoComponent rvoComponent)=>{
             if(escaped < despawnComponent.despawnTime)
             {
                 return;
@@ -20,6 +23,8 @@ public class MosnterDespawnSystem : ComponentSystem
                 target = entity
             });
 #endif
+            rvoObj.rvoSimulator.removeAgent(rvoComponent.rvoId);
+
             EntityManager.DestroyEntity(entity);
 
             var spawnCountCom = GetSingleton<SpawnMonsterComponent>();

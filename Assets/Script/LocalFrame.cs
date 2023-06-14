@@ -13,12 +13,11 @@ public class LocalFrame
     Action<PackageItem> SendMsg;
     public int ReceivedServerFrame;
 
-
     MessageItem messageItem;
 
     public void Init(float tick, Action<PackageItem> SendMsg)
     {
-        frame = 0;
+        frame = 5;
         totalSeconds = 0;
         preFrameSeconds = 0;
         _tick = tick;

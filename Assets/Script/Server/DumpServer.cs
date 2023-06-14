@@ -15,7 +15,7 @@ public class DumpServer
 
     public void Init(float tick, Action<ServerPackageItem> frameCallback)
     {
-        frame = -5;
+        frame = 1;
         totalSeconds = 0;
         preFrameSeconds = 0;
         _tick = tick;

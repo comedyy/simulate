@@ -15,7 +15,8 @@ public class MonsterAiSytem : ComponentSystem
             }
 
             var random = EntityManager.GetComponentObject<RandomComponent>(GetSingletonEntity<RandomComponent>()).random;
-            moveByDirComponent.dir = quaternion.RotateY(RandomUtils.Random(random, 2 * math.PI));
+            var angle = RandomUtils.Random(random, 2 * math.PI);
+            moveByDirComponent.dir = angle;
             ai.lastTurnTime = escaped;
         });
     }

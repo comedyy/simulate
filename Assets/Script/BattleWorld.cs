@@ -11,10 +11,10 @@ public class BattleWorld : World
     public BattleWorld(string name, CheckSum checksum, float logicFrameInterval, LocalFrame localServer) : base(name)
     {
         // init systems 
+        InitiazationSystem.logicFrameInterval = logicFrameInterval;
         CreateSystem<InitiazationSystem>();
-
         // update systems
-        InitSimulationSystem(checksum, logicFrameInterval, localServer);
+        InitSimulationSystem(checksum, localServer);
 
 #if !ONLY_LOGIC
         InitPresentationSystem(localServer);
@@ -22,10 +22,10 @@ public class BattleWorld : World
     }
 
 
-    public void InitSimulationSystem(CheckSum checksum, float logicFrameInterval, LocalFrame frame)
+    public void InitSimulationSystem(CheckSum checksum, LocalFrame frame)
     {
         var group = GetOrCreateSystem<FixedTimeSystemGroup>();
-        group.InitLogicTime(logicFrameInterval, frame);
+        group.InitLogicTime(frame);
         GetOrCreateSystem<Unity.Entities.SimulationSystemGroup>().AddSystemToUpdateList(group);
 
         var inputSystem = CreateSystem<InputUserPositionSystem>();

@@ -4,6 +4,13 @@ using System;
 
 public class InitiazationSystem : ComponentSystemBase
 {
+    public static float logicFrameInterval;
+
+    public void Init(float v)
+    {
+  
+    }
+
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -12,7 +19,7 @@ public class InitiazationSystem : ComponentSystemBase
         EntityManager.AddComponentData(entity, new SpawnEvent()
         {
             position = new float3(3, 0, 3),
-            dir = quaternion.identity,
+            dir = 0,
             isUser = true,
             isController = true
         });
@@ -21,7 +28,7 @@ public class InitiazationSystem : ComponentSystemBase
         EntityManager.AddComponentData(entity, new SpawnEvent()
         {
             position = new float3(3, 0, 1),
-            dir = quaternion.identity,
+            dir = 0,
             isUser = true,
             isController = false
         });
@@ -30,15 +37,26 @@ public class InitiazationSystem : ComponentSystemBase
         EntityManager.AddComponentData(entity, new SpawnEvent()
         {
             position = new float3(3, 0, 6),
-            dir = quaternion.identity,
+            dir = 0,
             isUser = true,
             isController = false
         });
 
+        // singetons
+        entity = EntityManager.CreateEntity();
+        EntityManager.AddComponentData(entity, new LogicTime(){
+            deltaTime = logicFrameInterval
+        });
 
         // create random
-        EntityManager.AddComponentData(EntityManager.CreateEntity(), new RandomComponent(){
+        EntityManager.AddComponentData(entity, new RandomComponent(){
             random = new System.Random(1)
+        });
+
+        // create RVO
+        RVO.Simulator.Instance.setTimeStep(logicFrameInterval);
+        EntityManager.AddComponentObject(entity, new RvoSimulatorComponet(){
+            rvoSimulator = RVO.Simulator.Instance
         });
     }
 

@@ -2,6 +2,11 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
+public struct LRvoComponent : IComponentData
+{
+    public int rvoId;
+}
+
 public struct LTransformComponet : IComponentData
 {
     public float3 position;
@@ -10,7 +15,7 @@ public struct LTransformComponet : IComponentData
 
 public struct LMoveByDirComponent : IComponentData
 {
-    public quaternion dir;
+    public float dir;
 }
 
 public struct LMoveByPosComponent : IComponentData
@@ -23,10 +28,15 @@ public struct MoveSpeedComponent : IComponentData
     public float speed;
 }
 
+public struct SizeComponent : IComponentData
+{
+    public float size;
+}
+
 public struct SpawnEvent : IComponentData
 {
     public float3 position;
-    public quaternion dir;
+    public float dir;
     public bool isUser;
     public float aiInterval;
     public float despawnTime;

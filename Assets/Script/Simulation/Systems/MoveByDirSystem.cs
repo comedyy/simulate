@@ -4,14 +4,30 @@ using Unity.Mathematics;
 
 public class MoveByDirSystem : ComponentSystem
 {
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+    }
+
     protected override void OnUpdate()
     {
-        var deltaTime = GetSingleton<LogicTime>().deltaTime;
+        var rvoEntity = GetSingletonEntity<RvoSimulatorComponet>();
+        var rvoObj = EntityManager.GetComponentObject<RvoSimulatorComponet>(rvoEntity);
+
+        Entities.ForEach((ref LRvoComponent rvoComponent, ref LMoveByDirComponent moveCom)=>{
+            var sin = math.sin(moveCom.dir);
+            var cos = math.cos(moveCom.dir);
+            rvoObj.rvoSimulator.setAgentPrefVelocity(rvoComponent.rvoId, new RVO.Vector2(cos, sin));
+        });
+
+        rvoObj.rvoSimulator.doStep();
         
-        Entities.ForEach((ref LTransformComponet tranCom, ref LMoveByDirComponent moveCom)=>{
-            tranCom.rotation = math.nlerp(tranCom.rotation, moveCom.dir, 0.3f);
-            var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
-            tranCom.position += deltaTime * dir;
+        Entities.ForEach((ref LTransformComponet tranCom, ref LRvoComponent rvoComponent)=>{
+            var pos = rvoObj.rvoSimulator.getAgentPosition(rvoComponent.rvoId);
+            var forward = rvoObj.rvoSimulator.getAgentVelocity(rvoComponent.rvoId);
+
+            tranCom.rotation = quaternion.LookRotation(new float3(forward.x(), 0, forward.y()), new float3(0, 1, 0));
+            tranCom.position = new float3(pos.x(), 0, pos.y());
         });
     }
 }

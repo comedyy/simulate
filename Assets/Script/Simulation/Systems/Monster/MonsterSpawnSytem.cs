@@ -33,10 +33,11 @@ public class MonsterSpawnSytem : ComponentSystem
 
         for(int i = 0; i < monsterSpwan.spawnCountPerInterval; i++)
         {
+            var randomAngle = RandomUtils.Random(random, 2 * math.PI);
             EntityManager.SetComponentData(spwanEventEntity, new SpawnEvent(){
                 isUser = false, 
                 position = new float3(RandomUtils.Random(random, 10), 0, RandomUtils.Random(random, 10)),
-                dir = quaternion.RotateY(RandomUtils.Random(random, 2 * math.PI)),
+                dir = randomAngle,
                 aiInterval = 1f,
                 despawnTime = 5 + escaped
             });    

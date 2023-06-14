@@ -15,12 +15,9 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         _firstTickFinished = false;
     }
     
-    internal void InitLogicTime(float v, LocalFrame localFrame)
+    internal void InitLogicTime(LocalFrame localFrame)
     {
         _localFrame = localFrame;
-        EntityManager.AddComponentData(EntityManager.CreateEntity(), new LogicTime(){
-            deltaTime = v
-        });
     }
     
     protected override void OnUpdate()
