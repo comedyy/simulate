@@ -42,82 +42,15 @@ namespace RVO
      */
     public class Simulator
     {
-        /**
-         * <summary>Defines a worker.</summary>
-         */
-        private class Worker
-        {
-            private readonly ManualResetEvent doneEvent_;
-            private readonly int end_;
-            private readonly int start_;
-
-            /**
-             * <summary>Constructs and initializes a worker.</summary>
-             *
-             * <param name="start">Start.</param>
-             * <param name="end">End.</param>
-             * <param name="doneEvent">Done event.</param>
-             */
-            internal Worker(int start, int end, ManualResetEvent doneEvent)
-            {
-                start_ = start;
-                end_ = end;
-                doneEvent_ = doneEvent;
-            }
-
-            /**
-             * <summary>Performs a simulation step.</summary>
-             *
-             * <param name="obj">Unused.</param>
-             */
-            internal void step(object _)
-            {
-                for (int agentNo = start_; agentNo < end_; ++agentNo)
-                {
-                    Simulator.Instance.agents_[agentNo].computeNeighbors();
-                    Simulator.Instance.agents_[agentNo].computeNewVelocity();
-                }
-
-                doneEvent_.Set();
-            }
-
-            /**
-             * <summary>updates the two-dimensional position and
-             * two-dimensional velocity of each agent.</summary>
-             *
-             * <param name="obj">Unused.</param>
-             */
-            internal void update(object _)
-            {
-                for (int agentNo = start_; agentNo < end_; ++agentNo)
-                {
-                    Simulator.Instance.agents_[agentNo].update();
-                }
-
-                doneEvent_.Set();
-            }
-        }
-
         internal IList<Agent> agents_;
         internal IList<Obstacle> obstacles_;
         internal KdTree kdTree_;
         internal float timeStep_;
 
-        private static readonly Simulator instance_ = new Simulator();
-
         private Agent defaultAgent_;
         private ManualResetEvent[] doneEvents_;
-        private Worker[] workers_;
         private int numWorkers_;
         private float globalTime_;
-
-        public static Simulator Instance
-        {
-            get
-            {
-                return instance_;
-            }
-        }
 
         /**
          * <summary>Adds a new agent with default properties to the simulation.
@@ -204,6 +137,7 @@ namespace RVO
             agent.timeHorizon_ = timeHorizon;
             agent.timeHorizonObst_ = timeHorizonObst;
             agent.velocity_ = velocity;
+            agent.simulator_ = this;
             agents_.Add(agent);
 
             return agent.id_;
@@ -273,12 +207,10 @@ namespace RVO
         {
             agents_ = new List<Agent>();
             defaultAgent_ = null;
-            kdTree_ = new KdTree();
+            kdTree_ = new KdTree(this);
             obstacles_ = new List<Obstacle>();
             globalTime_ = 0.0f;
             timeStep_ = 0.1f;
-
-            SetNumWorkers(1);
         }
 
         /**
@@ -293,13 +225,13 @@ namespace RVO
 
             for(int agentNo = 0; agentNo < agents_.Count; agentNo++)
             {
-                Simulator.Instance.agents_[agentNo].computeNeighbors();
-                Simulator.Instance.agents_[agentNo].computeNewVelocity();
+                agents_[agentNo].computeNeighbors();
+                agents_[agentNo].computeNewVelocity();
             }
 
             for(int agentNo = 0; agentNo < agents_.Count; agentNo++)
             {
-                Simulator.Instance.agents_[agentNo].update();
+                agents_[agentNo].update();
             }
 
             globalTime_ += timeStep_;
@@ -827,22 +759,6 @@ namespace RVO
         }
 
         /**
-         * <summary>Sets the number of workers.</summary>
-         *
-         * <param name="numWorkers">The number of workers.</param>
-         */
-        public void SetNumWorkers(int numWorkers)
-        {
-            numWorkers_ = numWorkers;
-
-            if (numWorkers_ <= 0)
-            {
-                ThreadPool.GetMinThreads(out numWorkers_, out _);
-            }
-            workers_ = null;
-        }
-
-        /**
          * <summary>Sets the time step of the simulation.</summary>
          *
          * <param name="timeStep">The time step of the simulation. Must be
@@ -856,7 +772,7 @@ namespace RVO
         /**
          * <summary>Constructs and initializes a simulation.</summary>
          */
-        private Simulator()
+        public Simulator()
         {
             Clear();
         }

@@ -54,9 +54,10 @@ public class InitiazationSystem : ComponentSystemBase
         });
 
         // create RVO
-        RVO.Simulator.Instance.setTimeStep(logicFrameInterval);
+        var rvoSimulator = new RVO.Simulator();
+        rvoSimulator.setTimeStep(logicFrameInterval);
         EntityManager.AddComponentObject(entity, new RvoSimulatorComponet(){
-            rvoSimulator = RVO.Simulator.Instance
+            rvoSimulator = rvoSimulator
         });
     }
 

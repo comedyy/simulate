@@ -158,19 +158,25 @@ namespace RVO
         private Agent[] agents_;
         private AgentTreeNode[] agentTree_;
         private ObstacleTreeNode obstacleTree_;
+        private Simulator simulator;
+
+        public KdTree(Simulator simulator)
+        {
+            this.simulator = simulator;
+        }
 
         /**
          * <summary>Builds an agent k-D tree.</summary>
          */
         internal void buildAgentTree()
         {
-            if (agents_ == null || agents_.Length != Simulator.Instance.agents_.Count)
+            if (agents_ == null || agents_.Length != this.simulator.agents_.Count)
             {
-                agents_ = new Agent[Simulator.Instance.agents_.Count];
+                agents_ = new Agent[this.simulator.agents_.Count];
 
                 for (int i = 0; i < agents_.Length; ++i)
                 {
-                    agents_[i] = Simulator.Instance.agents_[i];
+                    agents_[i] = this.simulator.agents_[i];
                 }
 
                 agentTree_ = new AgentTreeNode[2 * agents_.Length];
@@ -194,11 +200,11 @@ namespace RVO
         {
             obstacleTree_ = new ObstacleTreeNode();
 
-            IList<Obstacle> obstacles = new List<Obstacle>(Simulator.Instance.obstacles_.Count);
+            IList<Obstacle> obstacles = new List<Obstacle>(this.simulator.obstacles_.Count);
 
-            for (int i = 0; i < Simulator.Instance.obstacles_.Count; ++i)
+            for (int i = 0; i < this.simulator.obstacles_.Count; ++i)
             {
-                obstacles.Add(Simulator.Instance.obstacles_[i]);
+                obstacles.Add(this.simulator.obstacles_[i]);
             }
 
             obstacleTree_ = buildObstacleTreeRecursive(obstacles);
@@ -448,9 +454,9 @@ namespace RVO
                         newObstacle.convex_ = true;
                         newObstacle.direction_ = obstacleJ1.direction_;
 
-                        newObstacle.id_ = Simulator.Instance.obstacles_.Count;
+                        newObstacle.id_ = this.simulator.obstacles_.Count;
 
-                        Simulator.Instance.obstacles_.Add(newObstacle);
+                        this.simulator.obstacles_.Add(newObstacle);
 
                         obstacleJ1.next_ = newObstacle;
                         obstacleJ2.previous_ = newObstacle;
