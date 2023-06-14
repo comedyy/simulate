@@ -80,7 +80,7 @@ public class Main : MonoBehaviour
 
             foreach (var item in _checksums)
             {
-                Debug.Log(string.Join(",", item.GetHistory()));
+                Debug.Log($"【{item.GetHistory().Count}】:" + string.Join(",", item.GetHistory()));
             }
         }
     }

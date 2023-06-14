@@ -25,7 +25,7 @@ public class BattleWorld : World
     public void InitSimulationSystem(CheckSum checksum, LocalFrame frame)
     {
         var group = GetOrCreateSystem<FixedTimeSystemGroup>();
-        group.InitLogicTime(frame);
+        group.InitLogicTime(frame, flag);
         GetOrCreateSystem<Unity.Entities.SimulationSystemGroup>().AddSystemToUpdateList(group);
 
         var inputSystem = CreateSystem<InputUserPositionSystem>();

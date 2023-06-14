@@ -7,6 +7,7 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
     float _battleStartTime;
     bool _firstTickFinished;
     LocalFrame _localFrame;
+    BattleEndFlag _flag;
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -15,9 +16,10 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         _firstTickFinished = false;
     }
     
-    internal void InitLogicTime(LocalFrame localFrame)
+    internal void InitLogicTime(LocalFrame localFrame, BattleEndFlag flag)
     {
         _localFrame = localFrame;
+        _flag = flag;
     }
     
     protected override void OnUpdate()
@@ -27,10 +29,12 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         {
             var logicTime = GetSingleton<LogicTime>();
             var lastTime = logicTime.escaped;
-            if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
-            {
-                break;
-            }
+            // if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
+            // {
+            //     break;
+            // }
+
+            if(_flag.isEnd) return;
 
             if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
             {
