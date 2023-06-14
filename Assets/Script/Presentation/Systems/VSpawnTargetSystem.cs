@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class VSpawnTargetSystem : ComponentSystem
 {
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+
+        var entity = EntityManager.CreateEntity();
+        EntityManager.AddComponentData(entity, new BindingComponet());
+    }
+
     protected override void OnUpdate()
     {
         Entities.ForEach((Entity entity, ref VSpawnEvent ev)=>{
@@ -25,6 +33,11 @@ public class VSpawnTargetSystem : ComponentSystem
 
                 com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, lTransformCom.rotation);
             }
+
+            var entityBinding = GetSingletonEntity<BindingComponet>();
+            var binding = EntityManager.GetComponentObject<BindingComponet>(entityBinding);
+            binding.allObject.Add(ev.target, com.obj);
+
 
             EntityManager.DestroyEntity(entity);
         });

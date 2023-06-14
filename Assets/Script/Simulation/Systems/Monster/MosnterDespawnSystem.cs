@@ -20,6 +20,7 @@ public class MosnterDespawnSystem : ComponentSystem
                 target = entity
             });
 #endif
+            EntityManager.DestroyEntity(entity);
 
             var spawnCountCom = GetSingleton<SpawnMonsterComponent>();
             spawnCountCom.currentCount--;

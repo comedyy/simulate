@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Entities;
 
@@ -5,15 +6,21 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
 {
     float _battleStartTime;
     bool _firstTickFinished;
+    LocalFrame _localFrame;
     protected override void OnCreate()
     {
         base.OnCreate();
-        EntityManager.AddComponentData(EntityManager.CreateEntity(), new LogicTime(){
-            deltaTime = 0.1f
-        });
 
         _battleStartTime = UnityEngine.Time.time;
         _firstTickFinished = false;
+    }
+    
+    internal void InitLogicTime(float v, LocalFrame localFrame)
+    {
+        _localFrame = localFrame;
+        EntityManager.AddComponentData(EntityManager.CreateEntity(), new LogicTime(){
+            deltaTime = v
+        });
     }
     
     protected override void OnUpdate()
@@ -23,6 +30,10 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         {
             var logicTime = GetSingleton<LogicTime>();
             var lastTime = logicTime.escaped;
+            if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
+            {
+                break;
+            }
 
             if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
             {
@@ -52,5 +63,4 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         m_systemsToUpdate.Clear(  );
         m_systemsToUpdate.AddRange( backup );
     }
-
 }

@@ -8,26 +8,29 @@ public class BattleWorld : World
     BattleEndFlag flag = new BattleEndFlag();
     public bool IsEnd => flag.isEnd;
 
-    public BattleWorld(string name, CheckSum checksum) : base(name)
+    public BattleWorld(string name, CheckSum checksum, float logicFrameInterval, LocalFrame localServer) : base(name)
     {
         // init systems 
         CreateSystem<InitiazationSystem>();
 
         // update systems
-        InitSimulationSystem(checksum);
+        InitSimulationSystem(checksum, logicFrameInterval, localServer);
 
 #if !ONLY_LOGIC
-        InitPresentationSystem();
+        InitPresentationSystem(localServer);
 #endif
     }
 
 
-    public void InitSimulationSystem(CheckSum checksum)
+    public void InitSimulationSystem(CheckSum checksum, float logicFrameInterval, LocalFrame frame)
     {
         var group = GetOrCreateSystem<FixedTimeSystemGroup>();
+        group.InitLogicTime(logicFrameInterval, frame);
         GetOrCreateSystem<Unity.Entities.SimulationSystemGroup>().AddSystemToUpdateList(group);
 
-        group.AddSystemToUpdateList(CreateSystem<InputUserPositionSystem>()); // 玩家输入
+        var inputSystem = CreateSystem<InputUserPositionSystem>();
+        inputSystem.GetAllMessage = frame.GetFrameInput;
+        group.AddSystemToUpdateList(inputSystem); // 玩家输入
 
 
         group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
@@ -50,7 +53,7 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(checksumSystem);
     }
 
-    public void InitPresentationSystem()
+    public void InitPresentationSystem(LocalFrame localServer)
     {
         var group = GetOrCreateSystem<CustomSystems3>();
         GetOrCreateSystem<PresentationSystemGroup>().AddSystemToUpdateList(group);
@@ -61,6 +64,9 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<VDespawnSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());
         group.AddSystemToUpdateList(CreateSystem<VCameraFollowSystem>());
-        group.AddSystemToUpdateList(CreateSystem<ControllerMoveSystem>());
+
+        var moveSytem = CreateSystem<ControllerMoveSystem>();
+        moveSytem.localServer = localServer;
+        group.AddSystemToUpdateList(moveSytem);
     }
 }

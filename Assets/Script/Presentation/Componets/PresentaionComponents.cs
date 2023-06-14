@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -22,4 +23,9 @@ public class GameObjectBindingComponent : IComponentData, IEquatable<GameObjectB
 public struct ControllerHolder : IComponentData
 {
     public Entity controller;
+}
+
+public class BindingComponet : IComponentData
+{
+    public Dictionary<Entity, GameObject> allObject = new Dictionary<Entity, GameObject>();
 }

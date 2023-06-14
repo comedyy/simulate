@@ -6,13 +6,13 @@ public class VDespawnSystem : ComponentSystem
     protected override void OnUpdate()
     {
         Entities.ForEach((Entity entity, ref VDespawnEvent ev)=>{
-            var com = EntityManager.GetComponentObject<GameObjectBindingComponent>(ev.target);
-            if(com != null && com.obj != null)
+            var entityBinding = GetSingletonEntity<BindingComponet>();
+            var binding = EntityManager.GetComponentObject<BindingComponet>(entityBinding);
+            if(binding.allObject.TryGetValue(ev.target, out var obj))
             {
-                GameObject.Destroy(com.obj);
+                GameObject.Destroy(obj);
             }
 
-            EntityManager.DestroyEntity(ev.target);
             EntityManager.DestroyEntity(entity);
         });
     }

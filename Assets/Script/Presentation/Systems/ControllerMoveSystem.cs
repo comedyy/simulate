@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ControllerMoveSystem : ComponentSystem
 {
+    internal LocalFrame localServer;
+
     protected override void OnUpdate()
     {   
         if(!HasSingleton<ControllerHolder>()) return;
@@ -23,9 +25,8 @@ public class ControllerMoveSystem : ComponentSystem
         var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
         tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
 
-        EntityManager.AddComponentData(EntityManager.CreateEntity(), new MessageUpdatePosEvent(){
-            pos = tranCom.position,
-            entity = controllerEntity
+        localServer.SetData(new MessageItem(){
+            pos = tranCom.position, entity = controllerEntity
         });
     }
 
