@@ -38,15 +38,15 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         {
             var logicTime = GetSingleton<LogicTime>();
             var lastTime = logicTime.escaped;
-            // if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
-            // {
-            //     break;
-            // }
+            if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
+            {
+                break;
+            }
 
             if(_flag.isEnd) return; // 游戏已经结束
 
-            // if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
-            if((count--) > 0)
+            if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
+            // if((count--) > 0)
             {
                 _firstTickFinished = true;
                 

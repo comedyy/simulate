@@ -30,7 +30,7 @@ public class CircleSkillSystem : ComponentSystem
                 }
 
                 buffer.Add(new HurtComponent(){
-                    target = entity,
+                    target = item,
                     value = atk.atk 
                 });
             }

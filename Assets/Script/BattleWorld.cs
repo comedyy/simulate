@@ -36,20 +36,17 @@ public class BattleWorld : World
 
         var inputSystem = CreateSystem<InputUserPositionSystem>();
         inputSystem.GetAllMessage = frame.GetFrameInput;
-       // group.AddSystemToUpdateList(inputSystem); // 玩家输入
+        group.AddSystemToUpdateList(inputSystem); // 玩家输入
 
         group.AddSystemToUpdateList(CreateSystem<CircleSkillSystem>());
         group.AddSystemToUpdateList(CreateSystem<HurtSystem>());
 
         group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
         group.AddSystemToUpdateList(CreateSystem<MonsterAiSytem>());
-        // group.AddSystemToUpdateList(CreateSystem<MosnterDespawnSystem>());
         
         group.AddSystemToUpdateList(CreateSystem<SpawnTargetSystem>());
         
-        // group.AddSystemToUpdateList(CreateSystem<RecordPrePositionSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByDirSystem>());
-        // group.AddSystemToUpdateList(CreateSystem<MoveByosSystem>());
 
         var timeoutSystem = CreateSystem<GameTimeoutSystem>();
         timeoutSystem.flag = flag;

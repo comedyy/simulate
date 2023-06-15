@@ -25,7 +25,7 @@ public class InitiazationSystem : ComponentSystemBase
                 id = i + 1,
                 isUser = true,
                 atk = 10,
-                hp = 3000
+                hp = 100
             });
         }
         
