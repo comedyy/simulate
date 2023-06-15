@@ -5,15 +5,17 @@ public class VDespawnSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        Entities.ForEach((Entity entity, ref VDespawnEvent ev)=>{
+        var buffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>());
+        for(int i = 0; i < buffer.Length; i++)
+        {
+            var ev = buffer[i];
+
             var entityBinding = GetSingletonEntity<BindingComponet>();
             var binding = EntityManager.GetComponentObject<BindingComponet>(entityBinding);
-            if(binding.allObject.TryGetValue(ev.target, out var obj))
+            if(binding.allObject.TryGetValue(ev.entity, out var obj))
             {
                 GameObject.Destroy(obj);
             }
-
-            EntityManager.DestroyEntity(entity);
-        });
+        }
     }
 }

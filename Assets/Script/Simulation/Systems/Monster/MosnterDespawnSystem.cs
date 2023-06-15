@@ -17,12 +17,11 @@ public class MosnterDespawnSystem : ComponentSystem
                 return;
             }
 
-#if !ONLY_LOGIC
-            var despawnEntity = EntityManager.CreateEntity();
-            EntityManager.AddComponentData(despawnEntity, new VDespawnEvent(){
-                target = entity
+            var buffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>());
+            buffer.Add(new DeSpawnEventComponent(){
+                entity = entity,
             });
-#endif
+
             rvoObj.rvoSimulator.removeAgent(rvoComponent.rvoId);
 
             EntityManager.DestroyEntity(entity);

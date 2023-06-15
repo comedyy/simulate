@@ -24,12 +24,11 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
     
     protected override void OnUpdate()
     {
-        Entities.ForEach((Entity entity, ref VDespawnEvent ev)=>{
-            EntityManager.DestroyEntity(entity);
-        });
-        Entities.ForEach((Entity entity, ref VSpawnEvent ev)=>{
-            EntityManager.DestroyEntity(entity);
-        });
+
+        var buffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>());
+        buffer.Clear();
+        var bufferSpawn = EntityManager.GetBuffer<SpawnEventComponent>(GetSingletonEntity<SpawnEventComponent>());
+        bufferSpawn.Clear();
 
         var elapsedTime = UnityEngine.Time.time - _battleStartTime;
         while (true)

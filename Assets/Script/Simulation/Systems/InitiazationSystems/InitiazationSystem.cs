@@ -50,6 +50,9 @@ public class InitiazationSystem : ComponentSystemBase
         EntityManager.AddComponentData<UserListComponent>(EntityManager.CreateEntity(), new UserListComponent(){
             allUser = new Unity.Collections.LowLevel.Unsafe.UnsafeList<Entity>(8, Unity.Collections.Allocator.Persistent)
         });
+
+        EntityManager.AddBuffer<SpawnEventComponent>(entity);
+        EntityManager.AddBuffer<DeSpawnEventComponent>(entity);
     }
 
     public override void Update()

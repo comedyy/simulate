@@ -13,23 +13,28 @@ public class VSpawnTargetSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
-        Entities.ForEach((Entity entity, ref VSpawnEvent ev)=>{
+        var entity = GetSingletonEntity<SpawnEventComponent>();
+        var buffer = EntityManager.GetBuffer<SpawnEventComponent>(entity);
+        for(int i = 0; i < buffer.Length; i++)
+        {
+            var ev = buffer[i];
+
             GameObject prefab = null;
             var isController = ev.id == UserId;
             if(isController) prefab = Resources.Load<GameObject>("Controller");
             else if(ev.isUser) prefab = Resources.Load<GameObject>("Role");
             else prefab = Resources.Load<GameObject>("Monster");
 
-            var lTransformCom = EntityManager.GetComponentData<LTransformComponet>(ev.target);
+            var lTransformCom = EntityManager.GetComponentData<LTransformComponet>(ev.entity);
             var com = new GameObjectBindingComponent(){
                 obj = GameObject.Instantiate(prefab, lTransformCom.position, lTransformCom.rotation),
             };
-            EntityManager.AddComponentData(ev.target, com);
+            EntityManager.SetComponentData(ev.entity, com);
 
             if(isController)
             {
                 SetSingleton(new ControllerHolder(){
-                    controller = ev.target
+                    controller = ev.entity
                 });
 
                 com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, lTransformCom.rotation);
@@ -37,10 +42,7 @@ public class VSpawnTargetSystem : ComponentSystem
 
             var entityBinding = GetSingletonEntity<BindingComponet>();
             var binding = EntityManager.GetComponentObject<BindingComponet>(entityBinding);
-            binding.allObject.Add(ev.target, com.obj);
-
-
-            EntityManager.DestroyEntity(entity);
-        });
+            binding.allObject.Add(ev.entity, com.obj);
+        }
     }
 }

@@ -89,9 +89,9 @@ public class SpawnTargetSystem : ComponentSystem
                 size = size
             });
 
-            var vSpwanEntity = EntityManager.CreateEntity();
-            EntityManager.AddComponentData(vSpwanEntity, new VSpawnEvent(){
-                target = entity,
+            var buffer = EntityManager.GetBuffer<SpawnEventComponent>(GetSingletonEntity<SpawnEventComponent>());
+            buffer.Add(new SpawnEventComponent(){
+                entity = entity,
                 isUser = ev.isUser,
                 id = ev.id
             });
