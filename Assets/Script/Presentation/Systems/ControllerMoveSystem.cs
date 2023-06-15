@@ -31,6 +31,9 @@ public class ControllerMoveSystem : ComponentSystem
         localServer.SetData(new MessageItem(){
             pos = tranCom.position, entity = controllerEntity
         });
+
+        // simulate other role behavior
+        
     }
 
     static float GetAngle()

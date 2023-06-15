@@ -16,7 +16,7 @@ public class InitiazationSystem : ComponentSystemBase
         base.OnCreate();
         
 
-        for(int i = 0; i < 1; i++)
+        for(int i = 0; i < 2; i++)
         {
             EntityManager.AddComponentData(EntityManager.CreateEntity(), new SpawnEvent()
             {
@@ -29,7 +29,6 @@ public class InitiazationSystem : ComponentSystemBase
             });
         }
         
-
         // singetons
         var entity = EntityManager.CreateEntity();
         EntityManager.AddComponentData(entity, new LogicTime(){
