@@ -14,10 +14,8 @@ public class MoveByDirSystem : ComponentSystem
         var rvoEntity = GetSingletonEntity<RvoSimulatorComponet>();
         var rvoObj = EntityManager.GetComponentObject<RvoSimulatorComponet>(rvoEntity);
 
-        Entities.ForEach((ref LRvoComponent rvoComponent, ref LMoveByDirComponent moveCom)=>{
-            var sin = math.sin(moveCom.dir);
-            var cos = math.cos(moveCom.dir);
-            rvoObj.rvoSimulator.setAgentPrefVelocity(rvoComponent.rvoId, new RVO.Vector2(cos, sin));
+        Entities.ForEach((ref LRvoComponent rvoComponent, ref LMoveByDirComponent moveCom, ref MoveSpeedComponent speed)=>{
+            rvoObj.rvoSimulator.setAgentPrefVelocity(rvoComponent.rvoId, new RVO.Vector2(moveCom.dir.x, moveCom.dir.z) * speed.speed);
         });
 
         rvoObj.rvoSimulator.doStep();

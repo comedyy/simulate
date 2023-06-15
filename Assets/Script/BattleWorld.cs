@@ -39,9 +39,9 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(inputSystem); // 玩家输入
 
 
-        // group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
+        group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
         group.AddSystemToUpdateList(CreateSystem<MonsterAiSytem>());
-        group.AddSystemToUpdateList(CreateSystem<MosnterDespawnSystem>());
+        // group.AddSystemToUpdateList(CreateSystem<MosnterDespawnSystem>());
         
         group.AddSystemToUpdateList(CreateSystem<SpawnTargetSystem>());
         

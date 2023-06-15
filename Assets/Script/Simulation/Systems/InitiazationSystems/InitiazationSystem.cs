@@ -21,7 +21,7 @@ public class InitiazationSystem : ComponentSystemBase
             EntityManager.AddComponentData(EntityManager.CreateEntity(), new SpawnEvent()
             {
                 position = new float3(3, 0, 3),
-                dir = 0,
+                dir = new float3(1, 0, 0),
                 id = i + 1,
                 isUser = true,
             });
@@ -47,10 +47,18 @@ public class InitiazationSystem : ComponentSystemBase
         });
 
         EntityManager.AddComponent<ControllerHolder>(EntityManager.CreateEntity());
+        EntityManager.AddComponentData<UserListComponent>(EntityManager.CreateEntity(), new UserListComponent(){
+            allUser = new Unity.Collections.LowLevel.Unsafe.UnsafeList<Entity>(8, Unity.Collections.Allocator.Persistent)
+        });
     }
 
     public override void Update()
     {
         
+    }
+
+    protected override void OnDestroy()
+    {
+        GetSingleton<UserListComponent>().allUser.Dispose();
     }
 }

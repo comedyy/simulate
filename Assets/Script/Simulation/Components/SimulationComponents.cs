@@ -1,5 +1,6 @@
 
 using System;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -17,7 +18,7 @@ public struct LTransformComponet : IComponentData
 
 public struct LMoveByDirComponent : IComponentData
 {
-    public float dir;
+    public float3 dir;
 }
 
 public struct LMoveByPosComponent : IComponentData
@@ -38,7 +39,7 @@ public struct SizeComponent : IComponentData
 public struct SpawnEvent : IComponentData
 {
     public float3 position;
-    public float dir;
+    public float3 dir;
     public bool isUser;
     public float aiInterval;
     public float despawnTime;
@@ -113,4 +114,9 @@ public struct VSpawnEvent : IComponentData
 public struct VDespawnEvent : IComponentData
 {
     public Entity target;
+}
+
+public struct UserListComponent : IComponentData
+{
+    public UnsafeList<Entity> allUser;
 }

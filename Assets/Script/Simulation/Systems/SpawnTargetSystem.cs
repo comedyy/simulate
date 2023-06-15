@@ -52,6 +52,9 @@ public class SpawnTargetSystem : ComponentSystem
             {
                 entity = EntityManager.CreateEntity(_controllerArchetype);
                 
+                var userList = GetSingleton<UserListComponent>();
+                userList.allUser.Add(entity);
+                SetSingleton(userList);
                 // var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);
                 // move.pos = ev.position;
                 // EntityManager.SetComponentData(entity, move);
@@ -69,16 +72,13 @@ public class SpawnTargetSystem : ComponentSystem
                     dir = ev.dir 
                 });
 
-
-                var sin = math.sin(ev.dir);
-                var cos = math.cos(ev.dir);
                 EntityManager.SetComponentData(entity, new LRvoComponent(){
-                    rvoId = rvoObj.rvoSimulator.addAgent(new RVO.Vector2(ev.position.x, ev.position.z), 1.5f, 3, 0.05f, 0.05f, size, 3, new RVO.Vector2(cos, sin))
+                    rvoId = rvoObj.rvoSimulator.addAgent(new RVO.Vector2(ev.position.x, ev.position.z), 1.5f, 3, 0.05f, 0.05f, size, 3, new RVO.Vector2(ev.dir.x, ev.dir.z))
                 });
             }
             var transform = EntityManager.GetComponentData<LTransformComponet>(entity);
             transform.position = ev.position;
-            transform.rotation = quaternion.RotateY(ev.dir);
+            transform.rotation = quaternion.LookRotation(ev.dir, new float3(0, 1, 0));
             EntityManager.SetComponentData(entity, transform);
 
             EntityManager.SetComponentData<MoveSpeedComponent>(entity, new MoveSpeedComponent(){
