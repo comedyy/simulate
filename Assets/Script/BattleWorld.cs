@@ -10,6 +10,12 @@ public class BattleWorld : World
 
     public BattleWorld(string name, CheckSum checksum, float logicFrameInterval, LocalFrame localServer) : base(name)
     {
+        EntityManager.AddComponentData(EntityManager.CreateEntity(), new CheckSumComponet(){
+            checkSum = checksum
+        });
+
+        EntityManager.AddComponentData(EntityManager.CreateEntity(), new BindingComponet());
+
         // init systems 
         InitiazationSystem.logicFrameInterval = logicFrameInterval;
         CreateSystem<InitiazationSystem>();
@@ -48,9 +54,7 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(timeoutSystem);
 
         // cal CheckSum
-        var checksumSystem = CreateSystem<CalHashSystem>();
-        checksumSystem._checkSum = checksum;
-        group.AddSystemToUpdateList(checksumSystem);
+        group.AddSystemToUpdateList(CreateSystem<CalHashSystem>());
     }
 
     public void InitPresentationSystem(LocalFrame localServer)

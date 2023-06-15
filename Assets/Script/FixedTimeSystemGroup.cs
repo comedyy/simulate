@@ -15,7 +15,7 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         _battleStartTime = UnityEngine.Time.time;
         _firstTickFinished = false;
     }
-    
+
     internal void InitLogicTime(LocalFrame localFrame, BattleEndFlag flag)
     {
         _localFrame = localFrame;
@@ -24,17 +24,24 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
     
     protected override void OnUpdate()
     {
+        Entities.ForEach((Entity entity, ref VDespawnEvent ev)=>{
+            EntityManager.DestroyEntity(entity);
+        });
+        Entities.ForEach((Entity entity, ref VSpawnEvent ev)=>{
+            EntityManager.DestroyEntity(entity);
+        });
+
         var elapsedTime = UnityEngine.Time.time - _battleStartTime;
         while (true)
         {
             var logicTime = GetSingleton<LogicTime>();
             var lastTime = logicTime.escaped;
-            // if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
-            // {
-            //     break;
-            // }
+            if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
+            {
+                break;
+            }
 
-            if(_flag.isEnd) return;
+            if(_flag.isEnd) return; // 游戏已经结束
 
             if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
             {

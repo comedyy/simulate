@@ -13,7 +13,9 @@ public class SpawnTargetSystem : ComponentSystem
         typeof(MonsterAutoDespawnComponent), 
         typeof(VLerpTransformCopmnet), 
         typeof(LRvoComponent),
-        typeof(SizeComponent)
+        typeof(SizeComponent),
+
+        typeof(GameObjectBindingComponent)
     };
 
     ComponentType[] archetypeUserComponents = new ComponentType[]{
@@ -21,7 +23,9 @@ public class SpawnTargetSystem : ComponentSystem
         typeof(LMoveByPosComponent), 
         typeof(MoveSpeedComponent),
         typeof(VLerpTransformCopmnet), 
-        typeof(SizeComponent)
+        typeof(SizeComponent),
+
+        typeof(GameObjectBindingComponent)
 
     };
 

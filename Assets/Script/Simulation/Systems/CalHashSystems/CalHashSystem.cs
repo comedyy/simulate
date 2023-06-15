@@ -5,7 +5,6 @@ using UnityEngine;
 public class CalHashSystem : ComponentSystem
 {
     EntityQuery _entityQuery;
-    public CheckSum _checkSum;
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -15,16 +14,16 @@ public class CalHashSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
-        if(_checkSum == null) return;
+        var checkSum = this.GetSingletonObject<CheckSumComponet>().checkSum;
 
         int frame = GetSingleton<LogicTime>().frameCount;
-        _checkSum.Reset(frame);
+        // checkSum.Reset(0);
         
-        Entities.ForEach((ref LTransformComponet ls)=>{
-            _checkSum.CheckValue(ls.position.GetHashCode());
-            _checkSum.CheckValue(ls.rotation.GetHashCode());
+        Entities.ForEach((Entity entity, ref LTransformComponet ls)=>{
+            checkSum.CheckValue(entity, ls.position.GetHashCode());
+            checkSum.CheckValue(entity, ls.rotation.GetHashCode());
         });
 
-        _checkSum.SaveCheckSum();
+        checkSum.SaveCheckSum();
     }
 }

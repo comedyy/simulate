@@ -59,6 +59,8 @@ public class InitiazationSystem : ComponentSystemBase
         EntityManager.AddComponentObject(entity, new RvoSimulatorComponet(){
             rvoSimulator = rvoSimulator
         });
+
+        EntityManager.AddComponent<ControllerHolder>(EntityManager.CreateEntity());
     }
 
     public override void Update()

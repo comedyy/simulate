@@ -7,8 +7,6 @@ public class VSpawnTargetSystem : ComponentSystem
     {
         base.OnCreate();
 
-        var entity = EntityManager.CreateEntity();
-        EntityManager.AddComponentData(entity, new BindingComponet());
     }
 
     protected override void OnUpdate()
@@ -27,7 +25,7 @@ public class VSpawnTargetSystem : ComponentSystem
 
             if(ev.isContorller)
             {
-                EntityManager.AddComponentData(EntityManager.CreateEntity(), new ControllerHolder(){
+                SetSingleton(new ControllerHolder(){
                     controller = ev.target
                 });
 

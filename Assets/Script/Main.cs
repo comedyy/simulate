@@ -38,7 +38,7 @@ public class Main : MonoBehaviour
         _checksums = new CheckSum[worldCount];
         for(int i = 0; i < worldCount; i++)
         {
-            _checksums[i] = new CheckSum();
+            _checksums[i] = new CheckSum(i.ToString());
         }
 
         for(int i = 0; i < worldCount; i++)
@@ -81,6 +81,26 @@ public class Main : MonoBehaviour
             foreach (var item in _checksums)
             {
                 Debug.Log($"【{item.GetHistory().Count}】:" + string.Join(",", item.GetHistory()));
+            }
+
+            // 输出不同步的hash input。
+            var first = _checksums[0];
+            for(int i = 0; i < first.GetHistory().Count; i++)
+            {
+                for(int j = 1; j < _worlds.Length; j++)
+                {
+                    // hash 不一样
+                    if(first.GetHistory()[i] != _checksums[j].GetHistory()[i])
+                    {
+                        Debug.LogError($"unEqual frame = {i}");
+                        Debug.LogError(string.Join(",", first.GetHistoryDetail()[i]));
+                        Debug.LogError(string.Join(",", _checksums[j].GetHistoryDetail()[i]));
+
+                        Debug.LogError(string.Join(",", first.GetHistoryDetailOrder()[i]));
+                        Debug.LogError(string.Join(",", _checksums[j].GetHistoryDetailOrder()[i]));
+                        return;
+                    }
+                }
             }
         }
     }
