@@ -24,25 +24,29 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
     
     protected override void OnUpdate()
     {
-
         var buffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>());
         buffer.Clear();
         var bufferSpawn = EntityManager.GetBuffer<SpawnEventComponent>(GetSingletonEntity<SpawnEventComponent>());
         bufferSpawn.Clear();
+        var bufferHurt = EntityManager.GetBuffer<VHurtComponent>(GetSingletonEntity<VHurtComponent>());
+        bufferHurt.Clear();
+
+        int count = UnityEngine.Random.Range(0, 5);
 
         var elapsedTime = UnityEngine.Time.time - _battleStartTime;
         while (true)
         {
             var logicTime = GetSingleton<LogicTime>();
             var lastTime = logicTime.escaped;
-            if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
-            {
-                break;
-            }
+            // if(logicTime.frameCount >= _localFrame.ReceivedServerFrame)
+            // {
+            //     break;
+            // }
 
             if(_flag.isEnd) return; // 游戏已经结束
 
-            if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
+            // if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
+            if((count--) > 0)
             {
                 _firstTickFinished = true;
                 

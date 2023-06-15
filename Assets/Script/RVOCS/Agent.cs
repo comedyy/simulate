@@ -33,6 +33,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.Entities;
 
 namespace RVO
 {
@@ -55,7 +56,7 @@ namespace RVO
         internal float timeHorizon_ = 0.0f;
         internal float timeHorizonObst_ = 0.0f;
         internal Simulator simulator_ = default;
-
+        internal Entity entity;
         private Vector2 newVelocity_;
 
         /**

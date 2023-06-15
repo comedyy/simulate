@@ -7,7 +7,7 @@ using Unity.Entities;
 
 public class CheckSumComponet : IComponentData
 {
-    public CheckSum checkSum;
+    public CheckSumMgr checkSum;
 }
 
 public class CheckSum
@@ -19,17 +19,6 @@ public class CheckSum
     List<List<int>> m_HistoryCheckSumsDetail = new List<List<int>>();
     List<List<Entity>> m_HistoryCheckSumsOrder = new List<List<Entity>>();
 
-    public CheckSum(string name)
-    {
-        this.name = name;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Reset(int frame)
-    {
-        m_Frame = frame;
-        m_HashCode = CombineHashCode(0, frame);
-    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Destroy()
@@ -66,7 +55,10 @@ public class CheckSum
     public int GetCheckSum() => m_HashCode;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void SaveCheckSum() => m_HistoryCheckSums.Add(m_HashCode);
+    public void SaveCheckSum(){
+        m_HistoryCheckSums.Add(m_HashCode);
+        m_HashCode = 0;
+    }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public List<int> GetHistory() => m_HistoryCheckSums;
     public List<List<int>> GetHistoryDetail() => m_HistoryCheckSumsDetail;

@@ -24,6 +24,8 @@ public class InitiazationSystem : ComponentSystemBase
                 dir = new float3(1, 0, 0),
                 id = i + 1,
                 isUser = true,
+                atk = 10,
+                hp = 3000
             });
         }
         
@@ -46,13 +48,15 @@ public class InitiazationSystem : ComponentSystemBase
             rvoSimulator = rvoSimulator
         });
 
-        EntityManager.AddComponent<ControllerHolder>(EntityManager.CreateEntity());
-        EntityManager.AddComponentData<UserListComponent>(EntityManager.CreateEntity(), new UserListComponent(){
+        EntityManager.AddComponent<ControllerHolder>(entity);
+        EntityManager.AddComponentData<UserListComponent>(entity, new UserListComponent(){
             allUser = new Unity.Collections.LowLevel.Unsafe.UnsafeList<Entity>(8, Unity.Collections.Allocator.Persistent)
         });
 
         EntityManager.AddBuffer<SpawnEventComponent>(entity);
         EntityManager.AddBuffer<DeSpawnEventComponent>(entity);
+        EntityManager.AddBuffer<HurtComponent>(entity);
+        EntityManager.AddBuffer<VHurtComponent>(entity);
     }
 
     public override void Update()

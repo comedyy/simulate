@@ -623,5 +623,62 @@ namespace RVO
 
             return point1LeftOfQ * point2LeftOfQ >= 0.0f && RVOMath.sqr(point1LeftOfQ) * invLengthQ > RVOMath.sqr(radius) && RVOMath.sqr(point2LeftOfQ) * invLengthQ > RVOMath.sqr(radius) && queryVisibilityRecursive(q1, q2, radius, node.left_) && queryVisibilityRecursive(q1, q2, radius, node.right_);
         }
+
+        
+        public void QueryNearByAgents(Vector2 pos, List<int> list, float range)
+        {
+            if (agentTree_.Length == 0)
+            {
+                return;
+            }
+
+            QueryNearByAgents(pos, list, range * range, 0);
+        }
+
+        void QueryNearByAgents(Vector2 pos, List<int> list, float rangeSq, int node)
+        {
+             if (agentTree_[node].end_ - agentTree_[node].begin_ <= MAX_LEAF_SIZE)
+            {
+                for (int i = agentTree_[node].begin_; i < agentTree_[node].end_; ++i)
+                {
+                    // 加入列表
+                    float distSq = RVOMath.absSq(pos - agents_[i].position_);
+                    if (distSq < rangeSq) {
+                        list.Add(agents_[i].id_);
+                    }
+                }
+            }
+            else
+            {
+                float distSqLeft = RVOMath.sqr(Math.Max(0.0f, agentTree_[agentTree_[node].left_].minX_ - pos.x_)) + RVOMath.sqr(Math.Max(0.0f, pos.x_ - agentTree_[agentTree_[node].left_].maxX_)) + RVOMath.sqr(Math.Max(0.0f, agentTree_[agentTree_[node].left_].minY_ - pos.y_)) + RVOMath.sqr(Math.Max(0.0f, pos.y_ - agentTree_[agentTree_[node].left_].maxY_));
+                float distSqRight = RVOMath.sqr(Math.Max(0.0f, agentTree_[agentTree_[node].right_].minX_ - pos.x_)) + RVOMath.sqr(Math.Max(0.0f, pos.x_ - agentTree_[agentTree_[node].right_].maxX_)) + RVOMath.sqr(Math.Max(0.0f, agentTree_[agentTree_[node].right_].minY_ - pos.y_)) + RVOMath.sqr(Math.Max(0.0f, pos.y_ - agentTree_[agentTree_[node].right_].maxY_));
+
+                if (distSqLeft < distSqRight)
+                {
+                    if (distSqLeft < rangeSq)
+                    {
+                        QueryNearByAgents(pos, list, rangeSq, agentTree_[node].left_);
+
+                        if (distSqRight < rangeSq)
+                        {
+                            QueryNearByAgents(pos, list, rangeSq, agentTree_[node].right_);
+                        }
+                    }
+                }
+                else
+                {
+                    if (distSqRight < rangeSq)
+                    {
+                        QueryNearByAgents(pos, list, rangeSq, agentTree_[node].right_);
+
+                        if (distSqLeft < rangeSq)
+                        {
+                            QueryNearByAgents(pos, list, rangeSq, agentTree_[node].left_);
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }

@@ -17,13 +17,20 @@ public class CalHashSystem : ComponentSystem
         var checkSum = this.GetSingletonObject<CheckSumComponet>().checkSum;
 
         int frame = GetSingleton<LogicTime>().frameCount;
-        // checkSum.Reset(0);
         
         Entities.ForEach((Entity entity, ref LTransformComponet ls)=>{
-            checkSum.CheckValue(entity, ls.position.GetHashCode());
-            checkSum.CheckValue(entity, ls.rotation.GetHashCode());
+            checkSum.positionChecksum.CheckValue(entity, ls.position.GetHashCode());
+            checkSum.positionChecksum.CheckValue(entity, ls.rotation.GetHashCode());
         });
 
-        checkSum.SaveCheckSum();
+        checkSum.positionChecksum.SaveCheckSum();
+
+        Entities.ForEach((Entity entity, ref HpComponent ls)=>{
+            checkSum.hpCheckSum.CheckValue(entity, ls.hp.GetHashCode());
+        });
+
+        checkSum.hpCheckSum.SaveCheckSum();
+
+        checkSum.targetFindCheckSum.SaveCheckSum();
     }
 }

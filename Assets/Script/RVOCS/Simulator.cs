@@ -34,6 +34,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Entities;
 
 namespace RVO
 {
@@ -125,7 +126,7 @@ namespace RVO
          * <param name="velocity">The initial two-dimensional linear velocity of
          * this agent.</param>
          */
-        public int addAgent(Vector2 position, float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity)
+        public int addAgent(Vector2 position, float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity, Entity entity)
         {
             Agent agent = new Agent();
             agent.id_ = agents_.Count;
@@ -138,6 +139,7 @@ namespace RVO
             agent.timeHorizonObst_ = timeHorizonObst;
             agent.velocity_ = velocity;
             agent.simulator_ = this;
+            agent.entity = entity;
             agents_.Add(agent);
 
             return agent.id_;
@@ -767,6 +769,26 @@ namespace RVO
         public void setTimeStep(float timeStep)
         {
             timeStep_ = timeStep;
+        }
+
+        List<int> listIds = new List<int>();
+        public void FindAgents(RVO.Vector2 position, float range, List<Entity> list)
+        {
+            // kdTree_.queryAgentTreeRecursive
+
+            listIds.Clear();
+            kdTree_.QueryNearByAgents(position, listIds, range);
+
+            foreach (var item in listIds)
+            {
+                var pos = agents_[item].position_;
+                var radius = agents_[item].radius_;
+
+                if((range + radius)*(range + radius) > RVOMath.absSq(pos - position))
+                {
+                    list.Add(agents_[item].entity);
+                }
+            }
         }
 
         /**

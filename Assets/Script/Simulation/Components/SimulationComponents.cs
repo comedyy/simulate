@@ -44,6 +44,8 @@ public struct SpawnEvent : IComponentData
     public float aiInterval;
     public float despawnTime;
     internal int id;
+    public int hp;
+    public int atk;
 }
 
 public struct SpawnMonsterComponent: IComponentData
@@ -103,20 +105,16 @@ public struct ControllerHolder : IComponentData
     public Entity controller;
 }
 
-public struct VSpawnEvent : IComponentData
-{
-    public Entity target;
-    public bool isUser;
-    public  int id;
-}
-
-
-public struct VDespawnEvent : IComponentData
-{
-    public Entity target;
-}
-
 public struct UserListComponent : IComponentData
 {
     public UnsafeList<Entity> allUser;
 }
+
+public struct SkillComponent : IComponentData
+{
+    public float interval;
+    public float range;
+    public float preHurtTime;
+}
+
+public struct UserTag : IComponentData{}

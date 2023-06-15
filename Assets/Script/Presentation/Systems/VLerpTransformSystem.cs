@@ -11,6 +11,10 @@ public class VLerpTransformSystem : ComponentSystem
         if(!HasSingleton<ControllerHolder>()) return;
         var userEntity = GetSingleton<ControllerHolder>().controller;
         Entities.ForEach((Entity entity, GameObjectBindingComponent binding, ref VLerpTransformCopmnet lerp, ref LTransformComponet lTransformCom)=>{
+            if(binding.obj == null)
+            {
+                UnityEngine.Debug.LogError($"=== not found {entity}");
+            }
             if(lerp.lerpTime == 0)
             {
                 if(entity == userEntity)
@@ -37,7 +41,10 @@ public class VLerpTransformSystem : ComponentSystem
             }
             else
             {
-                binding.obj.transform.SetPositionAndRotation(pos, rotation);
+                if(binding.obj != null)
+                {
+                    binding.obj.transform.SetPositionAndRotation(pos, rotation);
+                }
             }
         });
     }

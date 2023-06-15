@@ -9,6 +9,8 @@ public class MonsterAiSytem : ComponentSystem
         var escaped = GetSingleton<LogicTime>().escaped;
         var listUser = GetSingleton<UserListComponent>().allUser;
 
+        if(listUser.length == 0) return;
+
         Entities.ForEach((ref MonsterAiComponent ai, ref LMoveByDirComponent moveByDirComponent, ref LTransformComponet trans)=>{
 
             var targetPos =  EntityManager.GetComponentData<LTransformComponet>(listUser[0]).position;

@@ -8,7 +8,7 @@ public class BattleWorld : World
     BattleEndFlag flag = new BattleEndFlag();
     public bool IsEnd => flag.isEnd;
 
-    public BattleWorld(string name, CheckSum checksum, float logicFrameInterval, LocalFrame localServer, int userId) : base(name)
+    public BattleWorld(string name, CheckSumMgr checksum, float logicFrameInterval, LocalFrame localServer, int userId) : base(name)
     {
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new CheckSumComponet(){
             checkSum = checksum
@@ -20,7 +20,7 @@ public class BattleWorld : World
         InitiazationSystem.logicFrameInterval = logicFrameInterval;
         CreateSystem<InitiazationSystem>();
         // update systems
-        InitSimulationSystem(checksum, localServer);
+        InitSimulationSystem(localServer);
 
 #if !ONLY_LOGIC
         InitPresentationSystem(localServer, userId);
@@ -28,7 +28,7 @@ public class BattleWorld : World
     }
 
 
-    public void InitSimulationSystem(CheckSum checksum, LocalFrame frame)
+    public void InitSimulationSystem(LocalFrame frame)
     {
         var group = GetOrCreateSystem<FixedTimeSystemGroup>();
         group.InitLogicTime(frame, flag);
@@ -36,8 +36,10 @@ public class BattleWorld : World
 
         var inputSystem = CreateSystem<InputUserPositionSystem>();
         inputSystem.GetAllMessage = frame.GetFrameInput;
-        group.AddSystemToUpdateList(inputSystem); // 玩家输入
+       // group.AddSystemToUpdateList(inputSystem); // 玩家输入
 
+        group.AddSystemToUpdateList(CreateSystem<CircleSkillSystem>());
+        group.AddSystemToUpdateList(CreateSystem<HurtSystem>());
 
         group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
         group.AddSystemToUpdateList(CreateSystem<MonsterAiSytem>());
@@ -69,6 +71,7 @@ public class BattleWorld : World
         system.UserId = userId;
 
         group.AddSystemToUpdateList(system);
+        group.AddSystemToUpdateList(CreateSystem<VHpColorSystem>());
         group.AddSystemToUpdateList(CreateSystem<VDespawnSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());
         group.AddSystemToUpdateList(CreateSystem<VCameraFollowSystem>());

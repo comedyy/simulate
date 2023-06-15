@@ -9,11 +9,13 @@ public class ControllerMoveSystem : ComponentSystem
     protected override void OnUpdate()
     {   
         var userEntity = GetSingleton<ControllerHolder>().controller;
-        if(userEntity == Entity.Null) return;
+        if(!EntityManager.Exists(userEntity)) return;
 
         var controllerHolder = GetSingleton<ControllerHolder>();
         var controllerEntity = controllerHolder.controller;
         var binding = EntityManager.GetComponentData<GameObjectBindingComponent>(controllerEntity);
+        if(binding.obj == null) return;
+
         var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
 
         var angle = GetAngle();

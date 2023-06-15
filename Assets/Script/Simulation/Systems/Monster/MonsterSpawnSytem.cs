@@ -42,7 +42,8 @@ public class MonsterSpawnSytem : ComponentSystem
                 position = new float3(RandomUtils.Random(random, 10), 0, RandomUtils.Random(random, 10)),
                 dir = new float3(cos, 0, sin),
                 aiInterval = 1f,
-                despawnTime = 5 + escaped
+                despawnTime = 5 + escaped,
+                hp = 50,atk = 5
             });    
         }
 

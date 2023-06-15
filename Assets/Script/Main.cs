@@ -14,7 +14,7 @@ public class Main : MonoBehaviour
     public float pingSec = 0;
 
     BattleWorld[] _worlds;
-    CheckSum[] _checksums; 
+    CheckSumMgr[] _checksums; 
     LocalFrame _localFrame;
     DumpServer _dumpServer;
     DumpNetworkTransferLayer _transLayer;
@@ -35,10 +35,10 @@ public class Main : MonoBehaviour
 
 
         _worlds = new BattleWorld[worldCount];
-        _checksums = new CheckSum[worldCount];
+        _checksums = new CheckSumMgr[worldCount];
         for(int i = 0; i < worldCount; i++)
         {
-            _checksums[i] = new CheckSum(i.ToString());
+            _checksums[i] = new CheckSumMgr();
         }
 
         for(int i = 0; i < worldCount; i++)
@@ -62,7 +62,9 @@ public class Main : MonoBehaviour
         if(_worlds.All(m=>m.IsEnd))
         {
             enabled = false;
-            CheckCheckSumOfAll(_checksums);
+            CheckCheckSumOfAll("pos", _checksums.Select(m=>m.positionChecksum).ToArray());
+            CheckCheckSumOfAll("hp", _checksums.Select(m=>m.hpCheckSum).ToArray());
+            CheckCheckSumOfAll("find", _checksums.Select(m=>m.targetFindCheckSum).ToArray());
         }
 
         _transLayer.Update(pingSec);
@@ -70,10 +72,10 @@ public class Main : MonoBehaviour
         _dumpServer.Update();
     }
 
-    private void CheckCheckSumOfAll(CheckSum[] _checksums)
+    private void CheckCheckSumOfAll(string name, CheckSum[] _checksums)
     {
         var allCheckSums = _checksums.Select(m=>m.GetHistoryCheckSums()).ToArray();
-        Debug.Log(string.Join(",", allCheckSums));
+        Debug.Log($"【{name}】"  +string.Join(",", allCheckSums));
         if(allCheckSums.Distinct().Count() > 1)
         {
             Debug.LogError("发现不同步");
