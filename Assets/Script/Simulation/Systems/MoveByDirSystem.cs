@@ -22,9 +22,11 @@ public class MoveByDirSystem : ComponentSystem
 
         rvoObj.rvoSimulator.doStep();
         
-        Entities.ForEach((ref LTransformComponet tranCom, ref LRvoComponent rvoComponent)=>{
+        Entities.ForEach((ref LTransformComponet tranCom, ref LRvoComponent rvoComponent, ref VLerpTransformCopmnet com)=>{
             var pos = rvoObj.rvoSimulator.getAgentPosition(rvoComponent.rvoId);
             var forward = rvoObj.rvoSimulator.getAgentVelocity(rvoComponent.rvoId);
+
+            com.lerpTime = 0;
 
             tranCom.rotation = quaternion.LookRotation(new float3(forward.x(), 0, forward.y()), new float3(0, 1, 0));
             tranCom.position = new float3(pos.x(), 0, pos.y());

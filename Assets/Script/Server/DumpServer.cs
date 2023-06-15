@@ -12,6 +12,7 @@ public class DumpServer
     Action<ServerPackageItem> FrameCallback;
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
+    List<MessageItem> _allMessage1 = new List<MessageItem>();
 
     public void Init(float tick, Action<ServerPackageItem> frameCallback)
     {
@@ -38,7 +39,8 @@ public class DumpServer
             _allMessage.Remove(frame);
         }
 
-        BroadCastMsg(list);
+        BroadCastMsg(_allMessage1);
+        _allMessage1 = new List<MessageItem>();
 
         frame++;
     }
@@ -57,17 +59,20 @@ public class DumpServer
             return;
         }
 
-        if(!_allMessage.TryGetValue(currentFrame, out var list))
-        {
-            list = new List<MessageItem>();
-            _allMessage.Add(currentFrame, list);
-        }
+        _allMessage1.Add(packageItem.messageItem);
+        Debug.LogWarning($"Server:Recive package  {Time.time}" );
+        // if(!_allMessage.TryGetValue(currentFrame, out var list))
+        // {
+        //     list = new List<MessageItem>();
+        //     _allMessage.Add(currentFrame, list);
+        // }
 
-        list.Add(packageItem.messageItem);
+        // list.Add(packageItem.messageItem);
     }
 
     private void BroadCastMsg(List<MessageItem> list)
     {
+        // Debug.LogError($"Server:Send package  {frame} {Time.time}" );
         FrameCallback(new ServerPackageItem(){
             frame = frame, list = list
         });

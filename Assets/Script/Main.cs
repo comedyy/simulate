@@ -44,7 +44,7 @@ public class Main : MonoBehaviour
         for(int i = 0; i < worldCount; i++)
         {
             await Task.Delay(i * 10);
-            _worlds[i] = new BattleWorld("new " + i, _checksums[i], tick, _localFrame);
+            _worlds[i] = new BattleWorld("new " + i, _checksums[i], tick, _localFrame, 1);
         }
     }
 

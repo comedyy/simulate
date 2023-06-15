@@ -15,35 +15,21 @@ public class InitiazationSystem : ComponentSystemBase
     {
         base.OnCreate();
         
-        var entity = EntityManager.CreateEntity();
-        EntityManager.AddComponentData(entity, new SpawnEvent()
-        {
-            position = new float3(3, 0, 3),
-            dir = 0,
-            isUser = true,
-            isController = true
-        });
 
-        entity = EntityManager.CreateEntity();
-        EntityManager.AddComponentData(entity, new SpawnEvent()
+        for(int i = 0; i < 1; i++)
         {
-            position = new float3(3, 0, 1),
-            dir = 0,
-            isUser = true,
-            isController = false
-        });
-
-        entity = EntityManager.CreateEntity();
-        EntityManager.AddComponentData(entity, new SpawnEvent()
-        {
-            position = new float3(3, 0, 6),
-            dir = 0,
-            isUser = true,
-            isController = false
-        });
+            EntityManager.AddComponentData(EntityManager.CreateEntity(), new SpawnEvent()
+            {
+                position = new float3(3, 0, 3),
+                dir = 0,
+                id = i + 1,
+                isUser = true,
+            });
+        }
+        
 
         // singetons
-        entity = EntityManager.CreateEntity();
+        var entity = EntityManager.CreateEntity();
         EntityManager.AddComponentData(entity, new LogicTime(){
             deltaTime = logicFrameInterval
         });

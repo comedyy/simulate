@@ -42,6 +42,7 @@ public class LocalFrame
                 messageItem = messageItem
             });
             messageItem = default;
+            // Debug.LogWarning($"Client:send package  {Time.time}" );
         }
     }
 
@@ -76,12 +77,20 @@ public class LocalFrame
         }
 
         ReceivedServerFrame = frame;
+        // Debug.LogError($"Client:receive package {frame} {Time.time} count:{_allMessage.Count}" );
     }
 
     public List<MessageItem> GetFrameInput(int frame)
     {
         if(_allMessage.TryGetValue(frame, out var list))
         {
+            _allMessage.Remove(frame);
+
+            // if(list != null && list.Count > 0)
+            // {
+            //     UnityEngine.Debug.LogError($"{frame} {list[0].pos} {Time.time}");
+            // }
+
             return list;
         }
 

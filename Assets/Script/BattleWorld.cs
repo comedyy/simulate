@@ -8,7 +8,7 @@ public class BattleWorld : World
     BattleEndFlag flag = new BattleEndFlag();
     public bool IsEnd => flag.isEnd;
 
-    public BattleWorld(string name, CheckSum checksum, float logicFrameInterval, LocalFrame localServer) : base(name)
+    public BattleWorld(string name, CheckSum checksum, float logicFrameInterval, LocalFrame localServer, int userId) : base(name)
     {
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new CheckSumComponet(){
             checkSum = checksum
@@ -23,7 +23,7 @@ public class BattleWorld : World
         InitSimulationSystem(checksum, localServer);
 
 #if !ONLY_LOGIC
-        InitPresentationSystem(localServer);
+        InitPresentationSystem(localServer, userId);
 #endif
     }
 
@@ -39,15 +39,15 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(inputSystem); // 玩家输入
 
 
-        group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
+        // group.AddSystemToUpdateList(CreateSystem<MonsterSpawnSytem>());
         group.AddSystemToUpdateList(CreateSystem<MonsterAiSytem>());
         group.AddSystemToUpdateList(CreateSystem<MosnterDespawnSystem>());
         
         group.AddSystemToUpdateList(CreateSystem<SpawnTargetSystem>());
         
-        group.AddSystemToUpdateList(CreateSystem<RecordPrePositionSystem>());
+        // group.AddSystemToUpdateList(CreateSystem<RecordPrePositionSystem>());
         group.AddSystemToUpdateList(CreateSystem<MoveByDirSystem>());
-        group.AddSystemToUpdateList(CreateSystem<MoveByPosSystem>());
+        // group.AddSystemToUpdateList(CreateSystem<MoveByosSystem>());
 
         var timeoutSystem = CreateSystem<GameTimeoutSystem>();
         timeoutSystem.flag = flag;
@@ -57,14 +57,18 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<CalHashSystem>());
     }
 
-    public void InitPresentationSystem(LocalFrame localServer)
+    public void InitPresentationSystem(LocalFrame localServer, int userId)
     {
         var group = GetOrCreateSystem<CustomSystems3>();
         GetOrCreateSystem<PresentationSystemGroup>().AddSystemToUpdateList(group);
 
         // add all simulation systems
         group.AddSystemToUpdateList(CreateSystem<UpdateWorldTimeSystem>());
-        group.AddSystemToUpdateList(CreateSystem<VSpawnTargetSystem>());
+
+        var system = CreateSystem<VSpawnTargetSystem>();
+        system.UserId = userId;
+
+        group.AddSystemToUpdateList(system);
         group.AddSystemToUpdateList(CreateSystem<VDespawnSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());
         group.AddSystemToUpdateList(CreateSystem<VCameraFollowSystem>());

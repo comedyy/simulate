@@ -42,7 +42,7 @@ public struct SpawnEvent : IComponentData
     public bool isUser;
     public float aiInterval;
     public float despawnTime;
-    internal bool isController;
+    internal int id;
 }
 
 public struct SpawnMonsterComponent: IComponentData
@@ -75,9 +75,9 @@ public struct LogicTime : IComponentData
 
 public struct VLerpTransformCopmnet : IComponentData
 {
-    public float3 preLogicPos;
-    public quaternion preLogicRatation;
-    public float lerpTime;
+    public float3 lerpBeginPos;  // lerp开始的位置。
+    public quaternion lerpBeginRotation; // lerp开始的rotation
+    public float lerpTime;              // 已经lerp多久了。
 }
 
 public class GameObjectBindingComponent : IComponentData, IEquatable<GameObjectBindingComponent>
@@ -106,7 +106,7 @@ public struct VSpawnEvent : IComponentData
 {
     public Entity target;
     public bool isUser;
-    public bool isContorller;
+    public  int id;
 }
 
 

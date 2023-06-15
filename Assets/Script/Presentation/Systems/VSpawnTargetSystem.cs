@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class VSpawnTargetSystem : ComponentSystem
 {
+    public int UserId { get; internal set; }
+
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -13,7 +15,8 @@ public class VSpawnTargetSystem : ComponentSystem
     {
         Entities.ForEach((Entity entity, ref VSpawnEvent ev)=>{
             GameObject prefab = null;
-            if(ev.isContorller) prefab = Resources.Load<GameObject>("Controller");
+            var isController = ev.id == UserId;
+            if(isController) prefab = Resources.Load<GameObject>("Controller");
             else if(ev.isUser) prefab = Resources.Load<GameObject>("Role");
             else prefab = Resources.Load<GameObject>("Monster");
 
@@ -23,7 +26,7 @@ public class VSpawnTargetSystem : ComponentSystem
             };
             EntityManager.AddComponentData(ev.target, com);
 
-            if(ev.isContorller)
+            if(isController)
             {
                 SetSingleton(new ControllerHolder(){
                     controller = ev.target

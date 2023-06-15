@@ -8,7 +8,8 @@ public class ControllerMoveSystem : ComponentSystem
 
     protected override void OnUpdate()
     {   
-        if(!HasSingleton<ControllerHolder>()) return;
+        var userEntity = GetSingleton<ControllerHolder>().controller;
+        if(userEntity == Entity.Null) return;
 
         var controllerHolder = GetSingleton<ControllerHolder>();
         var controllerEntity = controllerHolder.controller;

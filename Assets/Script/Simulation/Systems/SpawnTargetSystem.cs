@@ -20,7 +20,7 @@ public class SpawnTargetSystem : ComponentSystem
 
     ComponentType[] archetypeUserComponents = new ComponentType[]{
         typeof(LTransformComponet), 
-        typeof(LMoveByPosComponent), 
+        // typeof(LMoveByPosComponent), 
         typeof(MoveSpeedComponent),
         typeof(VLerpTransformCopmnet), 
         typeof(SizeComponent),
@@ -52,9 +52,9 @@ public class SpawnTargetSystem : ComponentSystem
             {
                 entity = EntityManager.CreateEntity(_controllerArchetype);
                 
-                var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);
-                move.pos = ev.position;
-                EntityManager.SetComponentData(entity, move);
+                // var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);
+                // move.pos = ev.position;
+                // EntityManager.SetComponentData(entity, move);
             }
             else
             {
@@ -93,7 +93,7 @@ public class SpawnTargetSystem : ComponentSystem
             EntityManager.AddComponentData(vSpwanEntity, new VSpawnEvent(){
                 target = entity,
                 isUser = ev.isUser,
-                isContorller = ev.isController
+                id = ev.id
             });
 
             EntityManager.DestroyEntity(evEntity);
