@@ -27,7 +27,7 @@ public class LocalFrame
     Action<PackageItem> SendMsg;
     public int ReceivedServerFrame;
 
-    MessageItem messageItem;
+    List<MessageItem> messageItemList = new List<MessageItem>();
 
     public void Init(float tick, Action<PackageItem> SendMsg)
     {
@@ -49,20 +49,25 @@ public class LocalFrame
         preFrameSeconds += _tick;
         frame++;
 
-        if(messageItem.id != 0)
+        if(messageItemList.Count > 0)
         {
-            SendMsg(new PackageItem(){
-                frame = frame,
-                messageItem = messageItem
-            });
-            messageItem = default;
+            foreach(var x in messageItemList)
+            {
+                SendMsg(new PackageItem(){
+                    frame = frame,
+                    messageItem = x
+                });
+            }
+            
             // Debug.LogWarning($"Client:send package  {Time.time}" );
         }
+
+        messageItemList.Clear();
     }
 
     public void SetData(MessageItem messageItem)
     {
-        this.messageItem = messageItem;
+        messageItemList.Add(messageItem);
     }
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();

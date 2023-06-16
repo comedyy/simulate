@@ -66,7 +66,6 @@ public class DumpNetworkTransferLayer
             }
         }
 
-
         while (_receiveList.Count > 0)
         {
             if(_receiveList.Peek().addTime < Time.time)

@@ -121,3 +121,8 @@ public struct UserComponnet : IComponentData
 {
     public int id;
 }
+
+public struct UserAiComponent : IComponentData
+{
+    public float3 offsetToController;
+}
