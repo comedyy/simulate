@@ -14,7 +14,7 @@ public class CircleSkillSystem : ComponentSystem
         var buffer = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
 
         var listUser = GetSingleton<UserListComponent>().allUser;
-        Entities.WithNone<UserTag>().ForEach((Entity entity, ref LTransformComponet trans, ref AtkComponent atk, ref SkillComponent skill)=>{
+        Entities.WithNone<UserComponnet>().ForEach((Entity entity, ref LTransformComponet trans, ref AtkComponent atk, ref SkillComponent skill)=>{
 
             if(logic.escaped - skill.preHurtTime < skill.interval) return;
             skill.preHurtTime = logic.escaped;
@@ -38,7 +38,7 @@ public class CircleSkillSystem : ComponentSystem
 
         var checkSum = this.GetSingletonObject<CheckSumComponet>().checkSum;
         var rvo = this.GetSingletonObject<RvoSimulatorComponet>().rvoSimulator;
-        Entities.ForEach((ref LTransformComponet trans, ref AtkComponent atk, ref SkillComponent skill, ref UserTag tag)=>{
+        Entities.ForEach((ref LTransformComponet trans, ref AtkComponent atk, ref SkillComponent skill, ref UserComponnet tag)=>{
             if(logic.escaped - skill.preHurtTime < skill.interval) return;
             skill.preHurtTime = logic.escaped;
 

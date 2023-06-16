@@ -30,7 +30,7 @@ public class SpawnTargetSystem : ComponentSystem
         typeof(HpComponent),
         typeof(AtkComponent),
         typeof(SkillComponent),
-        typeof(UserTag),
+        typeof(UserComponnet),
 
         typeof(GameObjectBindingComponent)
 
@@ -65,6 +65,10 @@ public class SpawnTargetSystem : ComponentSystem
 
                 EntityManager.SetComponentData(entity, new SkillComponent(){
                      range = 5, interval = 0.3f
+                });
+
+                EntityManager.SetComponentData(entity, new UserComponnet(){
+                    id = ev.id
                 });
                 
                 // var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);

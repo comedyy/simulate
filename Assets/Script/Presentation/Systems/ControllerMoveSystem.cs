@@ -29,7 +29,7 @@ public class ControllerMoveSystem : ComponentSystem
         tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
 
         localServer.SetData(new MessageItem(){
-            pos = tranCom.position, entity = controllerEntity
+            pos = tranCom.position, id = EntityManager.GetComponentData<UserComponnet>(controllerEntity).id
         });
 
         // simulate other role behavior

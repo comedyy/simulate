@@ -1,8 +1,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Unity.Entities;
 using UnityEngine;
+
+[Serializable]
+struct PlaybackInfo
+{
+    public PlayBackInfoItem[] infos;
+}
+
+[Serializable]
+struct PlayBackInfoItem
+{
+    public int frame;
+    public List<MessageItem> item;
+}
 
 public class LocalFrame
 {
@@ -35,7 +49,7 @@ public class LocalFrame
         preFrameSeconds += _tick;
         frame++;
 
-        if(messageItem.entity != Entity.Null)
+        if(messageItem.id != 0)
         {
             SendMsg(new PackageItem(){
                 frame = frame,
@@ -71,7 +85,7 @@ public class LocalFrame
             return;
         }
 
-        if(list != null)
+        if(list != null && list.Count > 0)
         {
             _allMessage.Add(frame, list);
         }
@@ -84,8 +98,6 @@ public class LocalFrame
     {
         if(_allMessage.TryGetValue(frame, out var list))
         {
-            _allMessage.Remove(frame);
-
             // if(list != null && list.Count > 0)
             // {
             //     UnityEngine.Debug.LogError($"{frame} {list[0].pos} {Time.time}");
@@ -95,5 +107,47 @@ public class LocalFrame
         }
 
         return null;
+    }
+
+    string path = Application.dataPath + "/../playback.json";
+    public void SavePlayback()
+    {
+        var infos = new PlayBackInfoItem[_allMessage.Count];
+        PlaybackInfo item = new PlaybackInfo(){
+            infos = infos
+        };
+
+        int count = 0;
+        foreach(var x in _allMessage)
+        {
+            infos[count++] = new PlayBackInfoItem(){
+                frame = x.Key, item = x.Value
+            };
+        }
+        var json = JsonUtility.ToJson(item, true);
+
+        File.WriteAllText(path, json);
+    }
+
+    internal void LoadPlayBackInfo()
+    {
+        if(File.Exists(path))
+        {
+            var context = File.ReadAllText(path);
+            var pkgInfo = JsonUtility.FromJson<PlaybackInfo>(context);
+
+            _allMessage.Clear();
+            foreach (var item in pkgInfo.infos)
+            {
+                _allMessage.Add(item.frame, item.item);
+            }
+            ReceivedServerFrame = int.MaxValue;
+
+            Debug.Log("load playback info");
+        }
+        else
+        {
+            Debug.Log("not found playback info");
+        }
     }
 }

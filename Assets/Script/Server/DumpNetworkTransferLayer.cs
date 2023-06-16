@@ -57,7 +57,8 @@ public class DumpNetworkTransferLayer
         {
             if(_sendList.Peek().addTime < Time.time)
             {
-                SendMsg(_sendList.Dequeue().item);
+                var item = _sendList.Dequeue().item;
+                SendMsg?.Invoke(item);
             }
             else
             {
@@ -70,7 +71,8 @@ public class DumpNetworkTransferLayer
         {
             if(_receiveList.Peek().addTime < Time.time)
             {
-                FrameCallback(_receiveList.Dequeue().items);
+                var x = _receiveList.Dequeue().items;
+                FrameCallback?.Invoke(x);
             }
             else
             {

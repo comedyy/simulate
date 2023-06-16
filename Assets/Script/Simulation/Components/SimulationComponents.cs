@@ -117,4 +117,7 @@ public struct SkillComponent : IComponentData
     public float preHurtTime;
 }
 
-public struct UserTag : IComponentData{}
+public struct UserComponnet : IComponentData
+{
+    public int id;
+}

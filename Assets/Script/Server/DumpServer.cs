@@ -40,7 +40,7 @@ public class DumpServer
         }
 
         BroadCastMsg(_allMessage1);
-        _allMessage1 = new List<MessageItem>();
+        _allMessage1 = null;
 
         frame++;
     }
@@ -57,6 +57,11 @@ public class DumpServer
         {
             Debug.LogError("frame > 10");
             return;
+        }
+
+        if(_allMessage1 ==  null) 
+        {
+            _allMessage1 = new List<MessageItem>();
         }
 
         _allMessage1.Add(packageItem.messageItem);

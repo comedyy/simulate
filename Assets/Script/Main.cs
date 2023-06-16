@@ -12,6 +12,8 @@ public class Main : MonoBehaviour
     public int worldCount = 1;
     public int LogicFrameCount = 20;
     public float pingSec = 0;
+    public bool usePlaybackInput;
+    public bool savePlayback;
 
     BattleWorld[] _worlds;
     CheckSumMgr[] _checksums; 
@@ -31,8 +33,14 @@ public class Main : MonoBehaviour
         _localFrame.Init(tick, _transLayer.Send);
         _dumpServer.Init(tick, _transLayer.Receive);
 
-        _transLayer.Init(_dumpServer.AddMessage, _localFrame.OnReceive);
-
+        if(!usePlaybackInput)
+        {
+            _transLayer.Init(_dumpServer.AddMessage, _localFrame.OnReceive);
+        }
+        else
+        {
+            _localFrame.LoadPlayBackInfo();
+        }
 
         _worlds = new BattleWorld[worldCount];
         _checksums = new CheckSumMgr[worldCount];
@@ -65,6 +73,12 @@ public class Main : MonoBehaviour
             CheckCheckSumOfAll("pos", _checksums.Select(m=>m.positionChecksum).ToArray());
             CheckCheckSumOfAll("hp", _checksums.Select(m=>m.hpCheckSum).ToArray());
             CheckCheckSumOfAll("find", _checksums.Select(m=>m.targetFindCheckSum).ToArray());
+
+            
+            if(savePlayback)
+            {
+                _localFrame.SavePlayback();
+            }
         }
 
         _transLayer.Update(pingSec);
