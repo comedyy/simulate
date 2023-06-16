@@ -9,19 +9,23 @@ public class DumpServer
     public float totalSeconds;
     public float preFrameSeconds;
     float _tick;
-    Action<ServerPackageItem> FrameCallback;
+    event Action<ServerPackageItem> FrameCallback;
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
     List<MessageItem> _allMessage1 = new List<MessageItem>();
 
-    public void Init(float tick, Action<ServerPackageItem> frameCallback)
+    public DumpServer(float tick)
     {
         frame = 1;
         totalSeconds = 0;
         preFrameSeconds = 0;
         _tick = tick;
         _allMessage.Clear();
-        FrameCallback = frameCallback;
+    }
+
+    public void AddCallback(Action<ServerPackageItem> frameCallback)
+    {
+        FrameCallback += frameCallback;
     }
 
     public void Update()

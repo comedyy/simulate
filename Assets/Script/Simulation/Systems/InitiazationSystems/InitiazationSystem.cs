@@ -5,6 +5,7 @@ using System;
 public class InitiazationSystem : ComponentSystemBase
 {
     public static float logicFrameInterval;
+    public static int userCount;
 
     public void Init(float v)
     {
@@ -16,7 +17,7 @@ public class InitiazationSystem : ComponentSystemBase
         base.OnCreate();
         
 
-        for(int i = 0; i < 2; i++)
+        for(int i = 0; i < userCount; i++)
         {
             EntityManager.AddComponentData(EntityManager.CreateEntity(), new SpawnEvent()
             {

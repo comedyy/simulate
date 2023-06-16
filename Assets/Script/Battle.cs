@@ -7,17 +7,15 @@ public class Battle
     public CheckSumMgr CheckSumMgr => _checkSumMgr;
 
     LocalFrame _localFrame;
-    DumpServer _dumpServer;
     DumpNetworkTransferLayer _transLayer;
 
-    public Battle(float tick, float pingSec, bool randomFixedCount, bool usePlaybackInput, int i)
+    public Battle(float tick, float pingSec, bool randomFixedCount, bool usePlaybackInput, int i, DumpServer _dumpServer, int userCount)
     {
-        _dumpServer = new DumpServer();
         _localFrame = new LocalFrame();
         _transLayer = new DumpNetworkTransferLayer(pingSec);
 
         _localFrame.Init(tick, _transLayer.Send);
-        _dumpServer.Init(tick, _transLayer.Receive);
+        _dumpServer?.AddCallback(_transLayer.Receive);
 
         if(!usePlaybackInput)
         {
@@ -29,7 +27,7 @@ public class Battle
         }
 
         _checkSumMgr = new CheckSumMgr();
-        _world = new BattleWorld("new " + i, _checkSumMgr, randomFixedCount, tick, _localFrame, 1);
+        _world = new BattleWorld("new " + i, _checkSumMgr, randomFixedCount, tick, _localFrame, i, userCount);
     }
 
     public bool IsEnd => _world.IsEnd;
@@ -43,7 +41,6 @@ public class Battle
 
         _transLayer.Update(pingSec);
         _localFrame.Update();
-        _dumpServer.Update();
     }
 
     internal void SavePlayback()

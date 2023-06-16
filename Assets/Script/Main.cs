@@ -10,29 +10,45 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     public int LogicFrameCount = 15;
+    public int countUser = 1;
     public float pingSec = 0;
     public bool savePlayback;
 
-    Battle _battle;
+    DumpServer _dumpServer;
+    Battle[] _battles;
 
     // Start is called before the first frame update
     async void Start()
     {
         var tick = 1f / LogicFrameCount;
-        _battle = new Battle(tick, pingSec, false, false, 1);
+        _dumpServer = new DumpServer(tick);
+
+        _battles = new Battle[countUser];
+        for(int i = 0; i < countUser; i++)
+        {
+            _battles[i] = new Battle(tick, pingSec, false, false, i + 1, _dumpServer, countUser);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(_battle != null && !_battle.IsEnd)
+        foreach(var battle in _battles)
         {
-            _battle.Update(pingSec);
+            if(battle != null && !battle.IsEnd)
+            {
+                battle.Update(pingSec);
+            }
         }
+        
+        _dumpServer.Update();
     }
 
     void OnDestroy()
     {
-        _battle.Dispose();
+        foreach (var item in _battles)
+        {
+            item.Dispose();
+        }
     }
 }

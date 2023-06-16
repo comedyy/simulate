@@ -16,33 +16,49 @@ public class ControllerMoveSystem : ComponentSystem
         var controllerEntity = controllerHolder.controller;
         var binding = EntityManager.GetComponentData<GameObjectBindingComponent>(controllerEntity);
         if(binding.obj == null) return;
+        int controllerId = EntityManager.GetComponentData<UserComponnet>(controllerEntity).id;
 
         var tranCom = binding.obj.transform;
-        UpdateOtherUser((float3)tranCom.position, controllerEntity);
+        if(controllerId == 1)   // 用户
+        {
+             var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
 
-        var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
+            var angle = GetAngle();
 
-        var angle = GetAngle();
+            if(angle < 0) return;
 
-        if(angle < 0) return;
+            tranCom.rotation = math.nlerp(tranCom.rotation, quaternion.RotateY(angle), 0.05f);
+            var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
+            tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
 
-
-        tranCom.rotation = math.nlerp(tranCom.rotation, quaternion.RotateY(angle), 0.05f);
-        var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
-        tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
-
-        int controllerId = EntityManager.GetComponentData<UserComponnet>(controllerEntity).id;
-        localServer.SetData(new MessageItem(){
-            pos = tranCom.position, id = controllerId
-        });
-        
+            localServer.SetData(new MessageItem(){
+                pos = tranCom.position, id = controllerId
+            });
+        }
+        else    // ai
+        {
+            UpdateOtherUser();
+        }
     }
 
-    private void UpdateOtherUser(float3 controllerPos, Entity controllerEntity)
+    private void UpdateOtherUser()
     {
+        float3 controllerPos = default;
+        Entity controllerEntity = default;
+
         // simulate other role behavior
         // 保持跟玩家的相对位置。
         var list = GetSingleton<UserListComponent>().allUser;
+        for(int i = 0; i < list.length; i++)
+        {
+            if(EntityManager.GetComponentData<UserComponnet>(list[i]).id == 1)
+            {
+                controllerEntity = list[i];
+                controllerPos = EntityManager.GetComponentData<LTransformComponet>(controllerEntity).position;
+                continue;
+            }
+        }
+
         for(int i = 0; i < list.length; i++)
         {
             if(list[i] == controllerEntity)
