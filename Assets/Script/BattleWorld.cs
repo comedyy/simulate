@@ -8,7 +8,7 @@ public class BattleWorld : World
     BattleEndFlag flag = new BattleEndFlag();
     public bool IsEnd => flag.isEnd;
 
-    public BattleWorld(string name, CheckSumMgr checksum, float logicFrameInterval, LocalFrame localServer, int userId) : base(name)
+    public BattleWorld(string name, CheckSumMgr checksum, bool randomFixedCount, float logicFrameInterval, LocalFrame localServer, int userId) : base(name)
     {
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new CheckSumComponet(){
             checkSum = checksum
@@ -20,7 +20,7 @@ public class BattleWorld : World
         InitiazationSystem.logicFrameInterval = logicFrameInterval;
         CreateSystem<InitiazationSystem>();
         // update systems
-        InitSimulationSystem(localServer);
+        InitSimulationSystem(localServer, randomFixedCount);
 
 #if !ONLY_LOGIC
         InitPresentationSystem(localServer, userId);
@@ -28,10 +28,10 @@ public class BattleWorld : World
     }
 
 
-    public void InitSimulationSystem(LocalFrame frame)
+    public void InitSimulationSystem(LocalFrame frame, bool randomFixedCount)
     {
         var group = GetOrCreateSystem<FixedTimeSystemGroup>();
-        group.InitLogicTime(frame, flag);
+        group.InitLogicTime(frame, flag, randomFixedCount);
         GetOrCreateSystem<Unity.Entities.SimulationSystemGroup>().AddSystemToUpdateList(group);
 
         var inputSystem = CreateSystem<InputUserPositionSystem>();

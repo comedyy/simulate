@@ -8,6 +8,7 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
     bool _firstTickFinished;
     LocalFrame _localFrame;
     BattleEndFlag _flag;
+    bool _needRandomFixedCount;
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -16,10 +17,11 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
         _firstTickFinished = false;
     }
 
-    internal void InitLogicTime(LocalFrame localFrame, BattleEndFlag flag)
+    internal void InitLogicTime(LocalFrame localFrame, BattleEndFlag flag, bool needRandomFixedCount)
     {
         _localFrame = localFrame;
         _flag = flag;
+        _needRandomFixedCount = needRandomFixedCount;
     }
     
     protected override void OnUpdate()
@@ -45,7 +47,11 @@ public class FixedTimeSystemGroup : ComponentSystemGroup
 
             if(_flag.isEnd) return; // 游戏已经结束
 
-            if (!_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime)
+            var condition = true;
+            if(_needRandomFixedCount) condition = count-- > 0;
+            else condition = !_firstTickFinished || elapsedTime - lastTime >= logicTime.deltaTime;
+
+            if (condition)
             // if((count--) > 0)
             {
                 _firstTickFinished = true;

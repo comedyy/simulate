@@ -10,7 +10,7 @@ public class Battle
     DumpServer _dumpServer;
     DumpNetworkTransferLayer _transLayer;
 
-    public Battle(float tick, float pingSec, bool usePlaybackInput, int i)
+    public Battle(float tick, float pingSec, bool randomFixedCount, bool usePlaybackInput, int i)
     {
         _dumpServer = new DumpServer();
         _localFrame = new LocalFrame();
@@ -29,7 +29,7 @@ public class Battle
         }
 
         _checkSumMgr = new CheckSumMgr();
-        _world = new BattleWorld("new " + i, _checkSumMgr, tick, _localFrame, 1);
+        _world = new BattleWorld("new " + i, _checkSumMgr, randomFixedCount, tick, _localFrame, 1);
     }
 
     public bool IsEnd => _world.IsEnd;
