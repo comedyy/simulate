@@ -15,75 +15,44 @@ public class Main : MonoBehaviour
     public bool usePlaybackInput;
     public bool savePlayback;
 
-    BattleWorld[] _worlds;
-    CheckSumMgr[] _checksums; 
-    LocalFrame _localFrame;
-    DumpServer _dumpServer;
-    DumpNetworkTransferLayer _transLayer;
+    Battle[] _battles;
 
     // Start is called before the first frame update
     async void Start()
     {
         var tick = 1f / LogicFrameCount;
 
-        _dumpServer = new DumpServer();
-        _localFrame = new LocalFrame();
-        _transLayer = new DumpNetworkTransferLayer(pingSec);
-
-        _localFrame.Init(tick, _transLayer.Send);
-        _dumpServer.Init(tick, _transLayer.Receive);
-
-        if(!usePlaybackInput)
-        {
-            _transLayer.Init(_dumpServer.AddMessage, _localFrame.OnReceive);
-        }
-        else
-        {
-            _localFrame.LoadPlayBackInfo();
-        }
-
-        _worlds = new BattleWorld[worldCount];
-        _checksums = new CheckSumMgr[worldCount];
-        for(int i = 0; i < worldCount; i++)
-        {
-            _checksums[i] = new CheckSumMgr();
-        }
-
+        _battles = new Battle[worldCount];
         for(int i = 0; i < worldCount; i++)
         {
             await Task.Delay(i * 10);
-            _worlds[i] = new BattleWorld("new " + i, _checksums[i], tick, _localFrame, 1);
+            _battles[i] = new Battle(tick, pingSec, usePlaybackInput, i);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        for(int i = 0; i < _worlds.Length; i++)
+        for(int i = 0; i < _battles.Length; i++)
         {
-            if(_worlds[i] != null && !_worlds[i].IsEnd)
+            if(_battles[i] != null && !_battles[i].IsEnd)
             {
-                _worlds[i].Update();
+                _battles[i].Update(pingSec);
             }
         }
 
-        if(_worlds.All(m=>m.IsEnd))
+        if(_battles.All(m=>m.IsEnd))
         {
             enabled = false;
-            CheckCheckSumOfAll("pos", _checksums.Select(m=>m.positionChecksum).ToArray());
-            CheckCheckSumOfAll("hp", _checksums.Select(m=>m.hpCheckSum).ToArray());
-            CheckCheckSumOfAll("find", _checksums.Select(m=>m.targetFindCheckSum).ToArray());
-
+            CheckCheckSumOfAll("pos", _battles.Select(m=>m.CheckSumMgr.positionChecksum).ToArray());
+            CheckCheckSumOfAll("hp", _battles.Select(m=>m.CheckSumMgr.hpCheckSum).ToArray());
+            CheckCheckSumOfAll("find", _battles.Select(m=>m.CheckSumMgr.targetFindCheckSum).ToArray());
             
             if(savePlayback)
             {
-                _localFrame.SavePlayback();
+                _battles[0].SavePlayback();
             }
         }
-
-        _transLayer.Update(pingSec);
-        _localFrame.Update();
-        _dumpServer.Update();
     }
 
     private void CheckCheckSumOfAll(string name, CheckSum[] _checksums)
@@ -103,7 +72,7 @@ public class Main : MonoBehaviour
             var first = _checksums[0];
             for(int i = 0; i < first.GetHistory().Count; i++)
             {
-                for(int j = 1; j < _worlds.Length; j++)
+                for(int j = 1; j < worldCount; j++)
                 {
                     // hash 不一样
                     if(first.GetHistory()[i] != _checksums[j].GetHistory()[i])
@@ -128,7 +97,7 @@ public class Main : MonoBehaviour
 
     void OnDestroy()
     {
-        foreach (var item in _worlds)
+        foreach (var item in _battles)
         {
             item.Dispose();
         }
