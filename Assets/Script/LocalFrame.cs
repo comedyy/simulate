@@ -40,8 +40,6 @@ public class LocalFrame
 
     public void Update()
     {
-        if(SendMsg == null) return;
-
         totalSeconds += Time.deltaTime;
         if(preFrameSeconds + _tick > totalSeconds)
         {

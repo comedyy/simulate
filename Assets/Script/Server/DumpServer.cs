@@ -13,7 +13,6 @@ public class DumpServer
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
     List<MessageItem> _allMessage1 = new List<MessageItem>();
-    public DumpNetworkTransferLayer _transLayer;
 
     public DumpServer(float tick)
     {
@@ -22,14 +21,15 @@ public class DumpServer
         preFrameSeconds = 0;
         _tick = tick;
         _allMessage.Clear();
-        _transLayer = new DumpNetworkTransferLayer();
-        FrameCallback += _transLayer.Receive;
     }
 
-    public void Update(float pingSec)
+    public void AddCallback(Action<ServerPackageItem> frameCallback)
     {
-        _transLayer.Update(pingSec);
+        FrameCallback += frameCallback;
+    }
 
+    public void Update()
+    {
         totalSeconds += Time.deltaTime;
         if(preFrameSeconds + _tick > totalSeconds)
         {
@@ -69,7 +69,7 @@ public class DumpServer
         }
 
         _allMessage1.Add(packageItem.messageItem);
-//         Debug.LogWarning($"Server:Recive package  {Time.time}" );
+        Debug.LogWarning($"Server:Recive package  {Time.time}" );
         // if(!_allMessage.TryGetValue(currentFrame, out var list))
         // {
         //     list = new List<MessageItem>();

@@ -41,7 +41,7 @@ public class Main : MonoBehaviour
             }
         }
         
-        _dumpServer.Update(pingSec);
+        _dumpServer.Update();
     }
 
     void OnDestroy()

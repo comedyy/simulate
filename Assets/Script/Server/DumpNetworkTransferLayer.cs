@@ -38,15 +38,15 @@ public class DumpNetworkTransferLayer
     Action<ServerPackageItem> FrameCallback;
     private float pingSec;
 
-    public DumpNetworkTransferLayer()
+    public DumpNetworkTransferLayer(float pingSec)
     {
-        this.pingSec = 0;
+        this.pingSec = pingSec;
     }
 
     public void Init(Action<PackageItem> SendMsg, Action<ServerPackageItem> FrameCallback)
     {
-        this.SendMsg += SendMsg;
-        this.FrameCallback += FrameCallback;
+        this.SendMsg = SendMsg;
+        this.FrameCallback = FrameCallback;
     }
 
     public void Update(float pingSec)
