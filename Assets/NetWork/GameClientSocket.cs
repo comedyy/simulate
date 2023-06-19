@@ -74,14 +74,18 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
 
     public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
     {
+        var msgType = (MsgType)reader.PeekByte();
         var msg = reader.GetRemainingBytes();
-        if(msg.Length == 2) // startBattle
+        if(msgType == MsgType.ServerFrameMsg)
         {
-            OnStartBattle( msg[0], msg[1] );
-            return;
+            OnReceiveMsg(msg);
         }
-
-        OnReceiveMsg(msg);
+        else if(msgType == (MsgType.StartBattle))
+        {
+            var startBattle = new BattleStartMessage();
+            startBattle.From(msg);
+            OnStartBattle((byte)startBattle.total, (byte)startBattle.userId);
+        }
     }
 
     public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)

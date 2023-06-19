@@ -105,7 +105,9 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
 
     public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
     {
+        var msgType = (MsgType)reader.PeekInt();
         var msg = reader.GetRemainingBytes();
+
         OnReceiveMsg(msg);
     }
 #endregion
@@ -120,8 +122,12 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
         for(int i = 0; i < _ourPeers.Count; i++)
         {
             var peer = _ourPeers[i];
-
-            byte[] bytes = new byte[]{(byte)_ourPeers.Count, (byte)(i+1)};
+            
+            BattleStartMessage start = new BattleStartMessage(){
+                total = _ourPeers.Count,
+                userId = i+1
+            };
+            byte[] bytes = start.ToBytes();
             _dataWriter.Reset();
             _dataWriter.Put(bytes);
 

@@ -16,6 +16,7 @@ public class Server
     List<MessageItem> _allMessage1 = new List<MessageItem>();
 
     public int PeerCount => _socket.Count;
+    HashChecker _hashChecker;
 
     public Server(float tick, IServerGameSocket socket)
     {
@@ -61,6 +62,15 @@ public class Server
 
     public void AddMessage(byte[] bytes)
     {
+        var msgType = bytes[0];
+        if(msgType == (byte)MsgType.HashMsg)
+        {
+            FrameHash hash = new FrameHash();
+            hash.From(bytes);
+            _hashChecker.AddHash(hash);
+            return;
+        }
+
         PackageItem packageItem = new PackageItem();
         packageItem.From(bytes);
 
@@ -105,6 +115,7 @@ public class Server
     bool start = false;
     public void StartBattle()
     {
+        _hashChecker = new HashChecker(_socket.Count);
         start = true;
         _socket.BroadCastBattleStart();
     }

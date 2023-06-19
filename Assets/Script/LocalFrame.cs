@@ -29,8 +29,11 @@ public class LocalFrame
     List<MessageItem> messageItemList = new List<MessageItem>();
     MessageItem? _messageItem;
     IGameSocket _socket;
+    CheckSumMgr _checkSumMgr;
+    int checkSumSendCount = 0;
+    int _controllerId = 0;
 
-    public void Init(float tick, IGameSocket socket)
+    public void Init(float tick, IGameSocket socket, CheckSumMgr checkSumMgr, int id)
     {
         frame = 5;
         totalSeconds = 0;
@@ -38,11 +41,22 @@ public class LocalFrame
         _tick = tick;
         _socket = socket;
         _socket.OnReceiveMsg = OnReceive;
+        _checkSumMgr = checkSumMgr;
+        _controllerId = id;
     }
 
     public void Update()
     {
         _socket.Update();
+
+        while(checkSumSendCount < _checkSumMgr.Count)
+        {
+            SendHash(checkSumSendCount, 
+                _checkSumMgr.positionChecksum.GetHistory()[checkSumSendCount],
+                _checkSumMgr.hpCheckSum.GetHistory()[checkSumSendCount],
+                _checkSumMgr.targetFindCheckSum.GetHistory()[checkSumSendCount]);
+            checkSumSendCount++;
+        }
 
         totalSeconds += Time.deltaTime;
         if(preFrameSeconds + _tick > totalSeconds)
@@ -59,15 +73,22 @@ public class LocalFrame
                 frame = frame,
                 messageItem = _messageItem.Value
             }.ToBytes());
-        
-            // Debug.LogWarning($"Client:send package  {Time.time}" );
-            _messageItem = null;
         }
+    
+        // Debug.LogWarning($"Client:send package  {Time.time}" );
+        _messageItem = null;
     }
 
     public void SetData(MessageItem messageItem)
     {
         _messageItem = messageItem;
+    }
+
+    public void SendHash(int frame, int hashPos, int hashHp, int hashFindtarget)
+    {
+        _socket.SendMessage(new FrameHash(){
+            frame = frame, hashPos = hashPos, hashFindtarget = hashFindtarget, hashHp = hashHp, id = _controllerId
+        }.ToBytes());
     }
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();

@@ -42,96 +42,6 @@ public interface ILifeCircle
     void OnDestroy();
 }
 
-public struct PackageItem
-{
-    public int frame;
-    public MessageItem messageItem;
-
-    public byte[] ToBytes()
-    {
-        MemoryStream steam = new MemoryStream();
-        BinaryWriter writer = new BinaryWriter(steam);
-        writer.Write(frame);
-        writer.Write(messageItem.id);
-        writer.Write((int)(messageItem.pos.x * 100));
-        writer.Write((int)(messageItem.pos.y * 100));
-        writer.Write((int)(messageItem.pos.z * 100));
-
-        return steam.ToArray();
-    }
-
-    public void From(byte[] bytes)
-    {
-        MemoryStream steam = new MemoryStream(bytes);
-        BinaryReader reader = new BinaryReader(steam);
-        frame = reader.ReadInt32();
-        messageItem = new MessageItem(){
-            id = reader.ReadInt32(),
-            pos = new Unity.Mathematics.float3()
-            {
-                x = reader.ReadInt32() / 100f,
-                y = reader.ReadInt32() / 100f,
-                z = reader.ReadInt32() / 100f,
-            }
-        };
-    }
-}
-
-public struct ServerPackageItem
-{
-    public int frame;
-    public List<MessageItem> list;
-
-    public byte[] ToBytes()
-    {
-        MemoryStream steam = new MemoryStream();
-        BinaryWriter writer = new BinaryWriter(steam);
-        writer.Write(frame);
-        if(list != null) 
-        {
-            writer.Write(list.Count);
-            for(int i = 0; i < list.Count; i++)
-            {
-                var messageItem = list[i];
-                writer.Write(messageItem.id);
-                writer.Write((int)(messageItem.pos.x * 100));
-                writer.Write((int)(messageItem.pos.y * 100));
-                writer.Write((int)(messageItem.pos.z * 100));
-            }
-        }
-        else
-        {
-            writer.Write(0);
-        }
-
-        return steam.ToArray();
-    }
-
-    public void From(byte[] bytes)
-    {
-        MemoryStream steam = new MemoryStream(bytes);
-        BinaryReader reader = new BinaryReader(steam);
-        frame = reader.ReadInt32();
-        var count = reader.ReadInt32();
-        if(count > 0)
-        {
-            list = new List<MessageItem>();
-            for(int i = 0; i < count; i++)
-            {
-                var messageItem = new MessageItem(){
-                    id = reader.ReadInt32(),
-                    pos = new Unity.Mathematics.float3()
-                    {
-                        x = reader.ReadInt32() / 100f,
-                        y = reader.ReadInt32() / 100f,
-                        z = reader.ReadInt32() / 100f,
-                    }
-                };
-                list.Add(messageItem);
-            }
-        }
-    }
-}
 
 struct SendItem
 {
@@ -247,7 +157,11 @@ public class DumpGameServerSocket : IServerGameSocket, IConnectionCount
     {
         for(int i = 0; i < BroadCastEvent.Count; i++)
         {
-            BroadCastEvent[i](new byte[]{(byte)BroadCastEvent.Count, (byte)(i+1)});
+            BattleStartMessage start = new BattleStartMessage(){
+                total = BroadCastEvent.Count,
+                userId = i+1
+            };
+            BroadCastEvent[i](start.ToBytes());
         }
     }
 }

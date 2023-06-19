@@ -11,6 +11,7 @@ public class Battle
     public Battle(float tick, bool randomFixedCount, bool usePlaybackInput, int i, IGameSocket socket, int userCount)
     {
         _localFrame = new LocalFrame();
+        _checkSumMgr = new CheckSumMgr();
 
         if(usePlaybackInput)
         {
@@ -18,10 +19,9 @@ public class Battle
         }
         else if(socket != null)
         {
-            _localFrame.Init(tick, socket);
+            _localFrame.Init(tick, socket, _checkSumMgr, i);
         }
 
-        _checkSumMgr = new CheckSumMgr();
         _world = new BattleWorld("new " + i, _checkSumMgr, randomFixedCount, tick, _localFrame, i, userCount);
     }
 
