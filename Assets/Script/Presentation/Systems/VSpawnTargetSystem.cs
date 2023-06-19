@@ -41,7 +41,10 @@ public class VSpawnTargetSystem : ComponentSystem
                     controller = ev.entity
                 });
 
-                if(Application.isEditor && ev.id == 1)
+                var isInputUser = true;
+                if(Application.isEditor) isInputUser = ev.id == 1;
+
+                if(isInputUser)
                 {
                     com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, lTransformCom.rotation);
                 }

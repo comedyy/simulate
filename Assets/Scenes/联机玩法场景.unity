@@ -154,7 +154,7 @@ MonoBehaviour:
   countUser: 3
   pingSec: 0.1
   savePlayback: 0
-  useRealNetwork: 0
+  useRealNetwork: 1
 --- !u!4 &182622823
 Transform:
   m_ObjectHideFlags: 0

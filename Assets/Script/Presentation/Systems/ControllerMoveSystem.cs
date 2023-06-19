@@ -22,7 +22,11 @@ public class ControllerMoveSystem : ComponentSystem
         int controllerId = EntityManager.GetComponentData<UserComponnet>(controllerEntity).id;
 
         var tranCom = binding.obj.transform;
-        if(controllerId == 1)   // 用户
+        var isInputController = true;
+
+        if(Application.isEditor) isInputController = controllerId == 1;
+
+        if(isInputController)   // 如果是在editor模式，只有id == 1的才是控制者，其他人都是ai
         {
              var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
 
