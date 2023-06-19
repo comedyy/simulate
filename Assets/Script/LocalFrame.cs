@@ -24,22 +24,25 @@ public class LocalFrame
     public float totalSeconds;
     public float preFrameSeconds;
     float _tick;
-    Action<PackageItem> SendMsg;
     public int ReceivedServerFrame;
 
     List<MessageItem> messageItemList = new List<MessageItem>();
+    DumpGameClientSocket _socket;
 
-    public void Init(float tick, Action<PackageItem> SendMsg)
+    public void Init(float tick, float pingSec, DumpGameServerSocket serverDumpSocket)
     {
         frame = 5;
         totalSeconds = 0;
         preFrameSeconds = 0;
         _tick = tick;
-        this.SendMsg = SendMsg;
+        _socket = new DumpGameClientSocket(pingSec, serverDumpSocket);
+        _socket.OnReceiveMsg = OnReceive;
     }
 
     public void Update()
     {
+        _socket.Update();
+
         totalSeconds += Time.deltaTime;
         if(preFrameSeconds + _tick > totalSeconds)
         {
@@ -53,10 +56,10 @@ public class LocalFrame
         {
             foreach(var x in messageItemList)
             {
-                SendMsg(new PackageItem(){
+                _socket.SendMessage(new PackageItem(){
                     frame = frame,
                     messageItem = x
-                });
+                }.ToBytes());
             }
             
             // Debug.LogWarning($"Client:send package  {Time.time}" );
@@ -72,8 +75,11 @@ public class LocalFrame
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
 
-    internal void OnReceive(ServerPackageItem item)
+    internal void OnReceive(byte[] bytes)
     {
+        ServerPackageItem item = new ServerPackageItem();
+        item.From(bytes);
+
         int frame = item.frame;
         if(frame <= 0) return;
 

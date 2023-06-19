@@ -7,23 +7,19 @@ public class Battle
     public CheckSumMgr CheckSumMgr => _checkSumMgr;
 
     LocalFrame _localFrame;
-    DumpNetworkTransferLayer _transLayer;
+    DumpGameClientSocket _transLayer;
 
-    public Battle(float tick, float pingSec, bool randomFixedCount, bool usePlaybackInput, int i, DumpServer _dumpServer, int userCount)
+    public Battle(float tick, float pingSec, bool randomFixedCount, bool usePlaybackInput, int i, Server _dumpServer, int userCount)
     {
         _localFrame = new LocalFrame();
-        _transLayer = new DumpNetworkTransferLayer(pingSec);
 
-        _localFrame.Init(tick, _transLayer.Send);
-        _dumpServer?.AddCallback(_transLayer.Receive);
-
-        if(!usePlaybackInput)
-        {
-            _transLayer.Init(_dumpServer.AddMessage, _localFrame.OnReceive);
-        }
-        else
+        if(usePlaybackInput)
         {
             _localFrame.LoadPlayBackInfo();
+        }
+        else if(_dumpServer != null)
+        {
+            _localFrame.Init(tick, pingSec, _dumpServer.ServerDumpSocket);
         }
 
         _checkSumMgr = new CheckSumMgr();
@@ -39,7 +35,6 @@ public class Battle
             _world.Update();
         }
 
-        _transLayer.Update(pingSec);
         _localFrame.Update();
     }
 

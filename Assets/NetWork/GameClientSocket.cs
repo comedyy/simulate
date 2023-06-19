@@ -5,7 +5,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using System;
 
-public class GameClient : IMessageSendReceive, ILifeCircle, INetEventListener
+public class GameClientSocket : IGameSocket, INetEventListener
 {
     private NetManager _netClient;
     private NetDataWriter _dataWriter;

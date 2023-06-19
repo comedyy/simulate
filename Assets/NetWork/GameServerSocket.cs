@@ -6,20 +6,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using System.Collections.Generic;
 
-public interface IMessageSendReceive
-{
-    void SendMessage(byte[] bytes);
-    Action<byte[]> OnReceiveMsg{get;set;}
-}
-
-public interface ILifeCircle
-{
-    void Start();
-    void Update();
-    void OnDestroy();
-}
-
-public class GameServer : IMessageSendReceive, ILifeCircle, INetEventListener, INetLogger
+public class GameServerSocket : IGameSocket, INetEventListener, INetLogger
 {
     private NetManager _netServer;
     private List<NetPeer> _ourPeers = new List<NetPeer>();

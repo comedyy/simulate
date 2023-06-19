@@ -14,14 +14,15 @@ public class Main : MonoBehaviour
     public float pingSec = 0;
     public bool savePlayback;
 
-    DumpServer _dumpServer;
+    Server _dumpServer;
     Battle[] _battles;
 
     // Start is called before the first frame update
     async void Start()
     {
         var tick = 1f / LogicFrameCount;
-        _dumpServer = new DumpServer(tick);
+        DumpGameServerSocket socket = new DumpGameServerSocket(pingSec);
+        _dumpServer = new Server(tick, socket);
 
         _battles = new Battle[countUser];
         for(int i = 0; i < countUser; i++)

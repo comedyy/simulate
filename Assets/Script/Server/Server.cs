@@ -3,33 +3,40 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-public class DumpServer
+public class Server
 {
     public int frame;
     public float totalSeconds;
     public float preFrameSeconds;
     float _tick;
-    event Action<ServerPackageItem> FrameCallback;
+    // event Action<byte[]> FrameCallback;
+    IGameSocket _socket;
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
     List<MessageItem> _allMessage1 = new List<MessageItem>();
 
-    public DumpServer(float tick)
+    public DumpGameServerSocket ServerDumpSocket => _socket as DumpGameServerSocket;
+
+    public Server(float tick, IGameSocket socket)
     {
         frame = 1;
         totalSeconds = 0;
         preFrameSeconds = 0;
         _tick = tick;
         _allMessage.Clear();
+        _socket = socket;
+        _socket.OnReceiveMsg = AddMessage;
     }
 
-    public void AddCallback(Action<ServerPackageItem> frameCallback)
-    {
-        FrameCallback += frameCallback;
-    }
+    // public void AddCallback(Action<byte[]> frameCallback)
+    // {
+    //     FrameCallback += frameCallback;
+    // }
 
     public void Update()
     {
+        _socket.Update();
+        
         totalSeconds += Time.deltaTime;
         if(preFrameSeconds + _tick > totalSeconds)
         {
@@ -49,8 +56,11 @@ public class DumpServer
         frame++;
     }
 
-    public void AddMessage(PackageItem packageItem)
+    public void AddMessage(byte[] bytes)
     {
+        PackageItem packageItem = new PackageItem();
+        packageItem.From(bytes);
+
         var currentFrame = packageItem.frame;
         if(currentFrame < frame)
         {
@@ -69,7 +79,7 @@ public class DumpServer
         }
 
         _allMessage1.Add(packageItem.messageItem);
-        Debug.LogWarning($"Server:Recive package  {Time.time}" );
+        // Debug.LogWarning($"Server:Recive package  {Time.time}" );
         // if(!_allMessage.TryGetValue(currentFrame, out var list))
         // {
         //     list = new List<MessageItem>();
@@ -82,8 +92,8 @@ public class DumpServer
     private void BroadCastMsg(List<MessageItem> list)
     {
         // Debug.LogError($"Server:Send package  {frame} {Time.time}" );
-        FrameCallback(new ServerPackageItem(){
+        _socket.SendMessage(new ServerPackageItem(){
             frame = frame, list = list
-        });
+        }.ToBytes());
     }
 }
