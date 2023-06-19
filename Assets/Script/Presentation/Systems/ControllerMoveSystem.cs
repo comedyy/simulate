@@ -109,6 +109,11 @@ public class ControllerMoveSystem : ComponentSystem
             angle = math.radians(180);
         }
 
+        if(SimpleJoystick.Instance.GetDir(out var dir))
+        {
+            angle = math.radians(dir);
+        }
+
         return angle;
     }
 }
