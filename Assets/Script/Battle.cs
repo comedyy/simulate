@@ -7,9 +7,8 @@ public class Battle
     public CheckSumMgr CheckSumMgr => _checkSumMgr;
 
     LocalFrame _localFrame;
-    DumpGameClientSocket _transLayer;
 
-    public Battle(float tick, float pingSec, bool randomFixedCount, bool usePlaybackInput, int i, Server _dumpServer, int userCount)
+    public Battle(float tick, bool randomFixedCount, bool usePlaybackInput, int i, IGameSocket socket, int userCount)
     {
         _localFrame = new LocalFrame();
 
@@ -17,9 +16,9 @@ public class Battle
         {
             _localFrame.LoadPlayBackInfo();
         }
-        else if(_dumpServer != null)
+        else if(socket != null)
         {
-            _localFrame.Init(tick, pingSec, _dumpServer.ServerDumpSocket);
+            _localFrame.Init(tick, socket);
         }
 
         _checkSumMgr = new CheckSumMgr();
@@ -28,7 +27,7 @@ public class Battle
 
     public bool IsEnd => _world.IsEnd;
 
-    public void Update(float pingSec)
+    public void Update()
     {
         if(!_world.IsEnd)
         {

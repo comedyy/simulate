@@ -10,14 +10,14 @@ public class Server
     public float preFrameSeconds;
     float _tick;
     // event Action<byte[]> FrameCallback;
-    IGameSocket _socket;
+    IServerGameSocket _socket;
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
     List<MessageItem> _allMessage1 = new List<MessageItem>();
 
     public DumpGameServerSocket ServerDumpSocket => _socket as DumpGameServerSocket;
 
-    public Server(float tick, IGameSocket socket)
+    public Server(float tick, IServerGameSocket socket)
     {
         frame = 1;
         totalSeconds = 0;
@@ -95,5 +95,10 @@ public class Server
         _socket.SendMessage(new ServerPackageItem(){
             frame = frame, list = list
         }.ToBytes());
+    }
+
+    public void StartBattle()
+    {
+        _socket.BroadCastBattleStart();
     }
 }

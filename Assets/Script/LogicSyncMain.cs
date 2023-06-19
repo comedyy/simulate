@@ -26,7 +26,7 @@ public class LogicSyncMain : MonoBehaviour
         for(int i = 0; i < worldCount; i++)
         {
             await Task.Delay(i * 10);
-            _battles[i] = new Battle(tick, pingSec, randomLogicSimulateTime, usePlaybackInput, i + 1, null, 5);
+            _battles[i] = new Battle(tick, randomLogicSimulateTime, usePlaybackInput, i + 1, null, 5);
         }
     }
 
@@ -37,7 +37,7 @@ public class LogicSyncMain : MonoBehaviour
         {
             if(_battles[i] != null && !_battles[i].IsEnd)
             {
-                _battles[i].Update(pingSec);
+                _battles[i].Update();
             }
         }
 

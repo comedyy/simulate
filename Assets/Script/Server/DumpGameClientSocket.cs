@@ -6,28 +6,18 @@ using UnityEngine;
 
 public class DumpGameClientSocket : IGameSocket
 {
-    public float HALF_PING => pingSec / 2f;
-
     public Action<byte[]> OnReceiveMsg{get;set;}
 
     Queue<SendItem> _sendList = new Queue<SendItem>();
     Queue<ReceiveItem> _receiveList = new Queue<ReceiveItem>();
-
-    private float pingSec;
     DumpGameServerSocket _serverSocket;
+    public Action<byte, byte> OnStartBattle{get;set;}
 
-    public DumpGameClientSocket(float pingSec, DumpGameServerSocket serverSocket)
+    public bool Connect()
     {
-        this.pingSec = pingSec;
-        this._serverSocket = serverSocket;
-        this._serverSocket.BroadCastEvent += OnReceiveMessageFromServer;
+        this._serverSocket = DumpGameServerSocket.Instance;
+        return this._serverSocket.AddBroadCastEvent(OnReceiveMessageFromServer);
     }
-
-    // public void Init(Action<PackageItem> SendMsg, Action<ServerPackageItem> FrameCallback)
-    // {
-    //     this.SendMsg = SendMsg;
-    //     this.FrameCallback = FrameCallback;
-    // }
 
     public void Update()
     {
@@ -61,14 +51,20 @@ public class DumpGameClientSocket : IGameSocket
     public void SendMessage(byte[] bytes)
     {
         _sendList.Enqueue(new SendItem(){
-            addTime = Time.time + HALF_PING, bytes = bytes
+            addTime = Time.time, bytes = bytes
         });
     }
 
     void OnReceiveMessageFromServer(byte[] bytes)
     {
+        if(bytes.Length == 2) // startBattle
+        {
+            OnStartBattle( bytes[0], bytes[1] );
+            return;
+        }
+
         _receiveList.Enqueue(new ReceiveItem(){
-            addTime = Time.time + HALF_PING, bytes = bytes
+            addTime = Time.time, bytes = bytes
         });
     }
 

@@ -27,15 +27,15 @@ public class LocalFrame
     public int ReceivedServerFrame;
 
     List<MessageItem> messageItemList = new List<MessageItem>();
-    DumpGameClientSocket _socket;
+    IGameSocket _socket;
 
-    public void Init(float tick, float pingSec, DumpGameServerSocket serverDumpSocket)
+    public void Init(float tick, IGameSocket socket)
     {
         frame = 5;
         totalSeconds = 0;
         preFrameSeconds = 0;
         _tick = tick;
-        _socket = new DumpGameClientSocket(pingSec, serverDumpSocket);
+        _socket = socket;
         _socket.OnReceiveMsg = OnReceive;
     }
 

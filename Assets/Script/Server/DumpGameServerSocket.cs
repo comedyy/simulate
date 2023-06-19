@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+public interface IServerGameSocket : IGameSocket
+{
+    void BroadCastBattleStart();
+}
+
 public interface IGameSocket : IMessageSendReceive, ILifeCircle
 {
     
@@ -125,22 +130,41 @@ struct ReceiveItem
     public byte[] bytes;
 }
 
-public class DumpGameServerSocket : IGameSocket
+interface IConnectionCount
+{
+    int Count{get;}
+}
+
+public class DumpGameServerSocket : IServerGameSocket, IConnectionCount
 {
     public float HALF_PING => pingSec / 2f;
 
     public Action<byte[]> OnReceiveMsg{get;set;}
 
-    public event Action<byte[]> BroadCastEvent;
+    public int Count => BroadCastEvent.Count;
+
+    List<Action<byte[]>> BroadCastEvent = new List<Action<byte[]>>();
+    public bool AddBroadCastEvent(Action<byte[]> action)
+    {
+        if(BroadCastEvent.Count >= totalConnection) return false;
+
+        BroadCastEvent.Add(action);
+        return true;
+    }
 
     Queue<SendItem> _sendList = new Queue<SendItem>();
     Queue<ReceiveItem> _receiveList = new Queue<ReceiveItem>();
 
     private float pingSec;
+    private int totalConnection;
 
-    public DumpGameServerSocket(float pingSec)
+    public static DumpGameServerSocket Instance{get; private set;}
+
+    public DumpGameServerSocket(float pingSec, int totalConnection)
     {
         this.pingSec = pingSec;
+        this.totalConnection = totalConnection;
+        Instance = this;
     }
 
     // public void Init(Action<PackageItem> SendMsg, Action<ServerPackageItem> FrameCallback)
@@ -169,7 +193,10 @@ public class DumpGameServerSocket : IGameSocket
             if(_sendList.Peek().addTime < Time.time)
             {
                 var item = _sendList.Dequeue().bytes;
-                BroadCastEvent?.Invoke(item);
+                foreach(var x in BroadCastEvent)
+                {
+                    x.Invoke(item);
+                }
             }
             else
             {
@@ -199,5 +226,13 @@ public class DumpGameServerSocket : IGameSocket
 
     public void OnDestroy()
     {
+    }
+
+    public void BroadCastBattleStart()
+    {
+        for(int i = 0; i < BroadCastEvent.Count; i++)
+        {
+            BroadCastEvent[i](new byte[]{(byte)BroadCastEvent.Count, (byte)(i+1)});
+        }
     }
 }
