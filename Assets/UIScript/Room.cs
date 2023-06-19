@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class RoomMember
 {
@@ -8,24 +9,30 @@ public class RoomMember
     public int id;
 }
 
-public class Room
+public class Room : MonoBehaviour
 {
     // List<RoomMember> _allMembers = new List<RoomMember>();
     Server _server;
 
-    public Room()
+    public void Init(IServerGameSocket socket)
     {
-        var tick = 1f / Main.Instance.LogicFrameCount;
-        DumpGameServerSocket socket = new DumpGameServerSocket(0, Main.Instance.countUser);
-        _server = new Server(tick, socket);
+        _server = new Server(Main.Instance.tick, socket);
     }
 
-    public int UserCount => _server.ServerDumpSocket.Count;
+    void Update()
+    {
+        _server.Update();
+    }
+
+    public int UserCount => _server.PeerCount;
 
     internal void StartBattle()
     {
         _server.StartBattle();
-        
-        Main.Instance.StartBattle(_server);
+    }
+
+    void OnDestroy()
+    {
+        _server.Destroy();
     }
 }

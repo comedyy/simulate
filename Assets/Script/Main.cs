@@ -13,6 +13,7 @@ public class Main : MonoBehaviour
     public int countUser = 1;
     public float pingSec = 0;
     public bool savePlayback;
+    public bool useRealNetwork;
 
     Server _dumpServer;
     public float tick => 1f / LogicFrameCount;

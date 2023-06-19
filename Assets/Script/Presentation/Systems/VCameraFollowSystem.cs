@@ -15,6 +15,12 @@ public class VCameraFollowSystem : SystemBase
     {
         var userEntity = GetSingleton<ControllerHolder>().controller;
         if(!EntityManager.Exists(userEntity)) return;
+        
+        if(Application.isEditor && EntityManager.GetComponentData<UserComponnet>(userEntity).id != 1)
+        {
+            return;
+        }
+        
         var obj = EntityManager.GetComponentObject<GameObjectBindingComponent>(userEntity).obj;
         if(obj == null) return;
         var pos = obj.transform.position;

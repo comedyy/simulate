@@ -6,13 +6,19 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using System.Collections.Generic;
 
-public class GameServerSocket : IGameSocket, INetEventListener, INetLogger
+public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
 {
     private NetManager _netServer;
     private List<NetPeer> _ourPeers = new List<NetPeer>();
     private NetDataWriter _dataWriter;
+    private int countUser;
 
-#region ILifeCircle
+    public GameServerSocket(int countUser)
+    {
+        this.countUser = countUser;
+    }
+
+    #region ILifeCircle
     public void Start()
     {
         NetDebug.Logger = this;
@@ -45,6 +51,7 @@ public class GameServerSocket : IGameSocket, INetEventListener, INetLogger
         _dataWriter.Reset();
         _dataWriter.Put(bytes);
 
+        // Debug.LogError(bytes.Length);
         foreach (var peer in _ourPeers)
         {
             peer.Send(_dataWriter, DeliveryMethod.Sequenced);
@@ -69,6 +76,11 @@ public class GameServerSocket : IGameSocket, INetEventListener, INetLogger
     {
         if (messageType == UnconnectedMessageType.Broadcast)
         {
+            if(_ourPeers.Count >= countUser)
+            {
+                return;
+            }
+
             Debug.Log("[SERVER] Received discovery request. Send discovery response");
             NetDataWriter resp = new NetDataWriter();
             resp.Put(1);
@@ -102,4 +114,20 @@ public class GameServerSocket : IGameSocket, INetEventListener, INetLogger
     {
         Debug.LogFormat(str, args);
     }
+
+    public void BroadCastBattleStart()
+    {
+        for(int i = 0; i < _ourPeers.Count; i++)
+        {
+            var peer = _ourPeers[i];
+
+            byte[] bytes = new byte[]{(byte)_ourPeers.Count, (byte)(i+1)};
+            _dataWriter.Reset();
+            _dataWriter.Put(bytes);
+
+            peer.Send(_dataWriter, DeliveryMethod.Sequenced);
+        }
+    }
+
+    public int Count => _ourPeers.Count;
 }

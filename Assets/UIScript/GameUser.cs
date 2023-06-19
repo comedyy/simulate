@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class GameUser : MonoBehaviour
 {
-    public static int count;
-    DumpGameClientSocket _socket;
+    IClientGameSocket _socket;
     Battle _battle;
     void Start()
     {
-        _socket = new DumpGameClientSocket();
-        if(!_socket.Connect())
+        if(Main.Instance.useRealNetwork)
         {
-            Destroy(gameObject);
-            return;
+            _socket = new GameClientSocket();
+        }
+        else
+        {
+            _socket = new DumpGameClientSocket();
         }
 
+        _socket.Start();
         _socket.OnStartBattle = OnBattleStart;
     }
 
@@ -26,5 +28,15 @@ public class GameUser : MonoBehaviour
     void Update(){
         _battle?.Update();
         _socket.Update();
+
+        if(_socket.connectResult == ConnectResult.Refuse)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        _socket.OnDestroy();
     }
 }

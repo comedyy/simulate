@@ -4,10 +4,25 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+public enum ConnectResult
+{
+    Connecting,
+    Refuse,
+    Connnected,
+}
+
 public interface IServerGameSocket : IGameSocket
 {
     void BroadCastBattleStart();
+    int Count{get;}
 }
+
+public interface IClientGameSocket : IGameSocket
+{
+    Action<byte, byte> OnStartBattle{get;set;}
+    ConnectResult connectResult{get;}
+}
+
 
 public interface IGameSocket : IMessageSendReceive, ILifeCircle
 {

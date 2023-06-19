@@ -15,18 +15,12 @@ public class VLerpTransformSystem : ComponentSystem
             {
                 UnityEngine.Debug.LogError($"=== not found {entity}");
             }
+
+            var obj = binding.objFollow == null ? binding.obj : binding.objFollow;
             if(lerp.lerpTime == 0)
             {
-                if(entity == userEntity)
-                {
-                    lerp.lerpBeginPos = binding.objFollow.transform.position;
-                    lerp.lerpBeginRotation = binding.objFollow.transform.rotation;
-                }
-                else
-                {
-                    lerp.lerpBeginPos = binding.obj.transform.position;
-                    lerp.lerpBeginRotation = binding.obj.transform.rotation;
-                }
+                lerp.lerpBeginPos = obj.transform.position;
+                lerp.lerpBeginRotation = obj.transform.rotation;
             }
 
             lerp.lerpTime = math.min(lerp.lerpTime + Time.DeltaTime, logicStep);
@@ -35,17 +29,7 @@ public class VLerpTransformSystem : ComponentSystem
             var rotation = math.nlerp(lerp.lerpBeginRotation, lTransformCom.rotation, lerpValue);
             // Debug.LogError(Time.DeltaTime + " " + lerp.lerpTime + " " + lerpValue + " " + pos + " " +  lerp.preLogicPos + " " + lTransformCom.position);
 
-            if(entity == userEntity)
-            {
-                binding.objFollow.transform.SetPositionAndRotation(pos, rotation);
-            }
-            else
-            {
-                if(binding.obj != null)
-                {
-                    binding.obj.transform.SetPositionAndRotation(pos, rotation);
-                }
-            }
+            obj.transform.SetPositionAndRotation(pos, rotation);
         });
     }
 }

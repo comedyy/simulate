@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class DumpGameClientSocket : IGameSocket
+public class DumpGameClientSocket : IClientGameSocket
 {
     public Action<byte[]> OnReceiveMsg{get;set;}
 
@@ -13,11 +13,7 @@ public class DumpGameClientSocket : IGameSocket
     DumpGameServerSocket _serverSocket;
     public Action<byte, byte> OnStartBattle{get;set;}
 
-    public bool Connect()
-    {
-        this._serverSocket = DumpGameServerSocket.Instance;
-        return this._serverSocket.AddBroadCastEvent(OnReceiveMessageFromServer);
-    }
+    public ConnectResult connectResult{get;private set;}
 
     public void Update()
     {
@@ -70,6 +66,17 @@ public class DumpGameClientSocket : IGameSocket
 
     public void Start()
     {
+        this._serverSocket = DumpGameServerSocket.Instance;
+        var isConnected = this._serverSocket.AddBroadCastEvent(OnReceiveMessageFromServer);
+
+        if(isConnected) 
+        {
+            connectResult = ConnectResult.Connnected;
+        }
+        else 
+        {
+            connectResult = ConnectResult.Refuse;
+        }
     }
 
 

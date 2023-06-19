@@ -5,10 +5,12 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using System;
 
-public class GameClientSocket : IGameSocket, INetEventListener
+public class GameClientSocket : IClientGameSocket, INetEventListener
 {
     private NetManager _netClient;
     private NetDataWriter _dataWriter;
+    public Action<byte, byte> OnStartBattle{get;set;}
+
 
 #region ILifeCircle
     public void Start()
@@ -43,6 +45,9 @@ public class GameClientSocket : IGameSocket, INetEventListener
 
 #region IMessageSendReceive
     public Action<byte[]> OnReceiveMsg{get;set;}
+
+    public ConnectResult connectResult{get; private set;}
+
     public void SendMessage(byte[] bytes)
     {
         var peer = _netClient.FirstPeer;
@@ -59,6 +64,7 @@ public class GameClientSocket : IGameSocket, INetEventListener
     public void OnPeerConnected(NetPeer peer)
     {
         Debug.Log("[CLIENT] We connected to " + peer.EndPoint);
+        connectResult = ConnectResult.Connnected;
     }
 
     public void OnNetworkError(IPEndPoint endPoint, SocketError socketErrorCode)
@@ -69,15 +75,28 @@ public class GameClientSocket : IGameSocket, INetEventListener
     public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
     {
         var msg = reader.GetRemainingBytes();
+        if(msg.Length == 2) // startBattle
+        {
+            OnStartBattle( msg[0], msg[1] );
+            return;
+        }
+
         OnReceiveMsg(msg);
     }
 
     public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
     {
-        if (messageType == UnconnectedMessageType.BasicMessage && _netClient.ConnectedPeersCount == 0 && reader.GetInt() == 1)
+        if (messageType == UnconnectedMessageType.BasicMessage && _netClient.ConnectedPeersCount == 0)
         {
-            Debug.Log("[CLIENT] Received discovery response. Connecting to: " + remoteEndPoint);
-            _netClient.Connect(remoteEndPoint, "sample_app");
+            if(reader.GetInt() == 1)
+            {
+                Debug.Log("[CLIENT] Received discovery response. Connecting to: " + remoteEndPoint);
+                _netClient.Connect(remoteEndPoint, "sample_app");
+            }
+            else if (reader.GetInt() == 2)
+            {
+                connectResult = ConnectResult.Refuse;
+            }
         }
     }
 
@@ -93,5 +112,5 @@ public class GameClientSocket : IGameSocket, INetEventListener
     {
         Debug.Log("[CLIENT] We disconnected because " + disconnectInfo.Reason);
     }
-#endregion
+    #endregion
 }

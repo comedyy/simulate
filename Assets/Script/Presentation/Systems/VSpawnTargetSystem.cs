@@ -41,7 +41,10 @@ public class VSpawnTargetSystem : ComponentSystem
                     controller = ev.entity
                 });
 
-                com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, lTransformCom.rotation);
+                if(Application.isEditor && ev.id == 1)
+                {
+                    com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, lTransformCom.rotation);
+                }
             }
 
             var entityBinding = GetSingletonEntity<BindingComponet>();

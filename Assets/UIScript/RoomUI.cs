@@ -39,7 +39,19 @@ public class RoomUI : MonoBehaviour
 
     private void OnClickHost()
     {
-        _room = new Room();
+        IServerGameSocket socket;
+        if(Main.Instance.useRealNetwork)
+        {
+            socket = new GameServerSocket(Main.Instance.countUser);
+        }
+        else
+        {
+            socket = new DumpGameServerSocket(0, Main.Instance.countUser);
+        }
+
+        _room = new GameObject("server").AddComponent<Room>();
+        _room.Init(socket);
+
 
         OnClickJoin();
 

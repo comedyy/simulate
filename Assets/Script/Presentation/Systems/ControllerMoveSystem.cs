@@ -40,14 +40,14 @@ public class ControllerMoveSystem : ComponentSystem
         }
         else    // ai
         {
-            UpdateOtherUser();
+            UpdateOtherUser(controllerId);
         }
     }
 
-    private void UpdateOtherUser()
+    private void UpdateOtherUser(int controllerId)
     {
-        float3 controllerPos = default;
-        Entity controllerEntity = default;
+        float3 firstPos = default;
+        Entity firstEntity = default;
 
         // simulate other role behavior
         // 保持跟玩家的相对位置。
@@ -56,21 +56,27 @@ public class ControllerMoveSystem : ComponentSystem
         {
             if(EntityManager.GetComponentData<UserComponnet>(list[i]).id == 1)
             {
-                controllerEntity = list[i];
-                controllerPos = EntityManager.GetComponentData<LTransformComponet>(controllerEntity).position;
+                firstEntity = list[i];
+                firstPos = EntityManager.GetComponentData<LTransformComponet>(firstEntity).position;
                 continue;
             }
         }
 
         for(int i = 0; i < list.length; i++)
         {
-            if(list[i] == controllerEntity)
+            var id = EntityManager.GetComponentData<UserComponnet>(list[i]).id;
+            if(id != controllerId)
+            {
+                continue;
+            }
+
+            if(list[i] == firstEntity)
             {
                 continue;
             }
 
             var entity = list[i];
-            var shouldBePos = controllerPos + EntityManager.GetComponentData<UserAiComponent>(entity).offsetToController;
+            var shouldBePos = firstPos + EntityManager.GetComponentData<UserAiComponent>(entity).offsetToController;
             var targetPos = shouldBePos;
 
             int userId = EntityManager.GetComponentData<UserComponnet>(entity).id;

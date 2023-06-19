@@ -15,7 +15,7 @@ public class Server
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
     List<MessageItem> _allMessage1 = new List<MessageItem>();
 
-    public DumpGameServerSocket ServerDumpSocket => _socket as DumpGameServerSocket;
+    public int PeerCount => _socket.Count;
 
     public Server(float tick, IServerGameSocket socket)
     {
@@ -25,6 +25,7 @@ public class Server
         _tick = tick;
         _allMessage.Clear();
         _socket = socket;
+        _socket.Start();
         _socket.OnReceiveMsg = AddMessage;
     }
 
@@ -36,6 +37,8 @@ public class Server
     public void Update()
     {
         _socket.Update();
+        
+        if(!start) return;
         
         totalSeconds += Time.deltaTime;
         if(preFrameSeconds + _tick > totalSeconds)
@@ -79,6 +82,7 @@ public class Server
         }
 
         _allMessage1.Add(packageItem.messageItem);
+        // Debug.LogError("AddMessage" + packageItem.frame);
         // Debug.LogWarning($"Server:Recive package  {Time.time}" );
         // if(!_allMessage.TryGetValue(currentFrame, out var list))
         // {
@@ -91,14 +95,22 @@ public class Server
 
     private void BroadCastMsg(List<MessageItem> list)
     {
+        // Debug.LogError(list == null ? 0 : list.Count);
         // Debug.LogError($"Server:Send package  {frame} {Time.time}" );
         _socket.SendMessage(new ServerPackageItem(){
             frame = frame, list = list
         }.ToBytes());
     }
 
+    bool start = false;
     public void StartBattle()
     {
+        start = true;
         _socket.BroadCastBattleStart();
+    }
+
+    public void Destroy()
+    {
+        _socket.OnDestroy();
     }
 }

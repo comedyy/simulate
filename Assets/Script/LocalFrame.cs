@@ -27,6 +27,7 @@ public class LocalFrame
     public int ReceivedServerFrame;
 
     List<MessageItem> messageItemList = new List<MessageItem>();
+    MessageItem? _messageItem;
     IGameSocket _socket;
 
     public void Init(float tick, IGameSocket socket)
@@ -52,25 +53,21 @@ public class LocalFrame
         preFrameSeconds += _tick;
         frame++;
 
-        if(messageItemList.Count > 0)
+        if(_messageItem != null)
         {
-            foreach(var x in messageItemList)
-            {
-                _socket.SendMessage(new PackageItem(){
-                    frame = frame,
-                    messageItem = x
-                }.ToBytes());
-            }
-            
+            _socket.SendMessage(new PackageItem(){
+                frame = frame,
+                messageItem = _messageItem.Value
+            }.ToBytes());
+        
             // Debug.LogWarning($"Client:send package  {Time.time}" );
+            _messageItem = null;
         }
-
-        messageItemList.Clear();
     }
 
     public void SetData(MessageItem messageItem)
     {
-        messageItemList.Add(messageItem);
+        _messageItem = messageItem;
     }
 
     Dictionary<int , List<MessageItem>> _allMessage = new Dictionary<int, List<MessageItem>>();
