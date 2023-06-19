@@ -14,6 +14,9 @@ public class ControllerMoveSystem : ComponentSystem
 
         var controllerHolder = GetSingleton<ControllerHolder>();
         var controllerEntity = controllerHolder.controller;
+
+        if(!EntityManager.Exists(controllerEntity)) return;
+
         var binding = EntityManager.GetComponentData<GameObjectBindingComponent>(controllerEntity);
         if(binding.obj == null) return;
         int controllerId = EntityManager.GetComponentData<UserComponnet>(controllerEntity).id;

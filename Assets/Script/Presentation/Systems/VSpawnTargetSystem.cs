@@ -18,6 +18,10 @@ public class VSpawnTargetSystem : ComponentSystem
         for(int i = 0; i < buffer.Length; i++)
         {
             var ev = buffer[i];
+            if(!EntityManager.Exists(ev.entity))
+            {
+                continue;
+            }
 
             GameObject prefab = null;
             var isController = ev.id == UserId;
