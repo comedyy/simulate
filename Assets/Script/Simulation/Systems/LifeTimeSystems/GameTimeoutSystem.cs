@@ -17,7 +17,7 @@ public class GameTimeoutSystem : ComponentSystem
 
         var entity = EntityManager.CreateEntity(typeof(GameTimeoutComponent));
         EntityManager.SetComponentData(entity, new GameTimeoutComponent(){
-            destoryTime = 15
+            destoryTime = 9999
         });
     }
 

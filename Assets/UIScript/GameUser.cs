@@ -23,6 +23,9 @@ public class GameUser : MonoBehaviour
     private void OnBattleStart(byte userCount, byte userId)
     {
          _battle = new Battle(Main.Instance.tick, false, false, userId, _socket, userCount);
+        // CloseUI
+
+        UnityEngine.Object.FindObjectOfType<RoomUI>().gameObject.SetActive(false);
     }
 
     void Update(){

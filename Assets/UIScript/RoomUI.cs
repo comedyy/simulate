@@ -27,7 +27,6 @@ public class RoomUI : MonoBehaviour
     private void OnClickStart()
     {
         _room.StartBattle();
-        gameObject.SetActive(false);
     }
 
     private void OnClickJoin()
@@ -35,6 +34,8 @@ public class RoomUI : MonoBehaviour
         // 创建一个单位，并加入到游戏中。
         GameObject o = new GameObject("newPlayer");
         o.AddComponent<GameUser>();
+
+        _hostButton.gameObject.SetActive(false);
     }
 
     private void OnClickHost()
