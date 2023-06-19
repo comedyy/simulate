@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03aea564b462134cb017ecebaff8443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldCount: 1
+  worldCount: 10
   LogicFrameCount: 15
   pingSec: 0
   usePlaybackInput: 1
