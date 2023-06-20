@@ -48,7 +48,6 @@ public class SimpleJoystick : MonoBehaviour
         if(!_isTouch) return false;
 
         dir = (Vector2.SignedAngle(_dir, Vector2.up) + 360) % 360;
-        Debug.LogError(_dir + " " + dir);
 
         return true;
     }

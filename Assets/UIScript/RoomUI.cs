@@ -33,7 +33,8 @@ public class RoomUI : MonoBehaviour
     {
         // 创建一个单位，并加入到游戏中。
         GameObject o = new GameObject("newPlayer");
-        o.AddComponent<GameUser>();
+        var user = o.AddComponent<GameUser>();
+        user.IsLocalClient = _room != null;
 
         _hostButton.gameObject.SetActive(false);
     }

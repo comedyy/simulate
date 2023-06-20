@@ -11,28 +11,42 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
     private NetDataWriter _dataWriter;
     public Action<byte, byte> OnStartBattle{get;set;}
 
+    bool _localSocket = false;
+    public GameClientSocket(bool localSocket)
+    {
+        _localSocket = localSocket;
+    }
 
 #region ILifeCircle
     public void Start()
     {
         _netClient = new NetManager(this);
         _dataWriter = new NetDataWriter();
-        _netClient.UnconnectedMessagesEnabled = true;
+        if(!_localSocket)
+        {
+            _netClient.UnconnectedMessagesEnabled = true;
+        }
         _netClient.UpdateTime = 15;
         _netClient.Start();
+
+        if(_localSocket)
+        {
+            _netClient.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000), "sample_app");
+        }
     }
 
     public void Update()
     {
         _netClient.PollEvents();
 
-        var peer = _netClient.FirstPeer;
-        if (peer != null && peer.ConnectionState == ConnectionState.Connected)
+        if(!_localSocket)
         {
-        }
-        else
-        {
-            _netClient.SendBroadcast(new byte[] {1}, 5000);
+            var peer = _netClient.FirstPeer;
+            var isPeerValid = peer != null && peer.ConnectionState == ConnectionState.Connected;
+            if(!isPeerValid)
+            {
+                _netClient.SendBroadcast(new byte[] {1}, 5000);
+            }
         }
     }
 

@@ -5,11 +5,14 @@ public class GameUser : MonoBehaviour
 {
     IClientGameSocket _socket;
     Battle _battle;
+
+    public bool IsLocalClient { get; internal set; }
+
     void Start()
     {
         if(Main.Instance.useRealNetwork)
         {
-            _socket = new GameClientSocket();
+            _socket = new GameClientSocket(IsLocalClient);
         }
         else
         {
