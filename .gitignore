@@ -4,6 +4,7 @@
 /.vs
 /obj
 /Windows
+/Windows_il2cpp
 /*.apk
 /*.csproj
 /*.sln

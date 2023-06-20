@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03aea564b462134cb017ecebaff8443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldCount: 1
+  worldCount: 2
   LogicFrameCount: 15
   pingSec: 0
   usePlaybackInput: 1
@@ -742,8 +742,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hostButton: {fileID: 0}
+  _startButton: {fileID: 0}
   _joinButton: {fileID: 0}
-  _inputField: {fileID: 0}
+  _info: {fileID: 0}
 --- !u!1 &768067542
 GameObject:
   m_ObjectHideFlags: 0
