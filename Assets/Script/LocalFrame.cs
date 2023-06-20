@@ -47,11 +47,19 @@ public class LocalFrame
 
     FrameHashItem GetHashItem(CheckSum checkSum, int checkSumSendCount)
     {
+        #if HASH_DETAIL
         return new FrameHashItem(){
             hash = checkSum.GetHistory()[checkSumSendCount], 
             listValue = checkSum.GetHistoryDetail()[checkSumSendCount], 
             listEntity = checkSum.GetHistoryDetailOrder()[checkSumSendCount], 
         };
+        #else
+        return new FrameHashItem(){
+            hash = checkSum.GetHistory()[checkSumSendCount], 
+            listValue = new List<int>(),
+            listEntity = new List<Entity>(), 
+        };
+        #endif
     }
 
     public void Update()
