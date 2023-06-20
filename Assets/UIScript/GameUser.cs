@@ -12,7 +12,17 @@ public class GameUser : MonoBehaviour
     {
         if(Main.Instance.useRealNetwork)
         {
-            _socket = new GameClientSocket(IsLocalClient);
+            string strIp = null;
+            if(Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                strIp = "172.20.10.14";
+            }
+
+            if(IsLocalClient)
+            {
+                strIp = "127.0.0.1";
+            }
+            _socket = new GameClientSocket(strIp);
         }
         else
         {

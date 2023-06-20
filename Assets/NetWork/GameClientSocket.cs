@@ -11,10 +11,10 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
     private NetDataWriter _dataWriter;
     public Action<byte, byte> OnStartBattle{get;set;}
 
-    bool _localSocket = false;
-    public GameClientSocket(bool localSocket)
+    string _targetIp = null;
+    public GameClientSocket(string targetIp)
     {
-        _localSocket = localSocket;
+        _targetIp = targetIp;
     }
 
 #region ILifeCircle
@@ -22,16 +22,16 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
     {
         _netClient = new NetManager(this);
         _dataWriter = new NetDataWriter();
-        if(!_localSocket)
+        if(_targetIp == null)
         {
             _netClient.UnconnectedMessagesEnabled = true;
         }
         _netClient.UpdateTime = 15;
         _netClient.Start();
 
-        if(_localSocket)
+        if(_targetIp != null)
         {
-            _netClient.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000), "sample_app");
+            _netClient.Connect(new IPEndPoint(IPAddress.Parse(_targetIp), 5000), "sample_app");
         }
     }
 
@@ -39,7 +39,7 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
     {
         _netClient.PollEvents();
 
-        if(!_localSocket)
+        if(_targetIp == null)
         {
             var peer = _netClient.FirstPeer;
             var isPeerValid = peer != null && peer.ConnectionState == ConnectionState.Connected;
