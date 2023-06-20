@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Unity.Entities;
 
 public enum MsgType{
     StartBattle = 1,
@@ -8,13 +9,90 @@ public enum MsgType{
     HashMsg = 4,
 }
 
+public struct FrameHashItem
+{
+    public int hash;
+    public List<int> listValue;
+    public List<Entity> listEntity;
+
+    public void Write(BinaryWriter writer)
+    {
+        writer.Write(hash);
+        writer.Write(listValue.Count);
+        for(int i = 0; i < listValue.Count; i++)
+        {
+            writer.Write(listValue[i]);
+        }
+
+        writer.Write(listEntity.Count);
+        for(int i = 0; i < listEntity.Count; i++)
+        {
+            writer.Write(listEntity[i].Index);
+            writer.Write(listEntity[i].Version);
+        }
+    }
+
+    public static FrameHashItem GetItem(BinaryReader reader)
+    {
+        var x = new FrameHashItem();
+        x.hash = reader.ReadInt32();
+        var listCount = reader.ReadInt32();
+        x.listValue = new List<int>();
+        for(int i = 0; i < listCount; i++)
+        {
+            x.listValue.Add(reader.ReadInt32());
+        }
+
+        var listCount1 = reader.ReadInt32();
+        x.listEntity = new List<Entity>();
+        for(int i = 0; i < listCount1; i++)
+        {
+            x.listEntity.Add(new Entity(){
+                Index = reader.ReadInt32(),
+                Version = reader.ReadInt32(),
+            });
+        }
+
+        return x;
+    } 
+
+    public static bool operator==(FrameHashItem item1, FrameHashItem item2)
+    {
+        if(item1.hash != item2.hash) return false;
+
+        if(item1.listEntity.Count != item2.listEntity.Count)return false;
+        for(int i =0; i < item1.listEntity.Count; i++)
+        {
+            if(item1.listEntity[i] != item1.listEntity[i]) return false;
+        }
+        
+        if(item1.listValue.Count != item2.listValue.Count)return false;
+        for(int i =0; i < item1.listValue.Count; i++)
+        {
+            if(item1.listValue[i] != item1.listValue[i]) return false;
+        }
+
+        return true;
+    }
+
+    public static bool operator!=(FrameHashItem item1, FrameHashItem item2)
+    {
+        return !(item1 == item2);
+    }
+
+    public override string ToString()
+    {
+        return $"Hash:{hash} listValue：{string.Join("!", listValue)} listEntity：{string.Join("!", listEntity)}";
+    }
+}
+
 public struct FrameHash
 {
     public int frame;
     public int id;
-    public int hashPos;
-    public int hashHp;
-    public int hashFindtarget;
+    public FrameHashItem hashPos;
+    public FrameHashItem hashHp;
+    public FrameHashItem hashFindtarget;
 
     public byte[] ToBytes()
     {
@@ -23,9 +101,9 @@ public struct FrameHash
         writer.Write((byte)MsgType.HashMsg);
         writer.Write(frame);
         writer.Write(id);
-        writer.Write(hashPos);
-        writer.Write(hashHp);
-        writer.Write(hashFindtarget);
+        hashPos.Write(writer);
+        hashHp.Write(writer);
+        hashFindtarget.Write(writer);
 
         return steam.ToArray();
     }
@@ -37,9 +115,9 @@ public struct FrameHash
         var msgType = reader.ReadByte();
         frame = reader.ReadInt32();
         id = reader.ReadInt32();
-        hashPos = reader.ReadInt32();
-        hashHp = reader.ReadInt32();
-        hashFindtarget = reader.ReadInt32();
+        hashPos = FrameHashItem.GetItem(reader);
+        hashHp = FrameHashItem.GetItem(reader);
+        hashFindtarget = FrameHashItem.GetItem(reader);
     }
 }
 

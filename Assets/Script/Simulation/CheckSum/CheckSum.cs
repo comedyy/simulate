@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,6 +16,9 @@ public class CheckSum
     string name;
     int m_Frame;
     int m_HashCode;
+    List<int> listDetail = new List<int>();
+    List<Entity> listOrder = new List<Entity>();
+
     List<int> m_HistoryCheckSums = new List<int>();
     List<List<int>> m_HistoryCheckSumsDetail = new List<List<int>>();
     List<List<Entity>> m_HistoryCheckSumsOrder = new List<List<Entity>>();
@@ -35,18 +39,11 @@ public class CheckSum
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void CheckValue(Entity entity, int value)
+    public void CheckValue(Entity entity, int value, params int[] list)
     {
-        if(m_HistoryCheckSumsDetail.Count <= m_HistoryCheckSums.Count)
-        {
-            m_HistoryCheckSumsDetail.Add(new List<int>());
-            m_HistoryCheckSumsOrder.Add(new List<Entity>());
-        }
-
-        var last = m_HistoryCheckSumsDetail.Last();
-        last.Add(value);
-        var last1 = m_HistoryCheckSumsOrder.Last();
-        last1.Add(entity);
+        listDetail.Add(value);
+        listDetail.AddRange(list);
+        listOrder.Add(entity);
 
         m_HashCode = CombineHashCode(m_HashCode, value);
     }
@@ -57,7 +54,12 @@ public class CheckSum
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SaveCheckSum(){
         m_HistoryCheckSums.Add(m_HashCode);
+        m_HistoryCheckSumsDetail.Add(listDetail);
+        m_HistoryCheckSumsOrder.Add(listOrder);
+
         m_HashCode = 0;
+        listDetail = new List<int>();
+        listOrder = new List<Entity>();
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public List<int> GetHistory() => m_HistoryCheckSums;

@@ -33,6 +33,8 @@ public class Battle
         {
             _world.Update();
         }
+
+        _localFrame.Update();
     }
 
     internal void SavePlayback()

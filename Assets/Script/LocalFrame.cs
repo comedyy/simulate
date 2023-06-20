@@ -45,16 +45,31 @@ public class LocalFrame
         _controllerId = id;
     }
 
+    FrameHashItem GetHashItem(CheckSum checkSum, int checkSumSendCount)
+    {
+        return new FrameHashItem(){
+            hash = checkSum.GetHistory()[checkSumSendCount], 
+            listValue = checkSum.GetHistoryDetail()[checkSumSendCount], 
+            listEntity = checkSum.GetHistoryDetailOrder()[checkSumSendCount], 
+        };
+    }
+
     public void Update()
     {
+        if(_socket == null) return;
+
         _socket.Update();
 
         while(checkSumSendCount < _checkSumMgr.Count)
         {
+            var positionFrame = GetHashItem(_checkSumMgr.positionChecksum, checkSumSendCount);
+            var hpFrame = GetHashItem(_checkSumMgr.hpCheckSum, checkSumSendCount);
+            var targetFindFrame = GetHashItem(_checkSumMgr.targetFindCheckSum, checkSumSendCount);
+
             SendHash(checkSumSendCount, 
-                _checkSumMgr.positionChecksum.GetHistory()[checkSumSendCount],
-                _checkSumMgr.hpCheckSum.GetHistory()[checkSumSendCount],
-                _checkSumMgr.targetFindCheckSum.GetHistory()[checkSumSendCount]);
+                positionFrame, 
+                hpFrame, 
+                targetFindFrame);
             checkSumSendCount++;
         }
 
@@ -84,7 +99,7 @@ public class LocalFrame
         _messageItem = messageItem;
     }
 
-    public void SendHash(int frame, int hashPos, int hashHp, int hashFindtarget)
+    public void SendHash(int frame, FrameHashItem hashPos, FrameHashItem hashHp, FrameHashItem hashFindtarget)
     {
         _socket.SendMessage(new FrameHash(){
             frame = frame, hashPos = hashPos, hashFindtarget = hashFindtarget, hashHp = hashHp, id = _controllerId

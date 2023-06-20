@@ -19,8 +19,8 @@ public class CalHashSystem : ComponentSystem
         int frame = GetSingleton<LogicTime>().frameCount;
         
         Entities.ForEach((Entity entity, ref LTransformComponet ls)=>{
-            checkSum.positionChecksum.CheckValue(entity, ls.position.GetHashCode());
-            checkSum.positionChecksum.CheckValue(entity, ls.rotation.GetHashCode());
+            checkSum.positionChecksum.CheckValue(entity, ls.position.GetHashCode(), math.asint(ls.position.x), math.asint(ls.position.y), math.asint(ls.position.z));
+            checkSum.positionChecksum.CheckValue(entity, ls.rotation.GetHashCode(), math.asint(ls.rotation.value.x), math.asint(ls.rotation.value.y), math.asint(ls.rotation.value.z),math.asint(ls.rotation.value.w));
         });
 
         checkSum.positionChecksum.SaveCheckSum();
