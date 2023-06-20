@@ -15,7 +15,7 @@ public class GameUser : MonoBehaviour
             string strIp = null;
             if(Application.platform == RuntimePlatform.IPhonePlayer)
             {
-                strIp = "172.20.10.14";
+                strIp = "172.20.10.1";
             }
 
             if(IsLocalClient)
