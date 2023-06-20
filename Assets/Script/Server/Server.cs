@@ -80,11 +80,11 @@ public class Server
             currentFrame = frame;
         }
 
-        if(currentFrame > frame + 10)
-        {
-            Debug.LogError("frame > 10");
-            return;
-        }
+        // if(currentFrame > frame + 10)
+        // {
+        //     Debug.LogError("frame > 10");
+        //     return;
+        // }
 
         if(_allMessage1 ==  null) 
         {
