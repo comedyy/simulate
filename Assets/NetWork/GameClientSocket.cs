@@ -97,7 +97,7 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
 
     public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
     {
-        if (messageType == UnconnectedMessageType.Broadcast &&  _netClient.GetPeersCount(ConnectionState.Connected | ConnectionState.Outgoing) == 0)
+        if (messageType == UnconnectedMessageType.Broadcast && _netClient.ConnectedPeersCount == 0)
         {
             if(reader.GetInt() == 1)
             {
