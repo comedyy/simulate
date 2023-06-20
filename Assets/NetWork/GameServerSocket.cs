@@ -12,7 +12,6 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
     private List<NetPeer> _ourPeers = new List<NetPeer>();
     private NetDataWriter _dataWriter;
     private int countUser;
-    private bool enableBroadCast = true;
 
     public GameServerSocket(int countUser)
     {
@@ -25,24 +24,14 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
         NetDebug.Logger = this;
         _dataWriter = new NetDataWriter();
         _netServer = new NetManager(this);
-        _netServer.Start();
-        _netServer.UnconnectedMessagesEnabled = true;
+        _netServer.Start(5000);
+        _netServer.BroadcastReceiveEnabled = true;
         _netServer.UpdateTime = 15;
     }
 
     public void Update()
     {
         _netServer.PollEvents();
-
-        if(enableBroadCast)
-        {
-            _netServer.SendBroadcast(new byte[] {1}, 5000);
-            _netServer.SendBroadcast(new byte[] {1}, 5001);
-            _netServer.SendBroadcast(new byte[] {1}, 5002);
-            _netServer.SendBroadcast(new byte[] {1}, 5003);
-            _netServer.SendBroadcast(new byte[] {1}, 5004);
-            _netServer.SendBroadcast(new byte[] {1}, 5005);
-        }
     }
 
     public void OnDestroy()
@@ -82,22 +71,21 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
         Debug.Log("[SERVER] error " + socketErrorCode);
     }
 
-    // 修改流程，由服务器广播房间，客户端主动加入。
     public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader,
         UnconnectedMessageType messageType)
     {
-        // if (messageType == UnconnectedMessageType.BasicMessage)
-        // {
-        //     if(_ourPeers.Count >= countUser)
-        //     {
-        //         return;
-        //     }
+        if (messageType == UnconnectedMessageType.Broadcast)
+        {
+            if(_ourPeers.Count >= countUser)
+            {
+                return;
+            }
 
-        //     Debug.Log("[SERVER] Received discovery request. Send discovery response");
-        //     NetDataWriter resp = new NetDataWriter();
-        //     resp.Put(1);
-        //     _netServer.SendUnconnectedMessage(resp, remoteEndPoint);
-        // }
+            Debug.Log("[SERVER] Received discovery request. Send discovery response");
+            NetDataWriter resp = new NetDataWriter();
+            resp.Put(1);
+            _netServer.SendUnconnectedMessage(resp, remoteEndPoint);
+        }
     }
 
     public void OnNetworkLatencyUpdate(NetPeer peer, int latency)
@@ -106,12 +94,6 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
 
     public void OnConnectionRequest(ConnectionRequest request)
     {
-        if(_ourPeers.Count >= countUser)
-        {
-            request.Reject();
-            return;
-        }
-
         request.AcceptIfKey("sample_app");
     }
 
@@ -137,7 +119,6 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
 
     public void BroadCastBattleStart()
     {
-        enableBroadCast = false;
         for(int i = 0; i < _ourPeers.Count; i++)
         {
             var peer = _ourPeers[i];

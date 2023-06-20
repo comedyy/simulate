@@ -11,36 +11,29 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
     private NetDataWriter _dataWriter;
     public Action<byte, byte> OnStartBattle{get;set;}
 
-    int _index;
-    public GameClientSocket(int index)
-    {
-        _index = index;
-    }
-
 
 #region ILifeCircle
     public void Start()
     {
         _netClient = new NetManager(this);
         _dataWriter = new NetDataWriter();
-        _netClient.Start(5000 + _index);
-        _netClient.BroadcastReceiveEnabled = true;
         _netClient.UnconnectedMessagesEnabled = true;
         _netClient.UpdateTime = 15;
+        _netClient.Start();
     }
 
     public void Update()
     {
         _netClient.PollEvents();
 
-        // var peer = _netClient.FirstPeer;
-        // if (peer != null && peer.ConnectionState == ConnectionState.Connected)
-        // {
-        // }
-        // else
-        // {
-        //     _netClient.SendBroadcast(new byte[] {1}, 5000);
-        // }
+        var peer = _netClient.FirstPeer;
+        if (peer != null && peer.ConnectionState == ConnectionState.Connected)
+        {
+        }
+        else
+        {
+            _netClient.SendBroadcast(new byte[] {1}, 5000);
+        }
     }
 
     public void OnDestroy()
@@ -97,7 +90,7 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
 
     public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
     {
-        if (messageType == UnconnectedMessageType.Broadcast && _netClient.ConnectedPeersCount == 0)
+        if (messageType == UnconnectedMessageType.BasicMessage && _netClient.ConnectedPeersCount == 0)
         {
             if(reader.GetInt() == 1)
             {

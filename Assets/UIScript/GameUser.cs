@@ -5,12 +5,11 @@ public class GameUser : MonoBehaviour
 {
     IClientGameSocket _socket;
     Battle _battle;
-    static int s_index;
     void Start()
     {
         if(Main.Instance.useRealNetwork)
         {
-            _socket = new GameClientSocket(s_index++);
+            _socket = new GameClientSocket();
         }
         else
         {
