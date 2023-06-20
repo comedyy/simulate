@@ -1,8 +1,17 @@
 <linker>
-  <assembly fullname="Unity.Entities" preserve="all" />
-  <assembly fullname="Unity.Collections" preserve="all" />
-  <assembly fullname="Unity.Transforms" preserve="all" />
-  <assembly fullname="Unity.Transforms.Hybrid" preserve="all" />
-  <assembly fullname="Unity.Jobs" preserve="all" />
-  <assembly fullname="Unity.Burst" preserve="all" />
+       <assembly fullname="UnityGameFramework.Runtime" preserve="all" />
+       <assembly fullname="RdGameFramework" preserve="all" />
+       <assembly fullname="AbstractFramework" preserve="all" />
+       <assembly fullname="Unity.Entities" preserve="all" />
+       <assembly fullname="Unity.Transforms" preserve="all" />
+       <assembly fullname="Unity.Collections" preserve="all" />
+       <assembly fullname="Unity.Jobs" preserve="all" />
+       <assembly fullname="Unity.Mathematics" preserve="all" />
+       <assembly fullname="Unity.Deformations" preserve="all" />
+       <assembly fullname="Unity.Entities.Hybrid" preserve="all" />
+       <assembly fullname="Unity.Mathematics.Extensions" preserve="all" />
+       <assembly fullname="Unity.Mathematics.Extensions.Hybrid" preserve="all" />
+       <assembly fullname="Unity.Collections" preserve="all" />
+       <assembly fullname="Unity.Burst" preserve="all" />
+	   <assembly fullname="log4net" preserve="all"/>
 </linker>
