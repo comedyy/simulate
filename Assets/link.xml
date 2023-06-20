@@ -1,5 +1,11 @@
 <linker>
-	<assembly fullname="UnityEngine.CoreModule">
-		<type fullname="UnityEngine.Jobs.TransformAccessArray" preserve="all" />
-	</assembly>
+  <assembly fullname="Unity.Collections" preserve="all" />
+  <assembly fullname="Unity.Collections.Tests" preserve="all" />
+  <assembly fullname="Unity.Burst.Tests" preserve="all" />
+  <assembly fullname="Unity.Transforms" preserve="all" />
+  <assembly fullname="Unity.Transforms.Hybrid" preserve="all" />
+  <assembly fullname="Unity.Transforms.Tests" preserve="all" />
+  <assembly fullname="Unity.Jobs" preserve="all" />
+  <assembly fullname="Unity.Jobs.Tests" preserve="all" />
+  <assembly fullname="Unity.Burst" preserve="all" />
 </linker>
