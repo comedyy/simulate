@@ -69,7 +69,7 @@ public class GameClientSocket : IClientGameSocket, INetEventListener
         {
             _dataWriter.Reset();
             _dataWriter.Put(bytes);
-            peer.Send(_dataWriter, DeliveryMethod.Sequenced);
+            peer.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
         }
     }
 #endregion

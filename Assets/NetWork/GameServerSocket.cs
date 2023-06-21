@@ -54,7 +54,7 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
         // Debug.LogError(bytes.Length);
         foreach (var peer in _ourPeers)
         {
-            peer.Send(_dataWriter, DeliveryMethod.Sequenced);
+            peer.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
         }
     }
 #endregion
@@ -131,7 +131,7 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
             _dataWriter.Reset();
             _dataWriter.Put(bytes);
 
-            peer.Send(_dataWriter, DeliveryMethod.Sequenced);
+            peer.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
         }
     }
 

@@ -12,12 +12,7 @@ public class GameUser : MonoBehaviour
     {
         if(Main.Instance.useRealNetwork)
         {
-            string strIp = null;
-            if(Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                strIp = "172.20.10.1";
-            }
-
+            string strIp = RoomUI.ip;
             if(IsLocalClient)
             {
                 strIp = "127.0.0.1";

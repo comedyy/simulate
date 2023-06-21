@@ -12,7 +12,12 @@ public class RoomUI : MonoBehaviour
     public Text _info;
 
     Room _room;
+    public static string ip;
 
+    void OnGUI()
+    {
+        ip = GUI.TextField(new Rect(100, 100, 100, 100), "192.168.2.14");
+    }
 
     // Start is called before the first frame update
     void Start()
