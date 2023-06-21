@@ -38,8 +38,11 @@ public class ControllerMoveSystem : ComponentSystem
             var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
             tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
 
+
+            var pos = tranCom.position;
+            var targetPos = new int3((int)(pos.x * 100), (int)(pos.y * 100), (int)(pos.z * 100));
             localServer.SetData(new MessageItem(){
-                pos = tranCom.position, id = controllerId
+                pos = targetPos, id = controllerId
             });
         }
         else    // ai
@@ -50,7 +53,7 @@ public class ControllerMoveSystem : ComponentSystem
 
     private void UpdateOtherUser(int controllerId)
     {
-        float3 firstPos = default;
+        fp3 firstPos = default;
         Entity firstEntity = default;
 
         // simulate other role behavior
@@ -85,7 +88,7 @@ public class ControllerMoveSystem : ComponentSystem
 
             int userId = EntityManager.GetComponentData<UserComponnet>(entity).id;
             localServer.SetData(new MessageItem(){
-                pos = targetPos, id = userId
+                pos = new int3((int)(targetPos.x * 100), (int)(targetPos.y * 100), (int)(targetPos.z * 100)), id = userId
             });
         }
     }

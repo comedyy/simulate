@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Unity.Entities;
+using Unity.Mathematics;
 
 public enum MsgType{
     StartBattle = 1,
@@ -134,9 +135,9 @@ public struct PackageItem
         writer.Write((byte)MsgType.FrameMsg);
         writer.Write(frame);
         writer.Write(messageItem.id);
-        writer.Write((int)(messageItem.pos.x * 100));
-        writer.Write((int)(messageItem.pos.y * 100));
-        writer.Write((int)(messageItem.pos.z * 100));
+        writer.Write(messageItem.pos.x);
+        writer.Write(messageItem.pos.y);
+        writer.Write(messageItem.pos.z);
 
         return steam.ToArray();
     }
@@ -149,12 +150,7 @@ public struct PackageItem
         frame = reader.ReadInt32();
         messageItem = new MessageItem(){
             id = reader.ReadInt32(),
-            pos = new Unity.Mathematics.float3()
-            {
-                x = reader.ReadInt32() / 100f,
-                y = reader.ReadInt32() / 100f,
-                z = reader.ReadInt32() / 100f,
-            }
+            pos = new int3(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32())
         };
     }
 }
@@ -203,9 +199,9 @@ public struct ServerPackageItem
             {
                 var messageItem = list[i];
                 writer.Write(messageItem.id);
-                writer.Write((int)(messageItem.pos.x * 100));
-                writer.Write((int)(messageItem.pos.y * 100));
-                writer.Write((int)(messageItem.pos.z * 100));
+                writer.Write(messageItem.pos.x);
+                writer.Write(messageItem.pos.y);
+                writer.Write(messageItem.pos.z);
             }
         }
         else
@@ -230,12 +226,7 @@ public struct ServerPackageItem
             {
                 var messageItem = new MessageItem(){
                     id = reader.ReadInt32(),
-                    pos = new Unity.Mathematics.float3()
-                    {
-                        x = reader.ReadInt32() / 100f,
-                        y = reader.ReadInt32() / 100f,
-                        z = reader.ReadInt32() / 100f,
-                    }
+                    pos = new int3(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32())
                 };
                 list.Add(messageItem);
             }

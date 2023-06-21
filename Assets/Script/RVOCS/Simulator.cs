@@ -47,12 +47,12 @@ namespace RVO
         internal IList<Agent> agents_;
         internal IList<Obstacle> obstacles_;
         internal KdTree kdTree_;
-        internal float timeStep_;
+        internal fp timeStep_;
 
         private Agent defaultAgent_;
         private ManualResetEvent[] doneEvents_;
         private int numWorkers_;
-        private float globalTime_;
+        private fp globalTime_;
 
         /**
          * <summary>Adds a new agent with default properties to the simulation.
@@ -130,7 +130,7 @@ namespace RVO
          * <param name="velocity">The initial two-dimensional linear velocity of
          * this agent.</param>
          */
-        public int addAgent(Vector2 position, float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity, Entity entity)
+        public int addAgent(Vector2 position, fp neighborDist, int maxNeighbors, fp timeHorizon, fp timeHorizonObst, fp radius, fp maxSpeed, Vector2 velocity, Entity entity)
         {
             Agent agent = null;
             if(_removedAgents.Count > 0)
@@ -206,7 +206,7 @@ namespace RVO
                 }
                 else
                 {
-                    obstacle.convex_ = (RVOMath.leftOf(vertices[(i == 0 ? vertices.Count - 1 : i - 1)], vertices[i], vertices[(i == vertices.Count - 1 ? 0 : i + 1)]) >= 0.0f);
+                    obstacle.convex_ = (RVOMath.leftOf(vertices[(i == 0 ? vertices.Count - 1 : i - 1)], vertices[i], vertices[(i == vertices.Count - 1 ? 0 : i + 1)]) >= fp.zero);
                 }
 
                 obstacle.id_ = obstacles_.Count;
@@ -225,8 +225,8 @@ namespace RVO
             defaultAgent_ = null;
             kdTree_ = new KdTree(this);
             obstacles_ = new List<Obstacle>();
-            globalTime_ = 0.0f;
-            timeStep_ = 0.1f;
+            globalTime_ = fp.zero;
+            timeStep_ = fp.Create(0, 10000);
         }
 
         /**
@@ -235,7 +235,7 @@ namespace RVO
          *
          * <returns>The global time after the simulation step.</returns>
          */
-        public float doStep()
+        public fp doStep()
         {
             kdTree_.buildAgentTree();
 
@@ -296,7 +296,7 @@ namespace RVO
          * <param name="agentNo">The number of the agent whose maximum speed is
          * to be retrieved.</param>
          */
-        public float getAgentMaxSpeed(int agentNo)
+        public fp getAgentMaxSpeed(int agentNo)
         {
             return agents_[agentNo].maxSpeed_;
         }
@@ -311,7 +311,7 @@ namespace RVO
          * <param name="agentNo">The number of the agent whose maximum neighbor
          * distance is to be retrieved.</param>
          */
-        public float getAgentNeighborDist(int agentNo)
+        public fp getAgentNeighborDist(int agentNo)
         {
             return agents_[agentNo].neighborDist_;
         }
@@ -419,7 +419,7 @@ namespace RVO
          * <param name="agentNo">The number of the agent whose radius is to be
          * retrieved.</param>
          */
-        public float getAgentRadius(int agentNo)
+        public fp getAgentRadius(int agentNo)
         {
             return agents_[agentNo].radius_;
         }
@@ -432,7 +432,7 @@ namespace RVO
          * <param name="agentNo">The number of the agent whose time horizon is
          * to be retrieved.</param>
          */
-        public float getAgentTimeHorizon(int agentNo)
+        public fp getAgentTimeHorizon(int agentNo)
         {
             return agents_[agentNo].timeHorizon_;
         }
@@ -447,7 +447,7 @@ namespace RVO
          * <param name="agentNo">The number of the agent whose time horizon with
          * respect to obstacles is to be retrieved.</param>
          */
-        public float getAgentTimeHorizonObst(int agentNo)
+        public fp getAgentTimeHorizonObst(int agentNo)
         {
             return agents_[agentNo].timeHorizonObst_;
         }
@@ -473,7 +473,7 @@ namespace RVO
          * <returns>The present global time of the simulation (zero initially).
          * </returns>
          */
-        public float getGlobalTime()
+        public fp getGlobalTime()
         {
             return globalTime_;
         }
@@ -559,7 +559,7 @@ namespace RVO
          *
          * <returns>The present time step of the simulation.</returns>
          */
-        public float getTimeStep()
+        public fp getTimeStep()
         {
             return timeStep_;
         }
@@ -590,7 +590,7 @@ namespace RVO
          * the two points and the obstacles in order for the points to be
          * mutually visible (optional). Must be non-negative.</param>
          */
-        public bool queryVisibility(Vector2 point1, Vector2 point2, float radius)
+        public bool queryVisibility(Vector2 point1, Vector2 point2, fp radius)
         {
             return kdTree_.queryVisibility(point1, point2, radius);
         }
@@ -627,7 +627,7 @@ namespace RVO
          * <param name="velocity">The default initial two-dimensional linear
          * velocity of a new agent.</param>
          */
-        public void setAgentDefaults(float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity)
+        public void setAgentDefaults(fp neighborDist, int maxNeighbors, fp timeHorizon, fp timeHorizonObst, fp radius, fp maxSpeed, Vector2 velocity)
         {
             if (defaultAgent_ == null)
             {
@@ -665,7 +665,7 @@ namespace RVO
          * <param name="maxSpeed">The replacement maximum speed. Must be
          * non-negative.</param>
          */
-        public void setAgentMaxSpeed(int agentNo, float maxSpeed)
+        public void setAgentMaxSpeed(int agentNo, fp maxSpeed)
         {
             agents_[agentNo].maxSpeed_ = maxSpeed;
         }
@@ -679,7 +679,7 @@ namespace RVO
          * <param name="neighborDist">The replacement maximum neighbor distance.
          * Must be non-negative.</param>
          */
-        public void setAgentNeighborDist(int agentNo, float neighborDist)
+        public void setAgentNeighborDist(int agentNo, fp neighborDist)
         {
             agents_[agentNo].neighborDist_ = neighborDist;
         }
@@ -720,7 +720,7 @@ namespace RVO
          * <param name="radius">The replacement radius. Must be non-negative.
          * </param>
          */
-        public void setAgentRadius(int agentNo, float radius)
+        public void setAgentRadius(int agentNo, fp radius)
         {
             agents_[agentNo].radius_ = radius;
         }
@@ -734,7 +734,7 @@ namespace RVO
          * <param name="timeHorizon">The replacement time horizon with respect
          * to other agents. Must be positive.</param>
          */
-        public void setAgentTimeHorizon(int agentNo, float timeHorizon)
+        public void setAgentTimeHorizon(int agentNo, fp timeHorizon)
         {
             agents_[agentNo].timeHorizon_ = timeHorizon;
         }
@@ -748,7 +748,7 @@ namespace RVO
          * <param name="timeHorizonObst">The replacement time horizon with
          * respect to obstacles. Must be positive.</param>
          */
-        public void setAgentTimeHorizonObst(int agentNo, float timeHorizonObst)
+        public void setAgentTimeHorizonObst(int agentNo, fp timeHorizonObst)
         {
             agents_[agentNo].timeHorizonObst_ = timeHorizonObst;
         }
@@ -772,7 +772,7 @@ namespace RVO
          *
          * <param name="globalTime">The global time of the simulation.</param>
          */
-        public void setGlobalTime(float globalTime)
+        public void setGlobalTime(fp globalTime)
         {
             globalTime_ = globalTime;
         }
@@ -783,13 +783,13 @@ namespace RVO
          * <param name="timeStep">The time step of the simulation. Must be
          * positive.</param>
          */
-        public void setTimeStep(float timeStep)
+        public void setTimeStep(fp timeStep)
         {
             timeStep_ = timeStep;
         }
 
         List<int> listIds = new List<int>();
-        public void FindAgents(RVO.Vector2 position, float range, List<Entity> list)
+        public void FindAgents(RVO.Vector2 position, fp range, List<Entity> list)
         {
             // kdTree_.queryAgentTreeRecursive
 

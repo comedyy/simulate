@@ -14,13 +14,13 @@ public class MonsterAiSytem : ComponentSystem
         Entities.ForEach((ref MonsterAiComponent ai, ref LMoveByDirComponent moveByDirComponent, ref LTransformComponet trans)=>{
 
             var targetPos =  EntityManager.GetComponentData<LTransformComponet>(listUser[0]).position;
-            var distanceSq = math.distancesq(trans.position, targetPos);
+            var distanceSq = fpMath.distancesq(trans.position, targetPos);
             var entityTarget = listUser[0];
             for(int i = 0; i < listUser.length; i++)
             {
                 var current = listUser[i];
                 var pos = EntityManager.GetComponentData<LTransformComponet>(listUser[i]).position;
-                var dis = math.distancesq(trans.position, pos);
+                var dis = fpMath.distancesq(trans.position, pos);
                 if(dis < distanceSq)
                 {
                     entityTarget = current;
@@ -29,7 +29,7 @@ public class MonsterAiSytem : ComponentSystem
                 }
             }
 
-            moveByDirComponent.dir = math.normalize(targetPos - trans.position);
+            moveByDirComponent.dir = fpMath.normalize(targetPos - trans.position);
         });
     }
 }

@@ -31,7 +31,7 @@ public class VSpawnTargetSystem : ComponentSystem
 
             var lTransformCom = EntityManager.GetComponentData<LTransformComponet>(ev.entity);
             var com = new GameObjectBindingComponent(){
-                obj = GameObject.Instantiate(prefab, lTransformCom.position, lTransformCom.rotation),
+                obj = GameObject.Instantiate(prefab, lTransformCom.position, Quaternion.LookRotation(lTransformCom.rotation, Vector3.up)),
             };
             EntityManager.SetComponentData(ev.entity, com);
 
@@ -46,7 +46,7 @@ public class VSpawnTargetSystem : ComponentSystem
 
                 if(isInputUser)
                 {
-                    com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, lTransformCom.rotation);
+                    com.objFollow = GameObject.Instantiate(Resources.Load<GameObject>("ControllerFollow"), lTransformCom.position, Quaternion.LookRotation(lTransformCom.rotation, Vector3.up));
                 }
             }
 

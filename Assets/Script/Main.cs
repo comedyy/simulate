@@ -16,7 +16,7 @@ public class Main : MonoBehaviour
     public bool useRealNetwork;
 
     Server _dumpServer;
-    public float tick => 1f / LogicFrameCount;
+    public fp tick => fp.Create(0, 6600);
     // Battle[] _battles;
 
     public static Main Instance{get; private set;}

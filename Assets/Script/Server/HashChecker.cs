@@ -108,21 +108,19 @@ public class HashChecker
     string GenPosHashDetail(FrameHashItem item)
     {
         List<float3> lst = new List<float3>();
-        List<float4> lstRotation = new List<float4>();
+        List<float3> lstRotation = new List<float3>();
         for(int i = 0; i < item.listEntity.Count / 2; i++)
         {
-            var f1 = math.asfloat(item.listValue[i * 9 + 1]);
-            var f2 = math.asfloat(item.listValue[i * 9 + 2]);
-            var f3 = math.asfloat(item.listValue[i * 9 + 3]);
+            var f1 = math.asfloat(item.listValue[i * 8 + 1]);
+            var f2 = math.asfloat(item.listValue[i * 8 + 2]);
+            var f3 = math.asfloat(item.listValue[i * 8 + 3]);
             lst.Add(new float3(f1, f2, f3));
 
-            var f11 = math.asfloat(item.listValue[i * 9 + 5]);
-            var f21 = math.asfloat(item.listValue[i * 9 + 6]);
-            var f31 = math.asfloat(item.listValue[i * 9 + 7]);
-            var f41 = math.asfloat(item.listValue[i * 9 + 8]);
-            lstRotation.Add(new float4(f11, f21, f31, f41));
+            var f11 = math.asfloat(item.listValue[i * 8 + 5]);
+            var f21 = math.asfloat(item.listValue[i * 8 + 6]);
+            var f31 = math.asfloat(item.listValue[i * 8 + 7]);
+            lstRotation.Add(new float3(f11, f21, f31));
         }
-
 
         return $"Hash:{item.hash} \nlistValue：{string.Join("!", item.listValue)}\n listEntity：{string.Join("!", item.listEntity)}\n pos:{string.Join(",", lst)} \n rotation{string.Join(",", lstRotation)}";
     }

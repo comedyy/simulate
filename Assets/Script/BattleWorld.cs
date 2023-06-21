@@ -8,7 +8,7 @@ public class BattleWorld : World
     BattleEndFlag flag = new BattleEndFlag();
     public bool IsEnd => flag.isEnd;
 
-    public BattleWorld(string name, CheckSumMgr checksum, bool randomFixedCount, float logicFrameInterval, LocalFrame localServer, int userId, int userCount) : base(name)
+    public BattleWorld(string name, CheckSumMgr checksum, bool randomFixedCount, fp logicFrameInterval, LocalFrame localServer, int userId, int userCount) : base(name)
     {
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new CheckSumComponet(){
             checkSum = checksum

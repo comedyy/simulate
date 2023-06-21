@@ -26,7 +26,7 @@ public class VLerpTransformSystem : ComponentSystem
             lerp.lerpTime = math.min(lerp.lerpTime + Time.DeltaTime, logicStep);
             var lerpValue = lerp.lerpTime / logicStep;
             var pos = math.lerp(lerp.lerpBeginPos, lTransformCom.position, lerpValue);
-            var rotation = math.nlerp(lerp.lerpBeginRotation, lTransformCom.rotation, lerpValue);
+            var rotation = math.nlerp(lerp.lerpBeginRotation, quaternion.LookRotation(lTransformCom.rotation, new float3(0, 1, 0)) , lerpValue);
             // Debug.LogError(Time.DeltaTime + " " + lerp.lerpTime + " " + lerpValue + " " + pos + " " +  lerp.preLogicPos + " " + lTransformCom.position);
 
             obj.transform.SetPositionAndRotation(pos, rotation);

@@ -4,10 +4,10 @@ using System;
 
 public class InitiazationSystem : ComponentSystemBase
 {
-    public static float logicFrameInterval;
+    public static fp logicFrameInterval;
     public static int userCount;
 
-    public void Init(float v)
+    public void Init(fp v)
     {
   
     }
@@ -21,8 +21,8 @@ public class InitiazationSystem : ComponentSystemBase
         {
             EntityManager.AddComponentData(EntityManager.CreateEntity(), new SpawnEvent()
             {
-                position = new float3(3, 0, 3),
-                dir = new float3(1, 0, 0),
+                position = new fp3(3, 0, 3),
+                dir = new fp3(1, 0, 0),
                 id = i + 1,
                 isUser = true,
                 atk = 10,

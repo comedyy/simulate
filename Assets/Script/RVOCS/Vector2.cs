@@ -41,8 +41,8 @@ namespace RVO
      */
     public struct Vector2
     {
-        internal float x_;
-        internal float y_;
+        internal fp x_;
+        internal fp y_;
 
         /**
          * <summary>Constructs and initializes a two-dimensional vector from the
@@ -53,7 +53,7 @@ namespace RVO
          * <param name="y">The y-coordinate of the two-dimensional vector.
          * </param>
          */
-        public Vector2(float x, float y)
+        public Vector2(fp x, fp y)
         {
             x_ = x;
             y_ = y;
@@ -66,7 +66,7 @@ namespace RVO
          */
         public override string ToString()
         {
-            return "(" + x_.ToString(new CultureInfo("").NumberFormat) + "," + y_.ToString(new CultureInfo("").NumberFormat) + ")";
+            return "(" + x_.ToString() + "," + y_.ToString() + ")";
         }
 
         /**
@@ -75,7 +75,7 @@ namespace RVO
          *
          * <returns>The x-coordinate of the two-dimensional vector.</returns>
          */
-        public float x()
+        public fp x()
         {
             return x_;
         }
@@ -86,7 +86,7 @@ namespace RVO
          *
          * <returns>The y-coordinate of the two-dimensional vector.</returns>
          */
-        public float y()
+        public fp y()
         {
             return y_;
         }
@@ -101,7 +101,7 @@ namespace RVO
          * <param name="vector1">The first two-dimensional vector.</param>
          * <param name="vector2">The second two-dimensional vector.</param>
          */
-        public static float operator *(Vector2 vector1, Vector2 vector2)
+        public static fp operator *(Vector2 vector1, Vector2 vector2)
         {
             return vector1.x_ * vector2.x_ + vector1.y_ * vector2.y_;
         }
@@ -116,7 +116,7 @@ namespace RVO
          * <param name="scalar">The scalar value.</param>
          * <param name="vector">The two-dimensional vector.</param>
          */
-        public static Vector2 operator *(float scalar, Vector2 vector)
+        public static Vector2 operator *(fp scalar, Vector2 vector)
         {
             return vector * scalar;
         }
@@ -131,7 +131,7 @@ namespace RVO
          * <param name="vector">The two-dimensional vector.</param>
          * <param name="scalar">The scalar value.</param>
          */
-        public static Vector2 operator *(Vector2 vector, float scalar)
+        public static Vector2 operator *(Vector2 vector, fp scalar)
         {
             return new Vector2(vector.x_ * scalar, vector.y_ * scalar);
         }
@@ -146,7 +146,7 @@ namespace RVO
          * <param name="vector">The two-dimensional vector.</param>
          * <param name="scalar">The scalar value.</param>
          */
-        public static Vector2 operator /(Vector2 vector, float scalar)
+        public static Vector2 operator /(Vector2 vector, fp scalar)
         {
             return new Vector2(vector.x_ / scalar, vector.y_ / scalar);
         }

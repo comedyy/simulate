@@ -24,7 +24,7 @@ public class CircleSkillSystem : ComponentSystem
             {
                 var item = listUser[i];
                 var pos = EntityManager.GetComponentData<LTransformComponet>(item).position;
-                if(math.distancesq(myPos, pos) > skill.range * skill.range)
+                if(fpMath.distancesq(myPos, pos) > skill.range * skill.range)
                 {
                     continue;
                 }

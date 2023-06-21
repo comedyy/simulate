@@ -20,13 +20,11 @@ public class LogicSyncMain : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
-        var tick = 1f / LogicFrameCount;
-
         _battles = new Battle[worldCount];
         for(int i = 0; i < worldCount; i++)
         {
             await Task.Delay(i * 10);
-            _battles[i] = new Battle(tick, randomLogicSimulateTime, usePlaybackInput, i + 1, null, 5);
+            _battles[i] = new Battle(fp.Create(0, 6600), randomLogicSimulateTime, usePlaybackInput, i + 1, null, 5);
         }
     }
 

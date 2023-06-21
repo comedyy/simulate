@@ -8,7 +8,7 @@ public class Battle
 
     LocalFrame _localFrame;
 
-    public Battle(float tick, bool randomFixedCount, bool usePlaybackInput, int i, IGameSocket socket, int userCount)
+    public Battle(fp tick, bool randomFixedCount, bool usePlaybackInput, int i, IGameSocket socket, int userCount)
     {
         _localFrame = new LocalFrame();
         _checkSumMgr = new CheckSumMgr();

@@ -12,37 +12,33 @@ public struct LRvoComponent : IComponentData
 
 public struct LTransformComponet : IComponentData
 {
-    public float3 position;
-    public quaternion rotation;
+    public fp3 position;
+    public fp3 rotation;
 }
 
 public struct LMoveByDirComponent : IComponentData
 {
-    public float3 dir;
+    public fp3 dir;
 }
 
-public struct LMoveByPosComponent : IComponentData
-{
-    public float3 pos;
-}
 
 public struct MoveSpeedComponent : IComponentData
 {
-    public float speed;
+    public fp speed;
 }
 
 public struct SizeComponent : IComponentData
 {
-    public float size;
+    public fp size;
 }
 
 public struct SpawnEvent : IComponentData
 {
-    public float3 position;
-    public float3 dir;
+    public fp3 position;
+    public fp3 dir;
     public bool isUser;
-    public float aiInterval;
-    public float despawnTime;
+    public fp aiInterval;
+    public fp despawnTime;
     internal int id;
     public int hp;
     public int atk;
@@ -52,28 +48,27 @@ public struct SpawnMonsterComponent: IComponentData
 {
     public int maxCount;
     public int currentCount;
-    public float interval;
-    public float spawnCountPerInterval;
-    public float lastSpawnTime;
+    public fp interval;
+    public fp spawnCountPerInterval;
+    public fp lastSpawnTime;
 }
 
 
 public struct MonsterAiComponent : IComponentData
 {
-    public float randomTurnInterval;
-    public float lastTurnTime;
+    public fp randomTurnInterval;
 }
 
 public struct MonsterAutoDespawnComponent : IComponentData
 {
-    public float despawnTime;
+    public fp despawnTime;
 }
 
 public struct LogicTime : IComponentData
 {
     public int frameCount;
-    public float escaped;
-    public float deltaTime;
+    public fp escaped;
+    public fp deltaTime;
 }
 
 public struct VLerpTransformCopmnet : IComponentData
@@ -83,22 +78,11 @@ public struct VLerpTransformCopmnet : IComponentData
     public float lerpTime;              // 已经lerp多久了。
 }
 
-public class GameObjectBindingComponent : IComponentData, IEquatable<GameObjectBindingComponent>
+public class GameObjectBindingComponent : IComponentData
 {
     public GameObject obj;
     public GameObject objFollow;
-
-    public bool Equals(GameObjectBindingComponent other)
-    {
-        return other.obj == obj;
-    }
-
-    public override int GetHashCode()
-    {
-        return obj.GetHashCode();
-    }
 }
-
 
 public struct ControllerHolder : IComponentData
 {
@@ -112,9 +96,9 @@ public struct UserListComponent : IComponentData
 
 public struct SkillComponent : IComponentData
 {
-    public float interval;
-    public float range;
-    public float preHurtTime;
+    public fp interval;
+    public fp range;
+    public fp preHurtTime;
 }
 
 public struct UserComponnet : IComponentData
@@ -124,5 +108,5 @@ public struct UserComponnet : IComponentData
 
 public struct UserAiComponent : IComponentData
 {
-    public float3 offsetToController;
+    public fp3 offsetToController;
 }

@@ -23,11 +23,16 @@ public class InputUserPositionSystem : ComponentSystem
             }
 
             var preTransform = EntityManager.GetComponentData<LTransformComponet>(entity);
-            var diff = message.pos - preTransform.position;
-            var dir = math.normalize(diff);
+            var pos = new fp3(){
+                x = fp.Create(message.pos.x / 100, (message.pos.x % 100 ) * 1000),
+                y = fp.Create(message.pos.y / 100, (message.pos.y % 100 ) * 1000),
+                z = fp.Create(message.pos.z / 100, (message.pos.z % 100 ) * 1000),
+            };
+            var diff = pos - preTransform.position;
+            var dir = fpMath.normalize(diff);
             EntityManager.SetComponentData(entity, new LTransformComponet(){
-                rotation = quaternion.LookRotation(dir, new float3(0, 1, 0)),
-                position = message.pos
+                rotation = dir,
+                position = pos
             });
 
             var com = EntityManager.GetComponentData<VLerpTransformCopmnet>(entity);

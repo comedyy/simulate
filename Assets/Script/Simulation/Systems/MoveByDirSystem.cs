@@ -26,8 +26,8 @@ public class MoveByDirSystem : ComponentSystem
 
             com.lerpTime = 0;
 
-            tranCom.rotation = quaternion.LookRotation(new float3(forward.x(), 0, forward.y()), new float3(0, 1, 0));
-            tranCom.position = new float3(pos.x(), 0, pos.y());
+            tranCom.rotation = new fp3(forward.x(), 0, forward.y());
+            tranCom.position = new fp3(pos.x(), 0, pos.y());
         });
     }
 }

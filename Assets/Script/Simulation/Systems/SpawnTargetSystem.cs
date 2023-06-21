@@ -55,7 +55,7 @@ public class SpawnTargetSystem : ComponentSystem
 
         Entities.ForEach((Entity evEntity, ref SpawnEvent ev)=>{
             var entity = Entity.Null;
-            var size = 1f;
+            var size = fp.one;
             
             if(ev.isUser)
             {
@@ -66,7 +66,7 @@ public class SpawnTargetSystem : ComponentSystem
                 SetSingleton(userList);
 
                 EntityManager.SetComponentData(entity, new SkillComponent(){
-                     range = 5, interval = 0.3f
+                     range = 5, interval = fp.Create(0, 30000)
                 });
 
                 EntityManager.SetComponentData(entity, new UserComponnet(){
@@ -74,7 +74,7 @@ public class SpawnTargetSystem : ComponentSystem
                 });
 
                 EntityManager.SetComponentData(entity, new UserAiComponent(){
-                    offsetToController = new float3(RandomUtils.Random(random, 5), 0, RandomUtils.Random(random, 5))
+                    offsetToController = new fp3(RandomUtils.Random(random, 5), 0, RandomUtils.Random(random, 5))
                 });
                 
                 // var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);
@@ -95,11 +95,11 @@ public class SpawnTargetSystem : ComponentSystem
                 });
 
                 EntityManager.SetComponentData(entity, new LRvoComponent(){
-                    rvoId = rvoObj.rvoSimulator.addAgent(new RVO.Vector2(ev.position.x, ev.position.z), 1.5f, 3, 0.05f, 0.05f, size, 3, new RVO.Vector2(ev.dir.x, ev.dir.z), entity)
+                    rvoId = rvoObj.rvoSimulator.addAgent(new RVO.Vector2(ev.position.x, ev.position.z), fp.Create(1, 50000), 3, fp.Create(0, 5000), fp.Create(0, 5000), size, 3, new RVO.Vector2(ev.dir.x, ev.dir.z), entity)
                 });
 
                 EntityManager.SetComponentData(entity, new SkillComponent(){
-                    range = 1.0f, interval = 0.3f
+                    range = fp.one, interval = fp.Create(0, 30000)
                 });
             }
 
@@ -113,11 +113,11 @@ public class SpawnTargetSystem : ComponentSystem
 
             var transform = EntityManager.GetComponentData<LTransformComponet>(entity);
             transform.position = ev.position;
-            transform.rotation = quaternion.LookRotation(ev.dir, new float3(0, 1, 0));
+            transform.rotation = ev.dir;
             EntityManager.SetComponentData(entity, transform);
 
             EntityManager.SetComponentData<MoveSpeedComponent>(entity, new MoveSpeedComponent(){
-                speed = 3f
+                speed = fp.Create(3)
             });
 
             EntityManager.SetComponentData<SizeComponent>(entity, new SizeComponent(){

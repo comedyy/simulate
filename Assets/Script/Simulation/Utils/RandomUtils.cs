@@ -1,12 +1,12 @@
 
 public static class RandomUtils
 {
-    public static float Random( System.Random _random)
+    public static fp Random( System.Random _random)
     {
-        return _random.Next(0, 10000) / 10000f;
+        return new fp(){rawValue = _random.Next(0, 10000) / 10000f};
     }
 
-    public static float Random(System.Random _random, float random)
+    public static fp Random(System.Random _random, fp random)
     {
         return random * Random(_random);
     }
