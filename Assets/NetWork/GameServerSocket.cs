@@ -6,7 +6,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using System.Collections.Generic;
 
-public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
+public class GameServerSocket : IServerGameSocket, INetEventListener
 {
     private NetManager _netServer;
     private List<NetPeer> _ourPeers = new List<NetPeer>();
@@ -21,7 +21,6 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
     #region ILifeCircle
     public void Start()
     {
-        NetDebug.Logger = this;
         _dataWriter = new NetDataWriter();
         _netServer = new NetManager(this);
         _netServer.Start(5000);
@@ -112,10 +111,10 @@ public class GameServerSocket : IServerGameSocket, INetEventListener, INetLogger
     }
 #endregion
 
-    public void WriteNet(NetLogLevel level, string str, params object[] args)
-    {
-        Debug.LogFormat(str, args);
-    }
+    // public void WriteNet(NetLogLevel level, string str, params object[] args)
+    // {
+    //     Debug.LogFormat(str, args);
+    // }
 
     public void BroadCastBattleStart()
     {
