@@ -511,6 +511,7 @@ namespace LiteNetLib
             if (remoteEndPoint.AddressFamily == AddressFamily.InterNetworkV6 && IPv6Support)
             {
                 socket = _udpSocketv6;
+                UnityEngine.Debug.Log("use ipv6");
                 if (socket == null)
                     return 0;
             }
