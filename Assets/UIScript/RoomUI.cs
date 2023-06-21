@@ -12,12 +12,15 @@ public class RoomUI : MonoBehaviour
     public Text _info;
 
     Room _room;
-    public static string ip;
+
+    #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
+    public static string ip = "192.168.2.14";
 
     void OnGUI()
     {
-        ip = GUI.TextField(new Rect(100, 100, 100, 100), "192.168.2.14");
+        ip = GUI.TextField(new Rect(100, 100, 100, 100), ip);
     }
+    #endif
 
     // Start is called before the first frame update
     void Start()

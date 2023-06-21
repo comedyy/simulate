@@ -47,7 +47,7 @@ public class LocalFrame
 
     FrameHashItem GetHashItem(CheckSum checkSum, int checkSumSendCount)
     {
-        #if HASH_DETAIL
+        #if !HASH_DETAIL
         return new FrameHashItem(){
             hash = checkSum.GetHistory()[checkSumSendCount], 
             listValue = checkSum.GetHistoryDetail()[checkSumSendCount], 
