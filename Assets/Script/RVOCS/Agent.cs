@@ -59,6 +59,8 @@ namespace RVO
         internal Entity entity;
         private Vector2 newVelocity_;
 
+        public bool IsRemove { get; internal set; }
+
         /**
          * <summary>Computes the neighbors of this agent.</summary>
          */

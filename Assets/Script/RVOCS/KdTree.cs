@@ -155,7 +155,7 @@ namespace RVO
          */
         private const int MAX_LEAF_SIZE = 10;
 
-        private Agent[] agents_;
+        private List<Agent> agents_ = new List<Agent>();
         private AgentTreeNode[] agentTree_;
         private ObstacleTreeNode obstacleTree_;
         private Simulator simulator;
@@ -170,26 +170,23 @@ namespace RVO
          */
         internal void buildAgentTree()
         {
-            if (agents_ == null || agents_.Length != this.simulator.agents_.Count)
+            agents_.Clear();
+            for (int i = 0; i < this.simulator.agents_.Count; ++i)
             {
-                agents_ = new Agent[this.simulator.agents_.Count];
-
-                for (int i = 0; i < agents_.Length; ++i)
-                {
-                    agents_[i] = this.simulator.agents_[i];
-                }
-
-                agentTree_ = new AgentTreeNode[2 * agents_.Length];
-
-                for (int i = 0; i < agentTree_.Length; ++i)
-                {
-                    agentTree_[i] = new AgentTreeNode();
-                }
+                if(this.simulator.agents_[i].IsRemove) continue;
+                agents_.Add(this.simulator.agents_[i]);
             }
 
-            if (agents_.Length != 0)
+            agentTree_ = new AgentTreeNode[2 * agents_.Count];
+
+            for (int i = 0; i < agentTree_.Length; ++i)
             {
-                buildAgentTreeRecursive(0, agents_.Length, 0);
+                agentTree_[i] = new AgentTreeNode();
+            }
+
+            if (agents_.Count != 0)
+            {
+                buildAgentTreeRecursive(0, agents_.Count, 0);
             }
         }
 

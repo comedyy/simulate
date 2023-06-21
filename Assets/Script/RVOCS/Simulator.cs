@@ -35,6 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Unity.Entities;
+using UnityEngine;
 
 namespace RVO
 {
@@ -85,8 +86,11 @@ namespace RVO
             return agent.id_;
         }
         
+        Queue<int> _removedAgents = new Queue<int>();
         public void removeAgent(int id)
         {
+            agents_[id].IsRemove = true;
+            _removedAgents.Enqueue(id);
             setAgentPosition(id, new Vector2(10000, 10000));
             setAgentRadius(id, 0);
             setAgentMaxSpeed(id, 0);
@@ -128,8 +132,19 @@ namespace RVO
          */
         public int addAgent(Vector2 position, float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity, Entity entity)
         {
-            Agent agent = new Agent();
-            agent.id_ = agents_.Count;
+            Agent agent = null;
+            if(_removedAgents.Count > 0)
+            {
+                int id = _removedAgents.Dequeue();
+                agent = agents_[id];
+                agent.IsRemove = false;
+            }
+            else
+            {
+                agent = new Agent();
+                agent.id_ = agents_.Count;
+                agents_.Add(agent);
+            }
             agent.maxNeighbors_ = maxNeighbors;
             agent.maxSpeed_ = maxSpeed;
             agent.neighborDist_ = neighborDist;
@@ -140,7 +155,6 @@ namespace RVO
             agent.velocity_ = velocity;
             agent.simulator_ = this;
             agent.entity = entity;
-            agents_.Add(agent);
 
             return agent.id_;
         }
@@ -227,12 +241,15 @@ namespace RVO
 
             for(int agentNo = 0; agentNo < agents_.Count; agentNo++)
             {
+                if(agents_[agentNo].IsRemove) continue;
+
                 agents_[agentNo].computeNeighbors();
                 agents_[agentNo].computeNewVelocity();
             }
 
             for(int agentNo = 0; agentNo < agents_.Count; agentNo++)
             {
+                if(agents_[agentNo].IsRemove) continue;
                 agents_[agentNo].update();
             }
 
