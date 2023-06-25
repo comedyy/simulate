@@ -607,6 +607,11 @@ namespace Unity.Entities
         public static int GetTypeIndex<T>()
         {
             var index = SharedTypeIndex<T>.Ref.Data;
+            if(typeof(T) == typeof(LinkedEntityGroup))
+            {
+                Debug.Log($"+++ typeID: get result {index}");
+                Debug.Log($"+++ typeID: get result {SharedStatic<int>.GetOrCreate<TypeManagerKeyContext, T>().Data}");
+            }
 
             if (index <= 0)
             {
