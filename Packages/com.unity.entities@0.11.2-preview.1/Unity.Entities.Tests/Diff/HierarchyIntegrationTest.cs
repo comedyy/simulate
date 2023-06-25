@@ -3,7 +3,7 @@ using Unity.Collections;
 
 namespace Unity.Entities.Tests
 {
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
     // https://unity3d.atlassian.net/browse/DOTSR-1435
     // These tests cause crashes in the IL2CPP runner. Cause not yet debugged.
 

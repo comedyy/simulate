@@ -226,7 +226,7 @@ namespace Unity.Entities
         public unsafe delegate void JobChunkRunWithoutJobSystemDelegate(ArchetypeChunkIterator* iterator, void* job);
         public unsafe delegate void JobRunWithoutJobSystemDelegate(void* job);
 
-#if NET_DOTS && ENABLE_UNITY_COLLECTIONS_CHECKS && !UNITY_DOTSPLAYER_IL2CPP
+#if NET_DOTS && ENABLE_UNITY_COLLECTIONS_CHECKS && !UNITY_DOTSPLAYER_IL2CPP1
         // DOTS Runtime always compiles against the .Net Framework which will re-order structs if they contain non-blittable data (unlike mono which
         // will keep structs as Layout.Sequential). However, Burst will always assume a struct layout as if Layout.Sequential was used which presents
         // a data layout mismatch that must be accounted for. The DOTS Runtime job system handles this problem by marshalling jobData structs already

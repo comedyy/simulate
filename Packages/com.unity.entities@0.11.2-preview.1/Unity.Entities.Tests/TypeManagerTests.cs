@@ -33,7 +33,7 @@ namespace Unity.Entities.Tests
         {
             int empty;
         }
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1433
         struct TestTypeWithBool : IComponentData, IEquatable<TestTypeWithBool>
         {
@@ -85,7 +85,7 @@ namespace Unity.Entities.Tests
             Assert.AreNotEqual(archetype1, archetype2);
         }
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1433
         [Test]
         public void TestPrimitiveButNotBlittableTypesAllowed()

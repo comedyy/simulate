@@ -5,7 +5,7 @@ using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine.Profiling;
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 using System.Linq;
 #endif
 

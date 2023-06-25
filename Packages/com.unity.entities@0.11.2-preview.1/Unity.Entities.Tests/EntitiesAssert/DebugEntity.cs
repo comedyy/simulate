@@ -1,4 +1,4 @@
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1432
 using System;
 using System.Collections.Generic;

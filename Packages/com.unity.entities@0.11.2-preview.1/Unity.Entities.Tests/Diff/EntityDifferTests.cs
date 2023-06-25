@@ -1096,6 +1096,6 @@ namespace Unity.Entities.Tests
         */
 
 #endif // !UNITY_DISABLE_MANAGED_COMPONENTS
-#endif // !UNITY_DOTSPLAYER_IL2CPP
+#endif // !UNITY_DOTSPLAYER_IL2CPP1
     }
 }

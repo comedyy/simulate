@@ -45,7 +45,7 @@ namespace Unity.Entities.Tests
             Assert.AreEqual(0, group.CalculateEntityCount());
         }
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1432
         [Test]
         public void IterateChunkedEntityQuery()
@@ -191,7 +191,7 @@ namespace Unity.Entities.Tests
             arr.Dispose();
         }
 
-#endif // UNITY_DOTSPLAYER_IL2CPP
+#endif // UNITY_DOTSPLAYER_IL2CPP1
 
         [Test]
         public void GroupCopyFromNativeArray()
@@ -330,7 +330,7 @@ namespace Unity.Entities.Tests
             m_Manager.DestroyEntity(entity);
         }
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1432
         [Test]
         public void IterateChunkedEntityQuery_ManagedComponents()
@@ -519,7 +519,7 @@ namespace Unity.Entities.Tests
             arr.Dispose();
         }
 
-#endif // !UNITY_DOTSPLAYER_IL2CPP
+#endif // !UNITY_DOTSPLAYER_IL2CPP1
 
         [Test]
         public void EntityQueryFilteredChunkCount_ManagedComponents()

@@ -2,7 +2,7 @@ using System;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 using System.Text.RegularExpressions;
 #endif
 

@@ -425,7 +425,7 @@ namespace Unity.Entities.Tests
         public void TestMultiChunks()
         {
             // Slow in IL2CPP: https://unity3d.atlassian.net/browse/DOTSR-1434
-#if UNITY_DOTSPLAYER_IL2CPP
+#if UNITY_DOTSPLAYER_IL2CPP1
             const int count = 4096;
 #else
             const int count = 65536;
@@ -1929,7 +1929,7 @@ namespace Unity.Entities.Tests
             }
         }
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
         // https://unity3d.atlassian.net/browse/DOTSR-1435
         // These tests cause crashes in the IL2CPP runner. Cause not yet debugged.
         // Only fails in Multi-Threaded
@@ -2106,7 +2106,7 @@ namespace Unity.Entities.Tests
             EntityCommandBuffer cmds = new EntityCommandBuffer(Allocator.Persistent);
 
             // Slow in IL2CPP: https://unity3d.atlassian.net/browse/DOTSR-1434
-#if UNITY_DOTSPLAYER_IL2CPP
+#if UNITY_DOTSPLAYER_IL2CPP1
             const int step = 100;
 #else
             const int step = 1;

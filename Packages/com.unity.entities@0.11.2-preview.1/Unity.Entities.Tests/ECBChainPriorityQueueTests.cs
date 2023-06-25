@@ -4,7 +4,7 @@ using Unity.Collections;
 
 namespace Unity.Entities.Tests
 {
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1432
 // Throws an unsupported exception. Haven't debugged root cause.
 

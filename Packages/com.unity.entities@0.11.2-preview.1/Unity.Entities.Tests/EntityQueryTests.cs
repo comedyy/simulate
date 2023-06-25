@@ -1,4 +1,4 @@
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1432
 
 using System;
@@ -1064,4 +1064,4 @@ namespace Unity.Entities.Tests
         }
     }
 }
-#endif // UNITY_DOTSPLAYER_IL2CPP
+#endif // UNITY_DOTSPLAYER_IL2CPP1

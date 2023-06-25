@@ -157,7 +157,7 @@ namespace Unity.Entities.Tests
             entities.Dispose();
         }
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
         // https://unity3d.atlassian.net/browse/DOTSR-1432
         // In IL2CPP this segfaults at runtime. I haven't debugged, but the return type of List<> is suspicious.
 

@@ -153,7 +153,7 @@ namespace Unity.Entities.Tests
             Assert.IsTrue(foundCycleMatch);
         }
 
-#endif // UNITY_DOTSPLAYER_IL2CPP
+#endif // UNITY_DOTSPLAYER_IL2CPP1
 
         class Unconstrained1System : TestSystemBase
         {

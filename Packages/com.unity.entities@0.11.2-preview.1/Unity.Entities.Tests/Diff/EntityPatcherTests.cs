@@ -6,7 +6,7 @@ namespace Unity.Entities.Tests
     [TestFixture]
     sealed class EntityPatcherTests : EntityDifferTestFixture
     {
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
         // https://unity3d.atlassian.net/browse/DOTSR-1435
         // These tests cause crashes in the IL2CPP runner. Cause not yet debugged.
         [Test]
@@ -706,7 +706,7 @@ namespace Unity.Entities.Tests
             }
         }
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1432
         [Test]
         [DotsRuntimeFixme] // No support for PinGCObject
@@ -860,6 +860,6 @@ namespace Unity.Entities.Tests
             }
         }
 
-#endif    // !UNITY_DOTSPLAYER_IL2CPP
+#endif    // !UNITY_DOTSPLAYER_IL2CPP1
     }
 }

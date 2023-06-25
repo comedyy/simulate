@@ -604,7 +604,7 @@ namespace Unity.Entities.Tests
             creationWorld.Dispose();
         }
 
-#if !UNITY_DOTSPLAYER_IL2CPP
+#if !UNITY_DOTSPLAYER_IL2CPP1
 // https://unity3d.atlassian.net/browse/DOTSR-1432
 
 #if !UNITY_DISABLE_MANAGED_COMPONENTS
