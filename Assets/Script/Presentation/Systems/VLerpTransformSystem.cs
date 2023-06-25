@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 
+[DisableAutoCreation]
 public class VLerpTransformSystem : ComponentSystem
 {
     protected override void OnUpdate()

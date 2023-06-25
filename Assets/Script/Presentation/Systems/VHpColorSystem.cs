@@ -3,6 +3,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
+[DisableAutoCreation]
 public class VHpColorSystem : ComponentSystem
 {
     protected override void OnUpdate()

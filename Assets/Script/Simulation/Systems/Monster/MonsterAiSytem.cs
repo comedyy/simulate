@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 // 往主角方向冲
+[DisableAutoCreation]
 public class MonsterAiSytem : ComponentSystem
 {
     protected override void OnUpdate()

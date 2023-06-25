@@ -1,6 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
+[DisableAutoCreation]
 public class VSpawnTargetSystem : ComponentSystem
 {
     public int UserId { get; internal set; }

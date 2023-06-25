@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 
+[DisableAutoCreation]
 public class InputUserPositionSystem : ComponentSystem
 {
     public Func<int, List<MessageItem>> GetAllMessage;

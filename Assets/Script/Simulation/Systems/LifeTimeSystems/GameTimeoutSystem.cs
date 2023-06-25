@@ -7,6 +7,7 @@ public class BattleEndFlag
 }
 
 
+[DisableAutoCreation]
 public class GameTimeoutSystem : ComponentSystem
 {
     public BattleEndFlag flag;

@@ -1,6 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
+[DisableAutoCreation]
 public class VDespawnSystem : ComponentSystem
 {
     protected override void OnUpdate()
