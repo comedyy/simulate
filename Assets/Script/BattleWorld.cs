@@ -10,7 +10,6 @@ public class BattleWorld : World
 
     public BattleWorld(string name, CheckSumMgr checksum, bool randomFixedCount, fp logicFrameInterval, LocalFrame localServer, int userId, int userCount) : base(name)
     {
-        TypeManager.Initialize();
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new CheckSumComponet(){
             checkSum = checksum
         });
