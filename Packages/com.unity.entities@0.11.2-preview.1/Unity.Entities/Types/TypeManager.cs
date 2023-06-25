@@ -403,24 +403,11 @@ namespace Unity.Entities
             Assert.AreEqual(s_TypeCount, typeInfo.TypeIndex & ClearFlagsMask);
             s_TypeCount++;
 
-            if(type == typeof(LinkedEntityGroup))
-            {
-                Debug.Log($"+++ AddToType");
-            }
-
 #if !NET_DOTS
             if (type != null)
             {
                 SharedTypeIndex.Get(type) = typeInfo.TypeIndex;
                 s_ManagedTypeToIndex.Add(type, typeInfo.TypeIndex);
-
-                if(type == typeof(LinkedEntityGroup))
-                {
-                    Debug.Log($"+++ AddToType {typeInfo.TypeIndex}");
-                    Debug.Log($"+++ AddToType {SharedTypeIndex.Get(type)}");
-                    Debug.Log($"+++ AddToType {SharedStatic<int>.GetOrCreate(typeof(TypeManagerKeyContext), typeof(LinkedEntityGroup)).Data}");
-                    Debug.Log($"+++ AddToType {SharedStatic<int>.GetOrCreate<TypeManagerKeyContext, LinkedEntityGroup>().Data}");
-                }
             }
 #endif
         }
