@@ -40,10 +40,21 @@ public class ControllerMoveSystem : ComponentSystem
 
 
             var pos = tranCom.position;
+            #if FIXED_POINT
+            var targetPos = new int3((int)fp.UnsafeConvert(pos.x).rawValue,
+                                        (int)fp.UnsafeConvert(pos.y).rawValue,
+                                        (int)fp.UnsafeConvert(pos.z).rawValue);
+            localServer.SetData(new MessageItem(){
+                pos = targetPos, id = controllerId
+            });
+            #else
             var targetPos = new int3((int)(pos.x * 100), (int)(pos.y * 100), (int)(pos.z * 100));
             localServer.SetData(new MessageItem(){
                 pos = targetPos, id = controllerId
             });
+            #endif
+
+            
         }
         else    // ai
         {

@@ -23,11 +23,20 @@ public class InputUserPositionSystem : ComponentSystem
             }
 
             var preTransform = EntityManager.GetComponentData<LTransformComponet>(entity);
-            var pos = new fp3(){
-                x = fp.Create(message.pos.x / 100, (message.pos.x % 100 ) * 1000),
-                y = fp.Create(message.pos.y / 100, (message.pos.y % 100 ) * 1000),
-                z = fp.Create(message.pos.z / 100, (message.pos.z % 100 ) * 1000),
-            };
+            #if FIXED_POINT
+                var pos = new fp3(){
+                    x = new fp(){rawValue = message.pos.x},
+                    y = new fp(){rawValue = message.pos.y},
+                    z = new fp(){rawValue = message.pos.z}
+                };
+            #else
+                var pos = new fp3(){
+                    x = new fp(){rawValue = message.pos.x / 100f},
+                    y = new fp(){rawValue = message.pos.y / 100f},
+                    z = new fp(){rawValue = message.pos.z / 100f}
+                };
+            #endif
+            
             var diff = pos - preTransform.position;
             var dir = fpMath.normalize(diff);
             EntityManager.SetComponentData(entity, new LTransformComponet(){
