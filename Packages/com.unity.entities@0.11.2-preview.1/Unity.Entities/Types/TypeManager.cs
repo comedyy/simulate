@@ -942,7 +942,6 @@ namespace Unity.Entities
 
                             if (IsSupportedComponentType(type))
                             {
-                                Debug.Log($"--- {type}");
                                 componentTypeSet.Add(type);
                             }
                         }
