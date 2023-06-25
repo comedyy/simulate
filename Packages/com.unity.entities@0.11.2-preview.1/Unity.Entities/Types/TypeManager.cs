@@ -403,11 +403,21 @@ namespace Unity.Entities
             Assert.AreEqual(s_TypeCount, typeInfo.TypeIndex & ClearFlagsMask);
             s_TypeCount++;
 
+            if(type == typeof(LinkedEntityGroup))
+            {
+                Debug.Log($"+++ AddToType");
+            }
+
 #if !NET_DOTS
             if (type != null)
             {
                 SharedTypeIndex.Get(type) = typeInfo.TypeIndex;
                 s_ManagedTypeToIndex.Add(type, typeInfo.TypeIndex);
+
+                if(type == typeof(LinkedEntityGroup))
+                {
+                    Debug.Log($"+++ AddToType {typeInfo.TypeIndex}");
+                }
             }
 #endif
         }
@@ -959,6 +969,10 @@ namespace Unity.Entities
                 for (int i = 0; i < componentTypes.Length; i++)
                 {
                     typeIndexByType[componentTypes[i]] = startTypeIndex + i;
+                    if(componentTypes[i] == typeof(LinkedEntityGroup))
+                    {
+                        Debug.Log($"+++ typeID: {typeIndexByType[componentTypes[i]]}");
+                    }
                 }
 
                 GatherWriteGroups(componentTypes, startTypeIndex, typeIndexByType, writeGroupByType);
