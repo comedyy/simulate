@@ -2,7 +2,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-[DisableAutoCreation]
 public class CalHashSystem : ComponentSystem
 {
     EntityQuery _entityQuery;

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Entities;
 
-[DisableAutoCreation]
 public class FixedTimeSystemGroup : ComponentSystemGroup
 {
     float _battleStartTime;

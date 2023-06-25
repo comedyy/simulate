@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 
-[DisableAutoCreation]
+
 public class CircleSkillSystem : ComponentSystem
 {
     List<Entity> tempEntities = new List<Entity>();

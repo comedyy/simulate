@@ -4,7 +4,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 
-[DisableAutoCreation]
 public class HurtSystem : ComponentSystem
 {
     List<Entity> _deadEntities = new List<Entity>();

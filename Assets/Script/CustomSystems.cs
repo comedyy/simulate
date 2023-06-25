@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.Entities;
 
-[DisableAutoCreation]
 public class CustomSystems3 : ComponentSystemGroup
 {
     public override void SortSystemUpdateList( )

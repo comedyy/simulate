@@ -3,7 +3,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-[DisableAutoCreation]
 public class SpawnTargetSystem : ComponentSystem
 {
     ComponentType[] archetypeComponents = new ComponentType[]{

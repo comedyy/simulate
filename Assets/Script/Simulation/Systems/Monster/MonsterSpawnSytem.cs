@@ -2,7 +2,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 
-[DisableAutoCreation]
 public class MonsterSpawnSytem : ComponentSystem
 {
     protected override void OnCreate()
