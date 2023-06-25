@@ -418,7 +418,8 @@ namespace Unity.Entities
                 {
                     Debug.Log($"+++ AddToType {typeInfo.TypeIndex}");
                     Debug.Log($"+++ AddToType {SharedTypeIndex.Get(type)}");
-                    Debug.Log($"+++ AddToType {SharedStatic<int>.GetOrCreate(typeof(TypeManagerKeyContext), type).Data}");
+                    Debug.Log($"+++ AddToType {SharedStatic<int>.GetOrCreate(typeof(TypeManagerKeyContext), typeof(LinkedEntityGroup)).Data}");
+                    Debug.Log($"+++ AddToType {SharedStatic<int>.GetOrCreate<TypeManagerKeyContext, LinkedEntityGroup>().Data}");
                 }
             }
 #endif
@@ -612,7 +613,7 @@ namespace Unity.Entities
             if(typeof(T) == typeof(LinkedEntityGroup))
             {
                 Debug.Log($"+++ typeID: get result {index}");
-                Debug.Log($"+++ typeID: get result {SharedStatic<int>.GetOrCreate<TypeManagerKeyContext, T>().Data}");
+                Debug.Log($"+++ typeID: get result {SharedStatic<int>.GetOrCreate<TypeManagerKeyContext, LinkedEntityGroup>().Data}");
             }
 
             if (index <= 0)
