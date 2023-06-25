@@ -226,7 +226,7 @@ namespace RVO
             kdTree_ = new KdTree(this);
             obstacles_ = new List<Obstacle>();
             globalTime_ = fp.zero;
-            timeStep_ = fp.Create(0, 10000);
+            timeStep_ = fp.Create(0, 1000);
         }
 
         /**

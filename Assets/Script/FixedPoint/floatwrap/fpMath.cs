@@ -1,3 +1,5 @@
+#if !FIXED_POINT
+
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -93,3 +95,4 @@ public class fpMath
     public static uint csum(uint3 x) { return x.x + x.y + x.z; }
 }
 
+#endif

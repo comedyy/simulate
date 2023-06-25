@@ -103,7 +103,13 @@ namespace RVO
          */
         public static fp operator *(Vector2 vector1, Vector2 vector2)
         {
-            return vector1.x_ * vector2.x_ + vector1.y_ * vector2.y_;
+            var result = vector1.x_ * vector2.x_ + vector1.y_ * vector2.y_;
+            if(result.rawValue == 0)
+            {
+                return fp.EPSILON;
+            }
+
+            return result;
         }
 
         /**

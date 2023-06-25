@@ -1,5 +1,4 @@
-#if !FIXED_POINT
-
+#if FIXED_POINT
 using System;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
@@ -10,6 +9,7 @@ public struct fp3 : System.IEquatable<fp3>, IFormattable
     public fp x;
     public fp y;
     public fp z;
+    internal static fp3 zero = new fp3(fp.zero, fp.zero, fp.zero);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public fp3(fp x, fp y, fp z)
@@ -44,6 +44,36 @@ public struct fp3 : System.IEquatable<fp3>, IFormattable
         return a;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static fp3 operator /(fp3 a, fp b) {
+        a.x /= b;
+        a.y /= b;
+        a.z /= b;
+        return a;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static fp3 operator *(fp3 a, fp b) {
+        a.x *= b;
+        a.y *= b;
+        a.z *= b;
+        return a;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(fp3 a, fp3 b) {
+        return 
+        a.x.rawValue == b.x.rawValue &&
+        a.y.rawValue == b.y.rawValue &&
+        a.z.rawValue == b.z.rawValue;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(fp3 a, fp3 b) {
+        return !(a == b);
+    }
+
+
     public static implicit operator Vector3(fp3 p)
     {
         return new Vector3(p.x, p.y, p.z);
@@ -59,5 +89,4 @@ public struct fp3 : System.IEquatable<fp3>, IFormattable
         return (int)fpMath.hash(this);
     }
 }
-
 #endif

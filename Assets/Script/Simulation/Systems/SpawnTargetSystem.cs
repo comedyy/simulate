@@ -66,7 +66,7 @@ public class SpawnTargetSystem : ComponentSystem
                 SetSingleton(userList);
 
                 EntityManager.SetComponentData(entity, new SkillComponent(){
-                     range = 5, interval = fp.Create(0, 30000)
+                     range = 5, interval = fp.Create(0, 3000)
                 });
 
                 EntityManager.SetComponentData(entity, new UserComponnet(){
@@ -95,11 +95,11 @@ public class SpawnTargetSystem : ComponentSystem
                 });
 
                 EntityManager.SetComponentData(entity, new LRvoComponent(){
-                    rvoId = rvoObj.rvoSimulator.addAgent(new RVO.Vector2(ev.position.x, ev.position.z), fp.Create(1, 50000), 3, fp.Create(0, 5000), fp.Create(0, 5000), size, 3, new RVO.Vector2(ev.dir.x, ev.dir.z), entity)
+                    rvoId = rvoObj.rvoSimulator.addAgent(new RVO.Vector2(ev.position.x, ev.position.z), fp.Create(1, 5000), 3, fp.Create(0, 500), fp.Create(0, 500), size, 3, new RVO.Vector2(ev.dir.x, ev.dir.z), entity)
                 });
 
                 EntityManager.SetComponentData(entity, new SkillComponent(){
-                    range = fp.one, interval = fp.Create(0, 30000)
+                    range = fp.one, interval = fp.Create(0, 3000)
                 });
             }
 

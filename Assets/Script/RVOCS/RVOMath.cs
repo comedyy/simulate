@@ -44,7 +44,7 @@ namespace RVO
         /**
          * <summary>A sufficiently small positive number.</summary>
          */
-        internal static fp RVO_EPSILON = fp.Create(0, 1);
+        internal static fp RVO_EPSILON = fp.EPSILON;
 
         /**
          * <summary>Computes the length of a specified two-dimensional vector.
@@ -84,6 +84,14 @@ namespace RVO
          */
         public static Vector2 normalize(Vector2 vector)
         {
+            if(vector.x_ == 0 || vector.y_ == 0) return vector;
+
+            var magnitude = abs(vector);
+            if(magnitude == 0)
+            {
+                vector = vector * 1000;
+            }
+
             return vector / abs(vector);
         }
 
