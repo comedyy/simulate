@@ -417,6 +417,8 @@ namespace Unity.Entities
                 if(type == typeof(LinkedEntityGroup))
                 {
                     Debug.Log($"+++ AddToType {typeInfo.TypeIndex}");
+                    Debug.Log($"+++ AddToType {SharedTypeIndex.Get(type)}");
+                    Debug.Log($"+++ AddToType {SharedStatic<int>.GetOrCreate(typeof(TypeManagerKeyContext), type).Data}");
                 }
             }
 #endif
