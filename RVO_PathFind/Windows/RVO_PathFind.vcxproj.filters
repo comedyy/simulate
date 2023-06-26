@@ -33,6 +33,27 @@
     <ClInclude Include="..\RVO_PathFind\Vector2.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\libfixmath\fix16.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libfixmath\fix16.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libfixmath\fix16_trig_sin_lut.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libfixmath\fixmath.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libfixmath\fract32.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libfixmath\int64.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libfixmath\uint32.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\RVO_PathFind\Agent.cpp">
@@ -48,6 +69,30 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\RVO_PathFind\RVOSimulator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fix16.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fix16_exp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fix16_fft.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fix16_sqrt.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fix16_str.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fix16_trig.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fract32.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\uint32.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
