@@ -20,7 +20,8 @@ public class BattleWorld : World
         InitiazationSystem.logicFrameInterval = logicFrameInterval;
         InitiazationSystem.userCount = userCount;
 
-        CreateSystem<InitiazationSystem>();
+        var init = CreateSystem<InitiazationSystem>();
+        init.Init(userId);
         // update systems
         InitSimulationSystem(localServer, randomFixedCount);
 

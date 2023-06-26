@@ -1,15 +1,21 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using System;
+using Game.Battle.CommonLib;
 
 public class InitiazationSystem : ComponentSystemBase
 {
     public static fp logicFrameInterval;
     public static int userCount;
 
-    public void Init(fp v)
+    public void Init(int worldId)
     {
-  
+        MSPathSystem.InitSystem(worldId);
+        var component = new RvoSimulatorComponet(){
+            id = worldId
+        };
+        component.setTimeStep(logicFrameInterval);
+        EntityManager.AddComponentObject(EntityManager.CreateEntity(), component);
     }
 
     protected override void OnCreate()
@@ -42,11 +48,12 @@ public class InitiazationSystem : ComponentSystemBase
         });
 
         // create RVO
-        var rvoSimulator = new RVO.Simulator();
-        rvoSimulator.setTimeStep(logicFrameInterval);
-        EntityManager.AddComponentObject(entity, new RvoSimulatorComponet(){
-            rvoSimulator = rvoSimulator
-        });
+        // var rvoSimulator = new RVO.Simulator();
+        // rvoSimulator.setTimeStep(logicFrameInterval);
+        // var comp = EntityManager.AddComponentObject(entity, new RvoSimulatorComponet(){
+        //     rvoSimulator = rvoSimulator
+        // });
+      
 
         EntityManager.AddComponent<ControllerHolder>(entity);
         EntityManager.AddComponentData<UserListComponent>(entity, new UserListComponent(){
@@ -67,5 +74,6 @@ public class InitiazationSystem : ComponentSystemBase
     protected override void OnDestroy()
     {
         GetSingleton<UserListComponent>().allUser.Dispose();
+        this.GetSingletonObject<RvoSimulatorComponet>().ShutDown();
     }
 }

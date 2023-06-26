@@ -153,8 +153,8 @@ MonoBehaviour:
   worldCount: 2
   LogicFrameCount: 15
   pingSec: 0
-  usePlaybackInput: 1
-  randomLogicSimulateTime: 1
+  usePlaybackInput: 0
+  randomLogicSimulateTime: 0
 --- !u!4 &182622823
 Transform:
   m_ObjectHideFlags: 0

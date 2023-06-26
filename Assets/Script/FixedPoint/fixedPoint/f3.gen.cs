@@ -9,7 +9,7 @@ public struct fp3 : System.IEquatable<fp3>, IFormattable
     public fp x;
     public fp y;
     public fp z;
-    internal static fp3 zero = new fp3(fp.zero, fp.zero, fp.zero);
+    public static fp3 zero = new fp3(fp.zero, fp.zero, fp.zero);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public fp3(fp x, fp y, fp z)

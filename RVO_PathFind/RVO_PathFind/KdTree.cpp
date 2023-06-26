@@ -342,7 +342,7 @@ namespace RVO {
 			return currentCount;
 		}
 
-		if (agentTree_.size() == 0)
+		if (agentTree_.size() == 0 || agents_.size() == 0)
 		{
 			return currentCount;
 		}

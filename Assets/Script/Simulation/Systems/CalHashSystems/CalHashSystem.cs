@@ -32,5 +32,6 @@ public class CalHashSystem : ComponentSystem
         checkSum.hpCheckSum.SaveCheckSum();
 
         checkSum.targetFindCheckSum.SaveCheckSum();
+        checkSum.preRVO.SaveCheckSum();
     }
 }

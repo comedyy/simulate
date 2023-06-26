@@ -181,8 +181,11 @@ public class LocalFrame
         File.WriteAllText(path, json);
     }
 
-    internal void LoadPlayBackInfo()
+    internal void LoadPlayBackInfo(bool load)
     {
+        ReceivedServerFrame = int.MaxValue;
+        if(!load) return;
+        
         if(File.Exists(path))
         {
             var context = File.ReadAllText(path);
@@ -193,7 +196,6 @@ public class LocalFrame
             {
                 _allMessage.Add(item.frame, item.item);
             }
-            ReceivedServerFrame = int.MaxValue;
 
             Debug.Log("load playback info");
         }

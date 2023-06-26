@@ -37,7 +37,7 @@ public class CircleSkillSystem : ComponentSystem
         });
 
         var checkSum = this.GetSingletonObject<CheckSumComponet>().checkSum;
-        var rvo = this.GetSingletonObject<RvoSimulatorComponet>().rvoSimulator;
+        var rvo = this.GetSingletonObject<RvoSimulatorComponet>();
         Entities.ForEach((ref LTransformComponet trans, ref AtkComponent atk, ref SkillComponent skill, ref UserComponnet tag)=>{
             if(logic.escaped - skill.preHurtTime < skill.interval) return;
             skill.preHurtTime = logic.escaped;

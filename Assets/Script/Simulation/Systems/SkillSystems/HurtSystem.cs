@@ -43,7 +43,7 @@ public class HurtSystem : ComponentSystem
             if(EntityManager.HasComponent<LRvoComponent>(entity))
             {
                 var rvoComponent = EntityManager.GetComponentData<LRvoComponent>(entity);
-                rvoObj.rvoSimulator.removeAgent(rvoComponent.rvoId);
+                rvoObj.RemoveAgent(rvoComponent.rvoId);
             }
             else
             {
