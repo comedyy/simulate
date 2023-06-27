@@ -72,6 +72,14 @@ namespace Game.Battle.CommonLib
         [DllImport(kFindPathDllName)]
         public static extern void GetAgentPosition(int id, int agentIndex, ref AgentVector2 position);
 
+                /// 获取Agent位置
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="agentIndex"></param>
+        /// <param name="position"></param>
+        [DllImport(kFindPathDllName)]
+        public static extern void GetAgentDir(int id, int agentIndex, ref AgentVector2 position);
+
         /// <summary>
         /// 设置单帧流逝时间. Time.deltaTime
         /// </summary>
@@ -158,5 +166,19 @@ namespace Game.Battle.CommonLib
             void* ptr = Unity.Collections.LowLevel.Unsafe.NativeArrayUnsafeUtility.GetUnsafePtr(nativeByteArray);
             return GetNearByAgents(id, x, y, ptr, nativeByteArray.Length, searchRange);
         }
+
+        
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="agentIndex"></param>
+        /// <param name="position"></param>
+        [DllImport(kFindPathDllName)]
+        unsafe public static extern int GetNeighbour(int id, int agentIndex, void* ptr);
+        public unsafe static int GetAgentNeighbor(int id, int index, Unity.Collections.NativeArray<int> nativeByteArray)
+        {
+            void* ptr = Unity.Collections.LowLevel.Unsafe.NativeArrayUnsafeUtility.GetUnsafePtr(nativeByteArray);
+            return GetNeighbour(id, index, ptr);
+        }
+
     }
 }

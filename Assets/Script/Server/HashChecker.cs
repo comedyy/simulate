@@ -17,7 +17,8 @@ public class HashChecker
     int notSamePosIndex{get; set;} = -1;
     int notSameHpIndex{get; set;} = -1;
     int notSameFindTargetIndex{get; set;} = -1;
-    public bool NotSame => notSamePosIndex >= 0 || notSameHpIndex >= 0 || notSameFindTargetIndex >= 0;
+    int notSamePreRvoIndex{get; set;} = -1;
+    public bool NotSame => notSamePosIndex >= 0 || notSameHpIndex >= 0 || notSameFindTargetIndex >= 0 || notSamePreRvoIndex >= 0;
 
     public HashChecker(int maxCount)
     {
@@ -79,12 +80,19 @@ public class HashChecker
             notSameFindTargetIndex = v;
         }
 
+        var preRvo = list.All(m=>m.preRvo == first.preRvo);
+        if(!preRvo && notSamePreRvoIndex < 0)
+        {
+            notSamePreRvoIndex = v;
+        }
+
         if(NotSame)
         {
-            Debug.LogError($"发现不一致的问题, pos：{notSamePosIndex} hp:{notSameHpIndex} targetFind {notSameFindTargetIndex}");
+            Debug.LogError($"发现不一致的问题, pos：{notSamePosIndex} hp:{notSameHpIndex} targetFind {notSameFindTargetIndex} preRvo {notSamePreRvoIndex}");
             if(notSamePosIndex >= 0) EchoPosIndex(list.Select(m=>m.hashPos), "Pos");
             if(notSameHpIndex >= 0) EchoIndex(list.Select(m=>m.hashHp), "Hp");
             if(notSameFindTargetIndex >= 0) EchoIndex(list.Select(m=>m.hashFindtarget), "FindTarget");
+            if(notSamePreRvoIndex >= 0) EchoIndex(list.Select(m=>m.preRvo), "preRvo");
         }
     }
 

@@ -73,11 +73,13 @@ public class LocalFrame
             var positionFrame = GetHashItem(_checkSumMgr.positionChecksum, checkSumSendCount);
             var hpFrame = GetHashItem(_checkSumMgr.hpCheckSum, checkSumSendCount);
             var targetFindFrame = GetHashItem(_checkSumMgr.targetFindCheckSum, checkSumSendCount);
+            var preRvo = GetHashItem(_checkSumMgr.preRVO, checkSumSendCount);
 
             SendHash(checkSumSendCount, 
                 positionFrame, 
                 hpFrame, 
-                targetFindFrame);
+                targetFindFrame,
+                preRvo);
             checkSumSendCount++;
         }
 
@@ -107,10 +109,10 @@ public class LocalFrame
         _messageItem = messageItem;
     }
 
-    public void SendHash(int frame, FrameHashItem hashPos, FrameHashItem hashHp, FrameHashItem hashFindtarget)
+    public void SendHash(int frame, FrameHashItem hashPos, FrameHashItem hashHp, FrameHashItem hashFindtarget, FrameHashItem preRvo)
     {
         _socket.SendMessage(new FrameHash(){
-            frame = frame, hashPos = hashPos, hashFindtarget = hashFindtarget, hashHp = hashHp, id = _controllerId
+            frame = frame, hashPos = hashPos, hashFindtarget = hashFindtarget, hashHp = hashHp, preRvo = preRvo, id = _controllerId
         }.ToBytes());
     }
 

@@ -34,7 +34,7 @@ extern "C"
 		delete x;
 	}
 
-	EXPORT_API size_t AddAgent(int id,  fix16_t posX, fix16_t posY, fix16_t neighborDist, size_t maxNeighbors, fix16_t timeHorizon, fix16_t timeHorizonObst,
+	EXPORT_API int AddAgent(int id,  fix16_t posX, fix16_t posY, fix16_t neighborDist, int maxNeighbors, fix16_t timeHorizon, fix16_t timeHorizonObst,
 		fix16_t radius, fix16_t maxSpeed, fix16_t mass, fix16_t velocityX, fix16_t velocityY)
 	{
 		Vector2 position = Vector2(Fix16::FromRaw(posX), Fix16::FromRaw(posY));
@@ -44,14 +44,21 @@ extern "C"
 			Fix16::FromRaw(radius), Fix16::FromRaw(maxSpeed), Fix16::FromRaw(mass), MonsterType::NormalGround, velocity);
 	}
 
-	EXPORT_API void RemoveAgent(int id, size_t agentIndex)
+	EXPORT_API void RemoveAgent(int id, int agentIndex)
 	{
 		pRVOSimulators[id]->removeAgent(agentIndex);
 	}
 
-	EXPORT_API void GetAgentPosition(int id, size_t agentIndex, AgentPosition& position)
+	EXPORT_API void GetAgentPosition(int id, int agentIndex, AgentPosition& position)
 	{
 		Vector2 vec = pRVOSimulators[id]->getAgentPosition(agentIndex);
+		position.x = vec.x().value;
+		position.y = vec.y().value;
+	}
+
+	EXPORT_API void GetAgentDir(int id, int agentIndex, AgentPosition & position)
+	{
+		Vector2 vec = pRVOSimulators[id]->getAgentVelocity(agentIndex);
 		position.x = vec.x().value;
 		position.y = vec.y().value;
 	}
@@ -61,7 +68,7 @@ extern "C"
 		pRVOSimulators[id]->setTimeStep(Fix16::FromRaw(timeStep));
 	}
 
-	EXPORT_API void SetAgentVelocityPref(int id, size_t agentIndex, fix16_t x, fix16_t y)
+	EXPORT_API void SetAgentVelocityPref(int id, int agentIndex, fix16_t x, fix16_t y)
 	{
 		pRVOSimulators[id]->setAgentPrefVelocity(agentIndex, Vector2(Fix16::FromRaw(x), Fix16::FromRaw(y)));
 	}
@@ -95,5 +102,18 @@ extern "C"
 		findCount = pRVOSimulators[id]->QueryNearByAgents(pos, ptr, findCount, arraySize, Fix16::FromRaw(range), 0);
 
 		return findCount;
+	}
+
+	EXPORT_API int GetNeighbour(int id, int index, void* intArray)
+	{
+		int* ptr = (int*)intArray;
+		
+		int neighborCount = pRVOSimulators[id]->getAgentNumAgentNeighbors(index);
+		for (int i = 0; i < neighborCount; i++) 
+		{
+			ptr[i] = pRVOSimulators[id]->getAgentAgentNeighbor(index, i);
+		}
+		
+		return neighborCount;
 	}
 }

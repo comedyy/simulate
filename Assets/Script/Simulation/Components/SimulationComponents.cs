@@ -14,6 +14,7 @@ public struct LTransformComponet : IComponentData
 {
     public fp3 position;
     public fp3 rotation;
+    public fp3 velocity;
 }
 
 public struct LMoveByDirComponent : IComponentData

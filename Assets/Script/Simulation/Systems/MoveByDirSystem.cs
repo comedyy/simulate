@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -17,21 +18,23 @@ public class MoveByDirSystem : ComponentSystem
 
         Entities.ForEach((Entity entity, ref LRvoComponent rvoComponent, ref LMoveByDirComponent moveCom, ref MoveSpeedComponent speed)=>{
             rvoObj.SetAgentPrefVelocity(rvoComponent.rvoId, new RVO.Vector2(moveCom.dir.x, moveCom.dir.z) * speed.speed);
-            checkSum.preRVO.CheckValue(entity, moveCom.dir.GetHashCode(), fpMath.asint(moveCom.dir.x),fpMath.asint(moveCom.dir.y),fpMath.asint(moveCom.dir.z));
+            // checkSum.preRVO.CheckValue(entity, moveCom.dir.GetHashCode(), fpMath.asint(moveCom.dir.x),fpMath.asint(moveCom.dir.y),fpMath.asint(moveCom.dir.z));
         });
 
         rvoObj.DoStep();
         
-        Entities.ForEach((ref LTransformComponet tranCom, ref LRvoComponent rvoComponent, ref VLerpTransformCopmnet com)=>{
+        NativeArray<int> array = new NativeArray<int>(1024, Allocator.Temp);
+        Entities.ForEach((Entity entity,  ref LTransformComponet tranCom, ref LRvoComponent rvoComponent, ref VLerpTransformCopmnet com)=>{
             var pos = rvoObj.GetAgentPosition(rvoComponent.rvoId);
+            var forward = rvoObj.GetAgentDir(rvoComponent.rvoId);
+            var neibourCount = rvoObj.GetAgentNeighbor(rvoComponent.rvoId, array);
+            int hash = neibourCount;
+            for(int i = 0; i < neibourCount; i++) hash = CheckSum.CombineHashCode(hash, array[i]);
+            checkSum.preRVO.CheckValue(entity, hash);
 
             com.lerpTime = 0;
 
-            var forward = fpMath.normalize(new fp3(pos.x(), 0, pos.y()) - tranCom.position);
-            if(forward != fp3.zero)
-            {
-                tranCom.rotation = new fp3(forward.x, 0, forward.y);
-            }
+            tranCom.rotation = new fp3(forward.x(), 0, forward.y());
             tranCom.position = new fp3(pos.x(), 0, pos.y());
         });
     }

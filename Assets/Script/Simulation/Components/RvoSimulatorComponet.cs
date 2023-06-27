@@ -89,6 +89,20 @@ public class RvoSimulatorComponet  : IComponentData
         return new Vector2(x, y);
     }
 
+    public Vector2 GetAgentDir(int index)
+    {
+        if(rvoSimulator != null) 
+        {
+            return rvoSimulator.getAgentVelocity(index);
+        }
+
+        var pos = new AgentVector2();
+        MSPathSystem.GetAgentDir(id, index, ref pos);
+        var x = new fp(){rawValue = UnityEngine.Mathf.FloorToInt(pos.x * fp.one.rawValue)};
+        var y = new fp(){rawValue = UnityEngine.Mathf.FloorToInt(pos.y * fp.one.rawValue)};
+        return new Vector2(x, y);
+    }
+
     public void FindAgents(Vector2 pos, fp range, List<Entity> list)
     {
         if(rvoSimulator != null)
@@ -111,5 +125,10 @@ public class RvoSimulatorComponet  : IComponentData
         if(rvoSimulator != null) return;
 
         MSPathSystem.Shutdown(id);
+    }
+
+    public int GetAgentNeighbor(int index, Unity.Collections.NativeArray<int> nativeByteArray)
+    {
+        return MSPathSystem.GetAgentNeighbor(id, index, nativeByteArray);
     }
 }

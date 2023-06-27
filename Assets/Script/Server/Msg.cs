@@ -94,6 +94,7 @@ public struct FrameHash
     public FrameHashItem hashPos;
     public FrameHashItem hashHp;
     public FrameHashItem hashFindtarget;
+    public FrameHashItem preRvo;
 
     public byte[] ToBytes()
     {
@@ -105,6 +106,7 @@ public struct FrameHash
         hashPos.Write(writer);
         hashHp.Write(writer);
         hashFindtarget.Write(writer);
+        preRvo.Write(writer);
 
         return steam.ToArray();
     }
@@ -119,6 +121,7 @@ public struct FrameHash
         hashPos = FrameHashItem.GetItem(reader);
         hashHp = FrameHashItem.GetItem(reader);
         hashFindtarget = FrameHashItem.GetItem(reader);
+        preRvo = FrameHashItem.GetItem(reader);
     }
 }
 
