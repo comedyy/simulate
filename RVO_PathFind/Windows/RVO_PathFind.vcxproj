@@ -19,8 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\libfixmath\fix16.c" />
-    <ClCompile Include="..\libfixmath\fix16_sqrt.c" />
+    <ClCompile Include="..\libfixmath\fix16_.cpp" />
+    <ClCompile Include="..\libfixmath\fix16.cpp" />
+    <ClCompile Include="..\libfixmath\fix16_sqrt.cpp" />
     <ClCompile Include="..\RVO_PathFind\Agent.cpp">
       <Link>Agent.cpp</Link>
     </ClCompile>
@@ -38,7 +39,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\libfixmath\fix16.h" />
+    <ClInclude Include="..\libfixmath\fix16_.h" />
     <ClInclude Include="..\libfixmath\fix16.hpp" />
     <ClInclude Include="..\libfixmath\fixmath.h" />
     <ClInclude Include="..\libfixmath\int64.h" />

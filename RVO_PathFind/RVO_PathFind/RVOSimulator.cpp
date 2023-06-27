@@ -3,20 +3,21 @@
 #include "Agent.h"
 #include "KdTree.h"
 #include "Obstacle.h"
+#include "../libfixmath/fix16.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
 #endif
 
 namespace RVO {
-	RVOSimulator::RVOSimulator() : defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(0.0f)
+	RVOSimulator::RVOSimulator() : defaultAgent_(NULL), globalTime_(Fix16::zero), kdTree_(NULL), timeStep_(Fix16::zero)
 	{
 		kdTree_ = new KdTree(this);
 	}
 
-	RVOSimulator::RVOSimulator(float timeStep, float neighborDist, size_t maxNeighbors, float timeHorizon,
-		float timeHorizonObst, float radius, float maxSpeed, const Vector2 &velocity)
-		: defaultAgent_(NULL), globalTime_(0.0f), kdTree_(NULL), timeStep_(timeStep)
+	RVOSimulator::RVOSimulator(Fix16 timeStep, Fix16 neighborDist, size_t maxNeighbors, Fix16 timeHorizon,
+		Fix16 timeHorizonObst, Fix16 radius, Fix16 maxSpeed, const Vector2 &velocity)
+		: defaultAgent_(NULL), globalTime_(Fix16::zero), kdTree_(NULL), timeStep_(timeStep)
 	{
 		kdTree_ = new KdTree(this);
 		defaultAgent_ = new Agent(this);
@@ -77,8 +78,8 @@ namespace RVO {
 		return agents_.size() - 1;
 	}
 
-	size_t RVOSimulator::addAgent(const Vector2 &position, float neighborDist, size_t maxNeighbors, float timeHorizon, float timeHorizonObst, 
-		float radius, float maxSpeed, float mass, MonsterType monsterType,
+	size_t RVOSimulator::addAgent(const Vector2 &position, Fix16 neighborDist, size_t maxNeighbors, Fix16 timeHorizon, Fix16 timeHorizonObst, 
+		Fix16 radius, Fix16 maxSpeed, Fix16 mass, MonsterType monsterType,
         const Vector2 &velocity)
 	{
 		Agent* agent;
@@ -123,8 +124,8 @@ namespace RVO {
 	void RVOSimulator::removeAgent(size_t agentIndex)
 	{
 		Agent* agent = agents_[agentIndex];
-		agent->position_ = Vector2(-1000000, -10000000);
-		agent->velocity_ = Vector2(0, 0);
+		agent->position_ = Vector2(Fix16::zero, Fix16::zero);
+		agent->velocity_ = Vector2(Fix16::zero, Fix16::zero);
 		agent->maxSpeed_ = 0;
 		agent->m_IsRemove = true;
 		m_UnusedAgentIndexs.push(agentIndex);
@@ -158,7 +159,7 @@ namespace RVO {
 				obstacle->isConvex_ = true;
 			}
 			else {
-				obstacle->isConvex_ = (leftOf(vertices[(i == 0 ? vertices.size() - 1 : i - 1)], vertices[i], vertices[(i == vertices.size() - 1 ? 0 : i + 1)]) >= 0.0f);
+				obstacle->isConvex_ = (leftOf(vertices[(i == 0 ? vertices.size() - 1 : i - 1)], vertices[i], vertices[(i == vertices.size() - 1 ? 0 : i + 1)]) >= Fix16::zero);
 			}
 
 			obstacle->id_ = obstacles_.size();
@@ -171,9 +172,6 @@ namespace RVO {
 
 	void RVOSimulator::doStep()
 	{
-		if (std::abs(timeStep_) <= 1e-6)
-			return;
-
 		kdTree_->buildAgentTree();
 
 #ifdef _OPENMP
@@ -209,12 +207,12 @@ namespace RVO {
 		return agents_[agentNo]->maxNeighbors_;
 	}
 
-	float RVOSimulator::getAgentMaxSpeed(size_t agentNo) const
+	Fix16 RVOSimulator::getAgentMaxSpeed(size_t agentNo) const
 	{
 		return agents_[agentNo]->maxSpeed_;
 	}
 
-	float RVOSimulator::getAgentNeighborDist(size_t agentNo) const
+	Fix16 RVOSimulator::getAgentNeighborDist(size_t agentNo) const
 	{
 		return agents_[agentNo]->neighborDist_;
 	}
@@ -254,17 +252,17 @@ namespace RVO {
 		return agents_[agentNo]->prefVelocity_;
 	}
 
-	float RVOSimulator::getAgentRadius(size_t agentNo) const
+	Fix16 RVOSimulator::getAgentRadius(size_t agentNo) const
 	{
 		return agents_[agentNo]->radius_;
 	}
 
-	float RVOSimulator::getAgentTimeHorizon(size_t agentNo) const
+	Fix16 RVOSimulator::getAgentTimeHorizon(size_t agentNo) const
 	{
 		return agents_[agentNo]->timeHorizon_;
 	}
 
-	float RVOSimulator::getAgentTimeHorizonObst(size_t agentNo) const
+	Fix16 RVOSimulator::getAgentTimeHorizonObst(size_t agentNo) const
 	{
 		return agents_[agentNo]->timeHorizonObst_;
 	}
@@ -274,7 +272,7 @@ namespace RVO {
 		return agents_[agentNo]->velocity_;
 	}
 
-	float RVOSimulator::getGlobalTime() const
+	Fix16 RVOSimulator::getGlobalTime() const
 	{
 		return globalTime_;
 	}
@@ -305,7 +303,7 @@ namespace RVO {
 		return obstacles_[vertexNo]->prevObstacle_->id_;
 	}
 
-	float RVOSimulator::getTimeStep() const
+	Fix16 RVOSimulator::getTimeStep() const
 	{
 		return timeStep_;
 	}
@@ -315,12 +313,12 @@ namespace RVO {
 		kdTree_->buildObstacleTree();
 	}
 
-	bool RVOSimulator::queryVisibility(const Vector2 &point1, const Vector2 &point2, float radius) const
+	bool RVOSimulator::queryVisibility(const Vector2 &point1, const Vector2 &point2, Fix16 radius) const
 	{
 		return kdTree_->queryVisibility(point1, point2, radius);
 	}
 
-	void RVOSimulator::setAgentDefaults(float neighborDist, size_t maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, const Vector2 &velocity)
+	void RVOSimulator::setAgentDefaults(Fix16 neighborDist, size_t maxNeighbors, Fix16 timeHorizon, Fix16 timeHorizonObst, Fix16 radius, Fix16 maxSpeed, const Vector2 &velocity)
 	{
 		if (defaultAgent_ == NULL) {
 			defaultAgent_ = new Agent(this);
@@ -340,12 +338,12 @@ namespace RVO {
 		agents_[agentNo]->maxNeighbors_ = maxNeighbors;
 	}
 
-	void RVOSimulator::setAgentMaxSpeed(size_t agentNo, float maxSpeed)
+	void RVOSimulator::setAgentMaxSpeed(size_t agentNo, Fix16 maxSpeed)
 	{
 		agents_[agentNo]->maxSpeed_ = maxSpeed;
 	}
 
-	void RVOSimulator::setAgentNeighborDist(size_t agentNo, float neighborDist)
+	void RVOSimulator::setAgentNeighborDist(size_t agentNo, Fix16 neighborDist)
 	{
 		agents_[agentNo]->neighborDist_ = neighborDist;
 	}
@@ -360,17 +358,17 @@ namespace RVO {
 		agents_[agentNo]->prefVelocity_ = prefVelocity;
 	}
 
-	void RVOSimulator::setAgentRadius(size_t agentNo, float radius)
+	void RVOSimulator::setAgentRadius(size_t agentNo, Fix16 radius)
 	{
 		agents_[agentNo]->radius_ = radius;
 	}
 
-	void RVOSimulator::setAgentTimeHorizon(size_t agentNo, float timeHorizon)
+	void RVOSimulator::setAgentTimeHorizon(size_t agentNo, Fix16 timeHorizon)
 	{
 		agents_[agentNo]->timeHorizon_ = timeHorizon;
 	}
 
-	void RVOSimulator::setAgentTimeHorizonObst(size_t agentNo, float timeHorizonObst)
+	void RVOSimulator::setAgentTimeHorizonObst(size_t agentNo, Fix16 timeHorizonObst)
 	{
 		agents_[agentNo]->timeHorizonObst_ = timeHorizonObst;
 	}
@@ -380,17 +378,17 @@ namespace RVO {
 		agents_[agentNo]->velocity_ = velocity;
 	}
 
-	void RVOSimulator::setTimeStep(float timeStep)
+	void RVOSimulator::setTimeStep(Fix16 timeStep)
 	{
 		timeStep_ = timeStep;
 	}
 
-	void RVOSimulator::setAgentMass(size_t agentIndex, float mass)
+	void RVOSimulator::setAgentMass(size_t agentIndex, Fix16 mass)
 	{
 		agents_[agentIndex]->mass_ = mass;
 	}
 
-	int RVOSimulator::QueryNearByAgents(Vector2 pos, int *ptr, int currentCount, int size, float range, int addId)
+	int RVOSimulator::QueryNearByAgents(Vector2 pos, int *ptr, int currentCount, int size, Fix16 range, int addId)
 	{
 		return kdTree_->QueryNearByAgents(pos, ptr, currentCount, size, range, addId);
 	}
@@ -398,9 +396,6 @@ namespace RVO {
 	// test performance
 	void RVOSimulator::doStepBuildTree()
 	{
-		if (std::abs(timeStep_) <= 1e-6)
-			return;
-
 		kdTree_->buildAgentTree();
 	}
 

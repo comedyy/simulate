@@ -150,5 +150,7 @@ public struct fp : IEquatable<fp>, IComparable<fp>
     {
         return $"raw:【{rawValue}】float:【{(float)this}】";
     }
+
+    public int To32Fp => (int)rawValue;
 }
 #endif

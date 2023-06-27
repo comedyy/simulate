@@ -218,7 +218,7 @@ static inline uint32_t fix_abs(fix16_t in)
  * Only tested on 32-bit ARM Cortex-M0 / x86 Intel.
  *
  * This macro is needed when compiling with options like "--fpu=none",
- * which forbid all and every use of float and related types and
+ * which forbid all and every use of Fix16 and related types and
  * would thus make it impossible to have fix16_t constants.
  *
  * Just replace uses of F16() with F16C() like this:

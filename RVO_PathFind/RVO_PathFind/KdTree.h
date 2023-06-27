@@ -17,13 +17,13 @@ namespace RVO {
 
 			size_t left;
 
-			float maxX;
+			Fix16 maxX;
 
-			float maxY;
+			Fix16 maxY;
 
-			float minX;
+			Fix16 minX;
 
-			float minY;
+			Fix16 minY;
 
 			size_t right;
 		};
@@ -51,28 +51,28 @@ namespace RVO {
 		ObstacleTreeNode *buildObstacleTreeRecursive(const std::vector<Obstacle *> &
 													 obstacles);
 
-		void computeAgentNeighbors(Agent *agent, float &rangeSq) const;
+		void computeAgentNeighbors(Agent *agent, Fix16 &rangeSq) const;
 
-		void computeObstacleNeighbors(Agent *agent, float rangeSq) const;
+		void computeObstacleNeighbors(Agent *agent, Fix16 rangeSq) const;
 
 		void deleteObstacleTree(ObstacleTreeNode *node);
 
-		void queryAgentTreeRecursive(Agent *agent, float &rangeSq,
+		void queryAgentTreeRecursive(Agent *agent, Fix16 &rangeSq,
 									 size_t node) const;
 
-		void queryObstacleTreeRecursive(Agent *agent, float rangeSq,
+		void queryObstacleTreeRecursive(Agent *agent, Fix16 rangeSq,
 										const ObstacleTreeNode *node) const;
 
 		bool queryVisibility(const Vector2 &q1, const Vector2 &q2,
-							 float radius) const;
+							 Fix16 radius) const;
 
 		bool queryVisibilityRecursive(const Vector2 &q1, const Vector2 &q2,
-									  float radius,
+									  Fix16 radius,
 									  const ObstacleTreeNode *node) const;
 
-		int QueryNearByAgents(const Vector2 &pos, int* ptr, int addCount, int totalCount, float range, int addId) const;
+		int QueryNearByAgents(const Vector2 &pos, int* ptr, int addCount, int totalCount, Fix16 range, int addId) const;
 
-		void QueryNearByAgents(const Vector2 &pos, int* ptr, int& addCount, int totalCount, float rangeSq, size_t node, int addId) const;
+		void QueryNearByAgents(const Vector2 &pos, int* ptr, int& addCount, int totalCount, Fix16 rangeSq, size_t node, int addId) const;
 
 		std::vector<Agent *> agents_;
 		std::vector<AgentTreeNode> agentTree_;

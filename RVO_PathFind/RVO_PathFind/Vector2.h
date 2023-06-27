@@ -3,38 +3,39 @@
 
 #include <cmath>
 #include <ostream>
+#include "../libfixmath/fix16.hpp"
 
 namespace RVO {
 
 	class Vector2 {
 	public:
 
-		inline Vector2() : x_(0.0f), y_(0.0f) { }
+		inline Vector2() : x_(Fix16::zero), y_(Fix16::zero) { }
 
-		inline Vector2(float x, float y) : x_(x), y_(y) { }
+		inline Vector2(Fix16 x, Fix16 y) : x_(x), y_(y) { }
 
-		inline float x() const { return x_; }
+		inline Fix16 x() const { return x_; }
 
-		inline float y() const { return y_; }
+		inline Fix16 y() const { return y_; }
 
 		inline Vector2 operator-() const
 		{
 			return Vector2(-x_, -y_);
 		}
 
-		inline float operator*(const Vector2 &vector) const
+		inline Fix16 operator*(const Vector2 &vector) const
 		{
 			return x_ * vector.x() + y_ * vector.y();
 		}
 
-		inline Vector2 operator*(float s) const
+		inline Vector2 operator*(Fix16 s) const
 		{
 			return Vector2(x_ * s, y_ * s);
 		}
 
-		inline Vector2 operator/(float s) const
+		inline Vector2 operator/(Fix16 s) const
 		{
-			const float invS = 1.0f / s;
+			const Fix16 invS = Fix16::one / s;
 
 			return Vector2(x_ * invS, y_ * invS);
 		}
@@ -59,7 +60,7 @@ namespace RVO {
 			return x_ != vector.x() || y_ != vector.y();
 		}
 
-		Vector2 &operator*=(float s)
+		Vector2 &operator*=(Fix16 s)
 		{
 			x_ *= s;
 			y_ *= s;
@@ -67,9 +68,9 @@ namespace RVO {
 			return *this;
 		}
 
-		Vector2 &operator/=(float s)
+		Vector2 &operator/=(Fix16 s)
 		{
-			const float invS = 1.0f / s;
+			const Fix16 invS = Fix16::one / s;
 			x_ *= invS;
 			y_ *= invS;
 
@@ -93,41 +94,51 @@ namespace RVO {
 		}
 
 	private:
-		float x_;
-		float y_;
+		Fix16 x_;
+		Fix16 y_;
 	};
 
-	inline Vector2 operator*(float s, const Vector2 &vector)
+	inline Vector2 operator*(Fix16 s, const Vector2 &vector)
 	{
 		return Vector2(s * vector.x(), s * vector.y());
 	}
 
-	inline std::ostream &operator<<(std::ostream &os,
+	/*inline std::ostream &operator<<(std::ostream &os,
 											   const Vector2 &vector)
 	{
 		os << "(" << vector.x() << "," << vector.y() << ")";
 
 		return os;
-	}
+	}*/
 
-	inline float abs(const Vector2 &vector)
+	inline Fix16 abs(const Vector2 &vector)
 	{
-		return std::sqrt(vector * vector);
+		Fix16 value = vector * vector;
+		return value.sqrt();
 	}
 
-	inline float absSq(const Vector2 &vector)
+	inline Fix16 absSq(const Vector2 &vector)
 	{
 		return vector * vector;
 	}
 
-	inline float det(const Vector2 &vector1, const Vector2 &vector2)
+	inline Fix16 det(const Vector2 &vector1, const Vector2 &vector2)
 	{
 		return vector1.x() * vector2.y() - vector1.y() * vector2.x();
 	}
 
 	inline Vector2 normalize(const Vector2 &vector)
 	{
-		return vector / abs(vector);
+		if (vector.x() == 0 && vector.y() == 0) return vector;
+
+		Fix16 magnitude = abs(vector);
+		if (magnitude > 0)
+		{
+			return vector / abs(vector);
+		}
+
+		Vector2 vector1 = (vector * Fix16::_100);
+		return vector1 / abs(vector1);
 	}
 }
 

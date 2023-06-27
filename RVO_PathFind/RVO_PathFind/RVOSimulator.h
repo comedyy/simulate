@@ -42,17 +42,17 @@ namespace RVO {
 	public:
 		RVOSimulator();
 
-		RVOSimulator(float timeStep, float neighborDist, size_t maxNeighbors,
-					 float timeHorizon, float timeHorizonObst, float radius,
-					 float maxSpeed, const Vector2 &velocity = Vector2());
+		RVOSimulator(Fix16 timeStep, Fix16 neighborDist, size_t maxNeighbors,
+					 Fix16 timeHorizon, Fix16 timeHorizonObst, Fix16 radius,
+					 Fix16 maxSpeed, const Vector2 &velocity = Vector2());
 
 		~RVOSimulator();
 
 		size_t addAgent(const Vector2 &position);
 
-		size_t addAgent(const Vector2 &position, float neighborDist,
-						size_t maxNeighbors, float timeHorizon,
-						float timeHorizonObst, float radius, float maxSpeed, float mass,
+		size_t addAgent(const Vector2 &position, Fix16 neighborDist,
+						size_t maxNeighbors, Fix16 timeHorizon,
+						Fix16 timeHorizonObst, Fix16 radius, Fix16 maxSpeed, Fix16 mass,
                         MonsterType monsterType,
 						const Vector2 &velocity = Vector2());
 
@@ -70,9 +70,9 @@ namespace RVO {
 
 		size_t getAgentMaxNeighbors(size_t agentNo) const;
 
-		float getAgentMaxSpeed(size_t agentNo) const;
+		Fix16 getAgentMaxSpeed(size_t agentNo) const;
 
-		float getAgentNeighborDist(size_t agentNo) const;
+		Fix16 getAgentNeighborDist(size_t agentNo) const;
 
 		size_t getAgentNumAgentNeighbors(size_t agentNo) const;
 
@@ -88,15 +88,15 @@ namespace RVO {
 
 		const Vector2 &getAgentPrefVelocity(size_t agentNo) const;
 
-		float getAgentRadius(size_t agentNo) const;
+		Fix16 getAgentRadius(size_t agentNo) const;
 
-		float getAgentTimeHorizon(size_t agentNo) const;
+		Fix16 getAgentTimeHorizon(size_t agentNo) const;
 
-		float getAgentTimeHorizonObst(size_t agentNo) const;
+		Fix16 getAgentTimeHorizonObst(size_t agentNo) const;
 
 		const Vector2 &getAgentVelocity(size_t agentNo) const;
 
-		float getGlobalTime() const;
+		Fix16 getGlobalTime() const;
 
 		size_t getNumAgents() const;
 
@@ -108,49 +108,49 @@ namespace RVO {
 
 		size_t getPrevObstacleVertexNo(size_t vertexNo) const;
 
-		float getTimeStep() const;
+		Fix16 getTimeStep() const;
 
 		void processObstacles();
 
 		bool queryVisibility(const Vector2 &point1, const Vector2 &point2,
-							 float radius = 0.0f) const;
+							 Fix16 radius = Fix16::zero) const;
 
-		void setAgentDefaults(float neighborDist, size_t maxNeighbors,
-							  float timeHorizon, float timeHorizonObst,
-							  float radius, float maxSpeed,
+		void setAgentDefaults(Fix16 neighborDist, size_t maxNeighbors,
+							  Fix16 timeHorizon, Fix16 timeHorizonObst,
+							  Fix16 radius, Fix16 maxSpeed,
 							  const Vector2 &velocity = Vector2());
 
 		void setAgentMaxNeighbors(size_t agentNo, size_t maxNeighbors);
 
-		void setAgentMaxSpeed(size_t agentNo, float maxSpeed);
+		void setAgentMaxSpeed(size_t agentNo, Fix16 maxSpeed);
 
-		void setAgentNeighborDist(size_t agentNo, float neighborDist);
+		void setAgentNeighborDist(size_t agentNo, Fix16 neighborDist);
 
 		void setAgentPosition(size_t agentNo, const Vector2 &position);
 
 		void setAgentPrefVelocity(size_t agentNo, const Vector2 &prefVelocity);
 
-		void setAgentRadius(size_t agentNo, float radius);
+		void setAgentRadius(size_t agentNo, Fix16 radius);
 
-		void setAgentTimeHorizon(size_t agentNo, float timeHorizon);
+		void setAgentTimeHorizon(size_t agentNo, Fix16 timeHorizon);
 
-		void setAgentTimeHorizonObst(size_t agentNo, float timeHorizonObst);
+		void setAgentTimeHorizonObst(size_t agentNo, Fix16 timeHorizonObst);
 
 		void setAgentVelocity(size_t agentNo, const Vector2 &velocity);
 
-		void setTimeStep(float timeStep);
+		void setTimeStep(Fix16 timeStep);
 
 		void removeAgent(size_t agentIndex);
-		void setAgentMass(size_t agentIndex, float mass);
-		int QueryNearByAgents(Vector2 pos, int *ptr, int currentCount, int size, float rangeSq, int addId);
+		void setAgentMass(size_t agentIndex, Fix16 mass);
+		int QueryNearByAgents(Vector2 pos, int *ptr, int currentCount, int size, Fix16 rangeSq, int addId);
 
 	private:
 		std::vector<Agent *> agents_;
 		Agent *defaultAgent_;
-		float globalTime_;
+		Fix16 globalTime_;
 		KdTree *kdTree_;
 		std::vector<Obstacle *> obstacles_;
-		float timeStep_;
+		Fix16 timeStep_;
 
 		std::stack<size_t> m_UnusedAgentIndexs;
 

@@ -33,7 +33,7 @@
     <ClInclude Include="..\RVO_PathFind\Vector2.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\libfixmath\fix16.h">
+    <ClInclude Include="..\libfixmath\fix16_.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\libfixmath\fix16.hpp">
@@ -62,10 +62,13 @@
     <ClCompile Include="..\RVO_PathFind\RVOSimulator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\libfixmath\fix16.c">
+    <ClCompile Include="..\libfixmath\fix16_.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\libfixmath\fix16_sqrt.c">
+    <ClCompile Include="..\libfixmath\fix16_sqrt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libfixmath\fix16.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

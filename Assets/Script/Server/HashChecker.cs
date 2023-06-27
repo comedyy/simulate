@@ -111,14 +111,14 @@ public class HashChecker
         List<float3> lstRotation = new List<float3>();
         for(int i = 0; i < item.listEntity.Count / 2; i++)
         {
-            var f1 = math.asfloat(item.listValue[i * 8 + 1]);
-            var f2 = math.asfloat(item.listValue[i * 8 + 2]);
-            var f3 = math.asfloat(item.listValue[i * 8 + 3]);
+            var f1 = new fp(){rawValue = item.listValue[i * 8 + 1]};
+            var f2 = new fp(){rawValue = item.listValue[i * 8 + 2]};
+            var f3 = new fp(){rawValue = item.listValue[i * 8 + 3]};
             lst.Add(new float3(f1, f2, f3));
 
-            var f11 = math.asfloat(item.listValue[i * 8 + 5]);
-            var f21 = math.asfloat(item.listValue[i * 8 + 6]);
-            var f31 = math.asfloat(item.listValue[i * 8 + 7]);
+            var f11 = new fp(){rawValue = item.listValue[i * 8 + 5]};
+            var f21 = new fp(){rawValue = item.listValue[i * 8 + 6]};
+            var f31 = new fp(){rawValue = item.listValue[i * 8 + 7]};
             lstRotation.Add(new float3(f11, f21, f31));
         }
 

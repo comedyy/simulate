@@ -24,7 +24,8 @@ public class RvoSimulatorComponet  : IComponentData
         if(rvoSimulator != null) rvoSimulator.addAgent(pos, neighborDist, maxNeighbors, timeHorizon, timeHorizonObst, radius, maxSpeed, velocity, entity);
 
         var velocity1 = new rvoInt2(){ x = (int)velocity.x().rawValue, y = (int)velocity.y().rawValue};
-        var agentIndex = MSPathSystem.AddAgent(id, pos.x(), pos.y(), neighborDist, maxNeighbors, timeHorizon, timeHorizonObst, radius, maxSpeed, 1, velocity.x(), velocity.y());
+        var agentIndex = MSPathSystem.AddAgent(id, pos.x().To32Fp, pos.y().To32Fp, neighborDist.To32Fp, maxNeighbors, timeHorizon.To32Fp, 
+            timeHorizonObst.To32Fp, radius.To32Fp, maxSpeed.To32Fp, fp.Create(1).To32Fp, velocity.x().To32Fp, velocity.y().To32Fp);
         
         _allEntities.Add(agentIndex, entity);
 
@@ -38,7 +39,7 @@ public class RvoSimulatorComponet  : IComponentData
             rvoSimulator.setTimeStep(stepTime); return;
         }
 
-        MSPathSystem.SetTimeStep(id, stepTime);
+        MSPathSystem.SetTimeStep(id, stepTime.To32Fp);
     }
 
     public void RemoveAgent(int index)
@@ -71,7 +72,7 @@ public class RvoSimulatorComponet  : IComponentData
             rvoSimulator.setAgentPrefVelocity(index, vec); return;
         } 
 
-        MSPathSystem.SetAgentVelocityPref(id, index, vec.x(), vec.y());
+        MSPathSystem.SetAgentVelocityPref(id, index, vec.x().To32Fp, vec.y().To32Fp);
     }
 
     public Vector2 GetAgentPosition(int index)
@@ -83,8 +84,8 @@ public class RvoSimulatorComponet  : IComponentData
 
         var pos = new AgentVector2();
         MSPathSystem.GetAgentPosition(id, index, ref pos);
-        var x = new fp(){rawValue = UnityEngine.Mathf.FloorToInt(pos.x * fp.one.rawValue)};
-        var y = new fp(){rawValue = UnityEngine.Mathf.FloorToInt(pos.y * fp.one.rawValue)};
+        var x = new fp(){rawValue = pos.x};
+        var y = new fp(){rawValue = pos.y};
         return new Vector2(x, y);
     }
 
@@ -96,7 +97,7 @@ public class RvoSimulatorComponet  : IComponentData
         }
 
         NativeArray<int> array = new Unity.Collections.NativeArray<int>(1024, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
-        int count = MSPathSystem.GetNearByAgents(id, pos.x(), pos.y(), array, range);
+        int count = MSPathSystem.GetNearByAgents(id, pos.x().To32Fp, pos.y().To32Fp, array, range.To32Fp);
 
         for(int i = 0; i < count; i++)
         {

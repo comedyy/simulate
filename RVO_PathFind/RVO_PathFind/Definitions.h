@@ -9,22 +9,20 @@
 
 #include "Vector2.h"
 
-const float RVO_EPSILON = 0.00001f;
-
 namespace RVO {
 	class Agent;
 	class Obstacle;
 	class RVOSimulator;
 
-	inline float distSqPointLineSegment(const Vector2 &a, const Vector2 &b,
+	inline Fix16 distSqPointLineSegment(const Vector2 &a, const Vector2 &b,
 										const Vector2 &c)
 	{
-		const float r = ((c - a) * (b - a)) / absSq(b - a);
+		const Fix16 r = ((c - a) * (b - a)) / absSq(b - a);
 
-		if (r < 0.0f) {
+		if (r < Fix16::zero) {
 			return absSq(c - a);
 		}
-		else if (r > 1.0f) {
+		else if (r > Fix16::one) {
 			return absSq(c - b);
 		}
 		else {
@@ -32,12 +30,12 @@ namespace RVO {
 		}
 	}
 
-	inline float leftOf(const Vector2 &a, const Vector2 &b, const Vector2 &c)
+	inline Fix16 leftOf(const Vector2 &a, const Vector2 &b, const Vector2 &c)
 	{
 		return det(a - c, b - a);
 	}
 
-	inline float sqr(float a)
+	inline Fix16 sqr(Fix16 a)
 	{
 		return a * a;
 	}

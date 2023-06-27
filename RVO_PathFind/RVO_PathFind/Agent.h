@@ -15,9 +15,9 @@ namespace RVO {
 
 		void computeNewVelocity();
 
-		void insertAgentNeighbor(const Agent *agent, float &rangeSq);
+		void insertAgentNeighbor(const Agent *agent, Fix16 &rangeSq);
 
-		void insertObstacleNeighbor(const Obstacle *obstacle, float rangeSq);
+		void insertObstacleNeighbor(const Obstacle *obstacle, Fix16 rangeSq);
 
 		void update();
         
@@ -25,26 +25,26 @@ namespace RVO {
         
         MonsterType GetMonsterType();
 
-		std::vector<std::pair<float, const Agent *> > agentNeighbors_;
+		std::vector<std::pair<Fix16, const Agent *> > agentNeighbors_;
 		size_t maxNeighbors_;
-		float maxSpeed_;
-		float neighborDist_;
+		Fix16 maxSpeed_;
+		Fix16 neighborDist_;
 		Vector2 newVelocity_;
-		std::vector<std::pair<float, const Obstacle *> > obstacleNeighbors_;
+		std::vector<std::pair<Fix16, const Obstacle *> > obstacleNeighbors_;
 		std::vector<Line> orcaLines_;
 		Vector2 position_;
 		Vector2 prefVelocity_;
-		float radius_;
+		Fix16 radius_;
 		RVOSimulator *sim_;
-		float timeHorizon_;
-		float timeHorizonObst_;
+		Fix16 timeHorizon_;
+		Fix16 timeHorizonObst_;
 		Vector2 velocity_;
 
 		size_t id_;
         
         MonsterType m_MonsterType;
 
-		float mass_;
+		Fix16 mass_;
 		bool m_IsRemove;
 
 		friend class KdTree;
@@ -52,15 +52,15 @@ namespace RVO {
 	};
 
 	bool linearProgram1(const std::vector<Line> &lines, size_t lineNo,
-						float radius, const Vector2 &optVelocity,
+						Fix16 radius, const Vector2 &optVelocity,
 						bool directionOpt, Vector2 &result);
 
-	size_t linearProgram2(const std::vector<Line> &lines, float radius,
+	size_t linearProgram2(const std::vector<Line> &lines, Fix16 radius,
 						  const Vector2 &optVelocity, bool directionOpt,
 						  Vector2 &result);
 
 	void linearProgram3(const std::vector<Line> &lines, size_t numObstLines, size_t beginLine,
-						float radius, Vector2 &result);
+						Fix16 radius, Vector2 &result);
 }
 
 #endif /* RVO_AGENT_H_ */
