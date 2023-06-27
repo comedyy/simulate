@@ -42,14 +42,13 @@ static const fix16_t fix16_overflow = 0x80000000; /*!< the value used to indicat
 static const fix16_t fix16_pi  = 205887;     /*!< fix16_t value of pi */
 static const fix16_t fix16_e   = 178145;     /*!< fix16_t value of e */
 static const fix16_t fix16_one = 0x00010000; /*!< fix16_t value of 1 */
+static const fix16_t fix16_half = 0x00008000; /*!< fix16_t value of 1 */
 static const fix16_t fix16_eps = 1;          /*!< fix16_t epsilon */
 
 /* Conversion functions between fix16_t and float/integer.
  * These are inlined to allow compiler to optimize away constant numbers
  */
 static inline fix16_t fix16_from_int(int a)     { return a * fix16_one; }
-static inline float   fix16_to_float(fix16_t a) { return (float)a / fix16_one; }
-static inline double  fix16_to_dbl(fix16_t a)   { return (double)a / fix16_one; }
 
 static inline int fix16_to_int(fix16_t a)
 {
@@ -60,25 +59,6 @@ static inline int fix16_to_int(fix16_t a)
 		return (a + (fix16_one >> 1)) / fix16_one;
 	return (a - (fix16_one >> 1)) / fix16_one;
 #endif
-}
-
-static inline fix16_t fix16_from_float(float a)
-{
-	float temp = a * fix16_one;
-#ifndef FIXMATH_NO_ROUNDING
-	temp += (temp >= 0) ? 0.5f : -0.5f;
-#endif
-	return (fix16_t)temp;
-}
-
-static inline fix16_t fix16_from_dbl(double a)
-{
-	double temp = a * fix16_one;
-    /* F16() and F16C() are both rounding allways, so this should as well */
-//#ifndef FIXMATH_NO_ROUNDING
-	temp += (double)((temp >= 0) ? 0.5f : -0.5f);
-//#endif
-	return (fix16_t)temp;
 }
 
 /* Macro for defining fix16_t constant values.
@@ -140,62 +120,6 @@ extern fix16_t fix16_smul(fix16_t inArg0, fix16_t inArg1) FIXMATH_FUNC_ATTRS;
 extern fix16_t fix16_sdiv(fix16_t inArg0, fix16_t inArg1) FIXMATH_FUNC_ATTRS;
 #endif
 
-/*! Divides the first given fix16_t by the second and returns the result.
-*/
-extern fix16_t fix16_mod(fix16_t x, fix16_t y) FIXMATH_FUNC_ATTRS;
-
-
-
-/*! Returns the linear interpolation: (inArg0 * (1 - inFract)) + (inArg1 * inFract)
-*/
-extern fix16_t fix16_lerp8(fix16_t inArg0, fix16_t inArg1, uint8_t inFract) FIXMATH_FUNC_ATTRS;
-extern fix16_t fix16_lerp16(fix16_t inArg0, fix16_t inArg1, uint16_t inFract) FIXMATH_FUNC_ATTRS;
-extern fix16_t fix16_lerp32(fix16_t inArg0, fix16_t inArg1, uint32_t inFract) FIXMATH_FUNC_ATTRS;
-
-
-
-/*! Returns the sine of the given fix16_t.
-*/
-extern fix16_t fix16_sin_parabola(fix16_t inAngle) FIXMATH_FUNC_ATTRS;
-
-/*! Returns the sine of the given fix16_t.
-*/
-extern fix16_t fix16_sin(fix16_t inAngle) FIXMATH_FUNC_ATTRS;
-
-/*! Returns the cosine of the given fix16_t.
-*/
-extern fix16_t fix16_cos(fix16_t inAngle) FIXMATH_FUNC_ATTRS;
-
-/*! Returns the tangent of the given fix16_t.
-*/
-extern fix16_t fix16_tan(fix16_t inAngle) FIXMATH_FUNC_ATTRS;
-
-/*! Returns the arcsine of the given fix16_t.
-*/
-extern fix16_t fix16_asin(fix16_t inValue) FIXMATH_FUNC_ATTRS;
-
-/*! Returns the arccosine of the given fix16_t.
-*/
-extern fix16_t fix16_acos(fix16_t inValue) FIXMATH_FUNC_ATTRS;
-
-/*! Returns the arctangent of the given fix16_t.
-*/
-extern fix16_t fix16_atan(fix16_t inValue) FIXMATH_FUNC_ATTRS;
-
-/*! Returns the arctangent of inY/inX.
-*/
-extern fix16_t fix16_atan2(fix16_t inY, fix16_t inX) FIXMATH_FUNC_ATTRS;
-
-static const fix16_t fix16_rad_to_deg_mult = 3754936;
-static inline fix16_t fix16_rad_to_deg(fix16_t radians)
-	{ return fix16_mul(radians, fix16_rad_to_deg_mult); }
-
-static const fix16_t fix16_deg_to_rad_mult = 1144;
-static inline fix16_t fix16_deg_to_rad(fix16_t degrees)
-	{ return fix16_mul(degrees, fix16_deg_to_rad_mult); }
-
-
-
 /*! Returns the square root of the given fix16_t.
 */
 extern fix16_t fix16_sqrt(fix16_t inValue) FIXMATH_FUNC_ATTRS;
@@ -220,17 +144,6 @@ extern fix16_t fix16_log2(fix16_t x) FIXMATH_FUNC_ATTRS;
 /*! Returns the saturated base 2 logarithm of the given fix16_t.
  */
 extern fix16_t fix16_slog2(fix16_t x) FIXMATH_FUNC_ATTRS;
-
-/*! Convert fix16_t value to a string.
- * Required buffer length for largest values is 13 bytes.
- */
-extern void fix16_to_str(fix16_t value, char *buf, int decimals);
-
-/*! Convert string to a fix16_t value
- * Ignores spaces at beginning and end. Returns fix16_overflow if
- * value is too large or there were garbage characters.
- */
-extern fix16_t fix16_from_str(const char *buf);
 
 static inline uint32_t fix_abs(fix16_t in)
 {
