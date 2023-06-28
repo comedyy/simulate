@@ -119,6 +119,8 @@ public class CircleSkillSystem : JobComponentSystem
             var atks = chunk.GetNativeArray(atkComponentChunkType);
             var trans = chunk.GetNativeArray(transformComponentChunkType);
 
+            Debug.LogError(TypeManager.GetTypeIndex<HurtComponent>());
+
             for(int j = 0; j < chunk.Count; j++)
             {
                 var skill = skills[j];
