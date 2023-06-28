@@ -31,6 +31,8 @@ public class HashChecker
 
     public void AddHash(FrameHash hash)
     {
+        if(!NotSame) return;
+
         var id = hash.id;
         var list = _listHash[id - 1];
         list.Add(hash);
