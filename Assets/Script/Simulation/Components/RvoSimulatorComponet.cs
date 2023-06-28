@@ -99,8 +99,8 @@ public class RvoSimulatorComponet  : IComponentData
 
         var pos = new AgentVector2();
         MSPathSystem.GetAgentDir(id, index, ref pos);
-        var x = new fp(){rawValue = UnityEngine.Mathf.FloorToInt(pos.x * fp.one.rawValue)};
-        var y = new fp(){rawValue = UnityEngine.Mathf.FloorToInt(pos.y * fp.one.rawValue)};
+        var x = new fp(){rawValue = pos.x};
+        var y = new fp(){rawValue = pos.y};
         return new Vector2(x, y);
     }
 
