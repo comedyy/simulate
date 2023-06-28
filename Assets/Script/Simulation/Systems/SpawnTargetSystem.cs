@@ -104,7 +104,7 @@ public class SpawnTargetSystem : ComponentSystem
             }
 
             EntityManager.SetComponentData(entity, new HpComponent(){
-                hp = ev.hp
+                hp = ev.hp, hpMax = ev.hp
             });
 
             EntityManager.SetComponentData(entity, new AtkComponent(){

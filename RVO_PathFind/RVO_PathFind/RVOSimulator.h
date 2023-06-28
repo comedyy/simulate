@@ -54,7 +54,7 @@ namespace RVO {
 						size_t maxNeighbors, Fix16 timeHorizon,
 						Fix16 timeHorizonObst, Fix16 radius, Fix16 maxSpeed, Fix16 mass,
                         MonsterType monsterType,
-						const Vector2 &velocity = Vector2());
+						const Vector2 &velocity = Vector2(), int entityId = 0);
 
 		size_t addObstacle(const std::vector<Vector2> &vertices);
         void ClearObstacle();

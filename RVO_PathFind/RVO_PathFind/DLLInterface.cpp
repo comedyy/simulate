@@ -35,13 +35,13 @@ extern "C"
 	}
 
 	EXPORT_API int AddAgent(int id,  fix16_t posX, fix16_t posY, fix16_t neighborDist, int maxNeighbors, fix16_t timeHorizon, fix16_t timeHorizonObst,
-		fix16_t radius, fix16_t maxSpeed, fix16_t mass, fix16_t velocityX, fix16_t velocityY)
+		fix16_t radius, fix16_t maxSpeed, fix16_t mass, fix16_t velocityX, fix16_t velocityY, int entityId)
 	{
 		Vector2 position = Vector2(Fix16::FromRaw(posX), Fix16::FromRaw(posY));
 		Vector2 velocity = Vector2(Fix16::FromRaw(velocityX), Fix16::FromRaw(velocityY));
         
 		return pRVOSimulators[id]->addAgent(position, Fix16::FromRaw(neighborDist), maxNeighbors, Fix16::FromRaw(timeHorizon), Fix16::FromRaw(timeHorizonObst), 
-			Fix16::FromRaw(radius), Fix16::FromRaw(maxSpeed), Fix16::FromRaw(mass), MonsterType::NormalGround, velocity);
+			Fix16::FromRaw(radius), Fix16::FromRaw(maxSpeed), Fix16::FromRaw(mass), MonsterType::NormalGround, velocity, entityId);
 	}
 
 	EXPORT_API void RemoveAgent(int id, int agentIndex)

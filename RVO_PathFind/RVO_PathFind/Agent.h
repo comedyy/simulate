@@ -41,7 +41,8 @@ namespace RVO {
 		Vector2 velocity_;
 
 		size_t id_;
-        
+		int entityId;
+
         MonsterType m_MonsterType;
 
 		Fix16 mass_;

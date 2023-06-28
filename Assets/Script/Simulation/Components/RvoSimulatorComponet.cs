@@ -24,8 +24,9 @@ public class RvoSimulatorComponet  : IComponentData
         if(rvoSimulator != null) rvoSimulator.addAgent(pos, neighborDist, maxNeighbors, timeHorizon, timeHorizonObst, radius, maxSpeed, velocity, entity);
 
         var velocity1 = new rvoInt2(){ x = (int)velocity.x().rawValue, y = (int)velocity.y().rawValue};
+        var entityID = entity.Index << 16 | entity.Version & 0xFFFF;
         var agentIndex = MSPathSystem.AddAgent(id, pos.x().To32Fp, pos.y().To32Fp, neighborDist.To32Fp, maxNeighbors, timeHorizon.To32Fp, 
-            timeHorizonObst.To32Fp, radius.To32Fp, maxSpeed.To32Fp, fp.Create(1).To32Fp, velocity.x().To32Fp, velocity.y().To32Fp);
+            timeHorizonObst.To32Fp, radius.To32Fp, maxSpeed.To32Fp, fp.Create(1).To32Fp, velocity.x().To32Fp, velocity.y().To32Fp, entityID);
         
         _allEntities.Add(agentIndex, entity);
 

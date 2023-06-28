@@ -53,7 +53,7 @@ namespace Game.Battle.CommonLib
         /// <returns></returns>
         [DllImport(kFindPathDllName)]
         public static extern int AddAgent(int id, int posX, int posY, int neighborDist, int maxNeighbors, int timeHorizon, 
-            int timeHorizonObst, int radius, int maxSpeed, int mass, int velocityX, int velocityY);
+            int timeHorizonObst, int radius, int maxSpeed, int mass, int velocityX, int velocityY, int entityId);
 
         /// <summary>
         /// 移除Agent

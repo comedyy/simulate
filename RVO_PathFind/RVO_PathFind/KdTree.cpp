@@ -365,7 +365,7 @@ namespace RVO {
 						return;
 					}
 
-					ptr[addCount] = agents_[i]-> id_ + addId;
+					ptr[addCount] = agents_[i]-> entityId;
 					addCount++;
 				}
 			}

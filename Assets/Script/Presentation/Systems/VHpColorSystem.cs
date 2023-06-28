@@ -20,12 +20,13 @@ public class VHpColorSystem : ComponentSystem
                 UnityEngine.Debug.LogError($"=== not found {target}");
             }
             var renderer = gameObj.GetComponentInChildren<Renderer>();
-            renderer.material.color = CalHpColor(EntityManager.GetComponentData<HpComponent>(target).hp);
+            var hpComponent = EntityManager.GetComponentData<HpComponent>(target);
+            renderer.material.color = CalHpColor(hpComponent.hp, hpComponent.hpMax);
         };
     }
 
-    private static Color CalHpColor(int hp)
+    private static Color CalHpColor(int hp, int hpMax)
     {
-        return Color.Lerp(Color.green, Color.red, 1 - hp / 100f);
+        return Color.Lerp(Color.green, Color.red, 1 - hp * 1.0f / hpMax);
     }
 }

@@ -80,7 +80,7 @@ namespace RVO {
 
 	size_t RVOSimulator::addAgent(const Vector2 &position, Fix16 neighborDist, size_t maxNeighbors, Fix16 timeHorizon, Fix16 timeHorizonObst, 
 		Fix16 radius, Fix16 maxSpeed, Fix16 mass, MonsterType monsterType,
-        const Vector2 &velocity)
+        const Vector2 &velocity, int entityId)
 	{
 		Agent* agent;
 		size_t agentIndex;
@@ -110,6 +110,7 @@ namespace RVO {
 		agent->timeHorizonObst_ = timeHorizonObst;
 		agent->velocity_ = velocity;
 		agent->mass_ = mass;
+		agent->entityId = entityId;
 
 		//agent->id_ = agents_.size();
 		agent->id_ = agentIndex;
