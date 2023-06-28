@@ -958,10 +958,6 @@ namespace Unity.Entities
                 for (int i = 0; i < componentTypes.Length; i++)
                 {
                     typeIndexByType[componentTypes[i]] = startTypeIndex + i;
-                    if(componentTypes[i] == typeof(LinkedEntityGroup))
-                    {
-                        Debug.Log($"+++ typeID: {typeIndexByType[componentTypes[i]]}");
-                    }
                 }
 
                 GatherWriteGroups(componentTypes, startTypeIndex, typeIndexByType, writeGroupByType);
