@@ -34,5 +34,20 @@ public sealed class IOSBitcodePostprocessor
  
    private static void setupBitcode(PBXProject project, string targetGUID) {
        project.SetBuildProperty(targetGUID, "ENABLE_BITCODE", "NO");
+
+        var projectGuid = project.ProjectGuid();
+        string debugConfigPro = project.BuildConfigByName(projectGuid, "Debug");
+        UnityEngine.Debug.Log("debugConfig:Pro" + debugConfigPro);
+        string releaseConfigPro = project.BuildConfigByName(projectGuid, "Release");
+        UnityEngine.Debug.Log("releaseConfig:Pro" + releaseConfigPro);
+        string releaseForProfilingConfigPro = project.BuildConfigByName(projectGuid, "ReleaseForProfiling");
+        UnityEngine.Debug.Log("releaseForProfilingConfigPro:" + releaseForProfilingConfigPro);
+        string releaseForRunningConfigPro = project.BuildConfigByName(projectGuid, "ReleaseForRunning");
+        UnityEngine.Debug.Log("releaseForRunningConfigPro:" + releaseForRunningConfigPro);
+
+        project.SetBuildPropertyForConfig(debugConfigPro, "GCC_OPTIMIZATION_LEVEL", "0");
+        project.SetBuildPropertyForConfig(releaseConfigPro, "GCC_OPTIMIZATION_LEVEL", "1");
+        project.SetBuildPropertyForConfig(releaseForProfilingConfigPro, "GCC_OPTIMIZATION_LEVEL", "1");
+        project.SetBuildPropertyForConfig(releaseForRunningConfigPro, "GCC_OPTIMIZATION_LEVEL", "1");
    }
 }
