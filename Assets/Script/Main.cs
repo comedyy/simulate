@@ -24,6 +24,8 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 1;
         Instance = this;
         // var tick = 1f / LogicFrameCount;
         // DumpGameServerSocket socket = new DumpGameServerSocket(pingSec);
