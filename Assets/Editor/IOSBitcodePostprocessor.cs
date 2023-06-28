@@ -4,7 +4,6 @@ using UnityEditor;
  
 public sealed class IOSBitcodePostprocessor
 {
-   public static bool enableBitcode = true;
   
    [PostProcessBuildAttribute]
    public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
@@ -34,6 +33,6 @@ public sealed class IOSBitcodePostprocessor
    }
  
    private static void setupBitcode(PBXProject project, string targetGUID) {
-       project.SetBuildProperty(targetGUID, "ENABLE_BITCODE", enableBitcode ? "YES" : "NO");
+       project.SetBuildProperty(targetGUID, "ENABLE_BITCODE", "NO");
    }
 }
