@@ -9,7 +9,6 @@ public class CircleSkillSystem : ComponentSystem
     List<Entity> tempEntities = new List<Entity>();
     protected override void OnUpdate()
     {   
-        return;
         LogicTime logic = GetSingleton<LogicTime>();
         tempEntities.Clear();
         var buffer = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
