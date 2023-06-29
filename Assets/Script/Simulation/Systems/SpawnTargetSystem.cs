@@ -95,7 +95,7 @@ public class SpawnTargetSystem : ComponentSystem
                 });
 
                 EntityManager.SetComponentData(entity, new LRvoComponent(){
-                    rvoId = rvoObj.AddAgent(new RVO.Vector2(ev.position.x, ev.position.z), fp.Create(1, 5000), 3, fp.Create(0, 500), fp.Create(0, 500), size, 3, new RVO.Vector2(ev.dir.x, ev.dir.z), entity)
+                    rvoId = rvoObj.AddAgent(new RVO.Vector2(ev.position.x, ev.position.z), fp.Create(5), 3, fp.Create(0, 500), fp.Create(0, 500), fp.Create(0, 9000), 3, new RVO.Vector2(ev.dir.x, ev.dir.z), entity)
                 });
 
                 EntityManager.SetComponentData(entity, new SkillComponent(){

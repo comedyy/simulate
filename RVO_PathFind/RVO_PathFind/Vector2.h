@@ -134,7 +134,7 @@ namespace RVO {
 		Fix16 magnitude = abs(vector);
 		if (magnitude > 0)
 		{
-			return vector / abs(vector);
+			return vector / magnitude;
 		}
 
 		Vector2 vector1 = (vector * Fix16::_100);
