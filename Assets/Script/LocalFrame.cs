@@ -106,6 +106,7 @@ public class LocalFrame
 
     public void SetData(MessageItem messageItem)
     {
+        messageItem.id = _controllerId;
         _messageItem = messageItem;
     }
 

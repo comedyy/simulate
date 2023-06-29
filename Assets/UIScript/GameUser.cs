@@ -6,7 +6,9 @@ public class GameUser : MonoBehaviour
     IClientGameSocket _socket;
     Battle _battle;
 
-    public bool IsLocalClient { get; internal set; }
+    bool IsLocalClient { get; set; }
+
+    private bool userAutoMove;
 
     void Start()
     {
@@ -35,7 +37,7 @@ public class GameUser : MonoBehaviour
     private void OnBattleStart(byte userCount, byte userId)
     {
         _userId = userId;
-         _battle = new Battle(Main.Instance.tick, false, false, userId, _socket, userCount);
+         _battle = new Battle(Main.Instance.tick, false, false, userId, _socket, userCount, userAutoMove);
         // CloseUI
 
         var roomUI = UnityEngine.Object.FindObjectOfType<RoomUI>();
@@ -68,5 +70,11 @@ public class GameUser : MonoBehaviour
         GUI.color = Color.black;
         var hash = _battle.CheckSumMgr.CurrentCheckSum;
         GUI.Label(new Rect(0, 50 * _userId, 200, 50), hash.ToString());
+    }
+
+    internal void Init(bool isLocalClient, bool userAutoMove)
+    {
+        this.IsLocalClient = isLocalClient;
+        this.userAutoMove = userAutoMove;
     }
 }

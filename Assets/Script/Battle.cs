@@ -8,7 +8,7 @@ public class Battle
 
     LocalFrame _localFrame;
 
-    public Battle(fp tick, bool randomFixedCount, bool usePlaybackInput, int worldIndex, IGameSocket socket, int userCount)
+    public Battle(fp tick, bool randomFixedCount, bool usePlaybackInput, int worldIndex, IGameSocket socket, int userCount, bool userAutoMove)
     {
         _localFrame = new LocalFrame();
         _checkSumMgr = new CheckSumMgr();
@@ -26,7 +26,7 @@ public class Battle
             _localFrame.LoadPlayBackInfo(false);
         }
 
-        _world = new BattleWorld("new " + worldIndex, _checkSumMgr, randomFixedCount, tick, _localFrame, worldIndex, userCount);
+        _world = new BattleWorld("new " + worldIndex, _checkSumMgr, randomFixedCount, tick, _localFrame, worldIndex, userCount, userAutoMove);
     }
 
     public bool IsEnd => _world.IsEnd;

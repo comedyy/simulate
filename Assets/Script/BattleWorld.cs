@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 
@@ -8,7 +9,7 @@ public class BattleWorld : World
     BattleEndFlag flag = new BattleEndFlag();
     public bool IsEnd => flag.isEnd;
 
-    public BattleWorld(string name, CheckSumMgr checksum, bool randomFixedCount, fp logicFrameInterval, LocalFrame localServer, int userId, int userCount) : base(name)
+    public BattleWorld(string name, CheckSumMgr checksum, bool randomFixedCount, fp logicFrameInterval, LocalFrame localServer, int userId, int userCount, bool userAutoMove) : base(name)
     {
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new CheckSumComponet(){
             checkSum = checksum
@@ -22,6 +23,9 @@ public class BattleWorld : World
 
         var init = CreateSystem<InitiazationSystem>();
         init.Init(userId);
+
+        InitMoveSystem(userAutoMove, localServer);
+
         // update systems
         InitSimulationSystem(localServer, randomFixedCount);
 
@@ -30,6 +34,14 @@ public class BattleWorld : World
 #endif
     }
 
+    private void InitMoveSystem(bool userAutoMove, LocalFrame localServer)
+    {
+        var group = GetOrCreateSystem<CustomSystems3>();
+        var moveSytem = CreateSystem<ControllerMoveSystem>();
+        moveSytem.localServer = localServer;
+        moveSytem.userAutoMove = userAutoMove;
+        group.AddSystemToUpdateList(moveSytem);
+    }
 
     public void InitSimulationSystem(LocalFrame frame, bool randomFixedCount)
     {
@@ -75,9 +87,5 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(CreateSystem<VDespawnSystem>());
         group.AddSystemToUpdateList(CreateSystem<VLerpTransformSystem>());
         group.AddSystemToUpdateList(CreateSystem<VCameraFollowSystem>());
-
-        var moveSytem = CreateSystem<ControllerMoveSystem>();
-        moveSytem.localServer = localServer;
-        group.AddSystemToUpdateList(moveSytem);
     }
 }

@@ -24,7 +24,7 @@ public class LogicSyncMain : MonoBehaviour
         for(int i = 0; i < worldCount; i++)
         {
             // await Task.Delay(i * 10);
-            _battles[i] = new Battle(fp.Create(0, 660), randomLogicSimulateTime, usePlaybackInput, (i + 1), null, 5);
+            _battles[i] = new Battle(fp.Create(0, 660), randomLogicSimulateTime, usePlaybackInput, (i + 1), null, 5, false);
         }
     }
 

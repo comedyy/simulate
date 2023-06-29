@@ -14,11 +14,14 @@ public class RoomUI : MonoBehaviour
     Room _room;
 
     public static string ip = "192.168.2.14";
-    public string hash = "";
+    public bool userAutoMove = false;
 
     void OnGUI()
     {
         ip = GUI.TextField(new Rect(100, 100, 100, 100), ip);
+
+        GUI.color = Color.black;
+        userAutoMove = GUI.Toggle(new Rect(100, 0, 100, 100), userAutoMove, "ai控制操作");
     }
 
     // Start is called before the first frame update
@@ -41,7 +44,8 @@ public class RoomUI : MonoBehaviour
         // 创建一个单位，并加入到游戏中。
         GameObject o = new GameObject("newPlayer");
         var user = o.AddComponent<GameUser>();
-        user.IsLocalClient = _room != null;
+        var isLocalClient = _room != null;
+        user.Init(isLocalClient, userAutoMove);
 
         _hostButton.gameObject.SetActive(false);
     }

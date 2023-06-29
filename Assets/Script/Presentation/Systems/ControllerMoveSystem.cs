@@ -6,6 +6,7 @@ using UnityEngine;
 public class ControllerMoveSystem : ComponentSystem
 {
     internal LocalFrame localServer;
+    public bool userAutoMove;
 
     protected override void OnUpdate()
     {   
@@ -26,7 +27,7 @@ public class ControllerMoveSystem : ComponentSystem
 
         if(Application.isEditor) isInputController = controllerId == 1;
 
-        if(isInputController)   // 如果是在editor模式，只有id == 1的才是控制者，其他人都是ai
+        if(isInputController && !userAutoMove)   // 如果是在editor模式，只有id == 1的才是控制者，其他人都是ai
         {
              var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
 
@@ -36,7 +37,7 @@ public class ControllerMoveSystem : ComponentSystem
 
             tranCom.rotation = math.nlerp(tranCom.rotation, quaternion.RotateY(angle), 0.05f);
             var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
-            tranCom.position += (Vector3)(Time.DeltaTime * dir * moveSpeedComponent.speed);
+            tranCom.position += (Vector3)(UnityEngine.Time.deltaTime * dir * moveSpeedComponent.speed);
 
 
             var pos = tranCom.position;
@@ -58,50 +59,40 @@ public class ControllerMoveSystem : ComponentSystem
         }
         else    // ai
         {
-            UpdateOtherUser(controllerId);
+            UpdateOtherUser(binding.obj);
         }
     }
 
-    private void UpdateOtherUser(int controllerId)
+    Vector3 goToPos;
+    Vector3? currentPos;
+    private void UpdateOtherUser(GameObject controller)
     {
-        fp3 firstPos = default;
-        Entity firstEntity = default;
-
-        // simulate other role behavior
-        // 保持跟玩家的相对位置。
-        var list = GetSingleton<UserListComponent>().allUser;
-        for(int i = 0; i < list.length; i++)
+        if(!currentPos.HasValue || Vector3.Distance(currentPos.Value, goToPos) < 1)
         {
-            if(EntityManager.GetComponentData<UserComponnet>(list[i]).id == 1)
-            {
-                firstEntity = list[i];
-                firstPos = EntityManager.GetComponentData<LTransformComponet>(firstEntity).position;
-                continue;
-            }
-        }
+            var randomX = UnityEngine.Random.Range(0, 10);
+            var randomY = UnityEngine.Random.Range(0, 10);
+            goToPos = new Vector3(randomX, 0, randomY);   
+        } 
 
-        for(int i = 0; i < list.length; i++)
-        {
-            var id = EntityManager.GetComponentData<UserComponnet>(list[i]).id;
-            if(id != controllerId)
-            {
-                continue;
-            }
+        if(!currentPos.HasValue) currentPos = controller.transform.position;
 
-            if(list[i] == firstEntity)
-            {
-                continue;
-            }
+        var dir = Vector3.Normalize(goToPos - currentPos.Value);
+        currentPos = currentPos.Value + dir * UnityEngine.Time.deltaTime * 3;
+        controller.transform.position = currentPos.Value;
 
-            var entity = list[i];
-            var shouldBePos = firstPos + EntityManager.GetComponentData<UserAiComponent>(entity).offsetToController;
-            var targetPos = shouldBePos;
-
-            int userId = EntityManager.GetComponentData<UserComponnet>(entity).id;
-            localServer.SetData(new MessageItem(){
-                pos = new int3((int)(targetPos.x * 100), (int)(targetPos.y * 100), (int)(targetPos.z * 100)), id = userId
-            });
-        }
+        #if FIXED_POINT
+        var targetPos = new int3((int)fp.UnsafeConvert(currentPos.Value.x).rawValue,
+                                    (int)fp.UnsafeConvert(currentPos.Value.y).rawValue,
+                                    (int)fp.UnsafeConvert(currentPos.Value.z).rawValue);
+        localServer.SetData(new MessageItem(){
+            pos = targetPos
+        });
+        #else
+        var targetPos = new int3((int)(pos.x * 100), (int)(pos.y * 100), (int)(pos.z * 100));
+        localServer.SetData(new MessageItem(){
+            pos = targetPos, id = controllerId
+        });
+        #endif
     }
 
     static float GetAngle()
