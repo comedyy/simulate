@@ -98,9 +98,9 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.entities": {
-      "version": "file:com.unity.entities@0.11.2-preview.1",
+      "version": "0.11.2-preview.1",
       "depth": 0,
-      "source": "embedded",
+      "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.3.0-preview.12",
         "com.unity.collections": "0.9.0-preview.6",
@@ -112,7 +112,8 @@
         "com.unity.jobs": "0.2.10-preview.13",
         "com.unity.scriptablebuildpipeline": "1.6.4-preview",
         "com.unity.platforms": "0.3.0-preview.4"
-      }
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
