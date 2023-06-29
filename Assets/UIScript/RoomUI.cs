@@ -13,14 +13,13 @@ public class RoomUI : MonoBehaviour
 
     Room _room;
 
-    #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
     public static string ip = "192.168.2.14";
+    public string hash = "";
 
     void OnGUI()
     {
         ip = GUI.TextField(new Rect(100, 100, 100, 100), ip);
     }
-    #endif
 
     // Start is called before the first frame update
     void Start()

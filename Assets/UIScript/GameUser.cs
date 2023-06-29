@@ -34,6 +34,7 @@ public class GameUser : MonoBehaviour
 
     private void OnBattleStart(byte userCount, byte userId)
     {
+        _userId = userId;
          _battle = new Battle(Main.Instance.tick, false, false, userId, _socket, userCount);
         // CloseUI
 
@@ -57,5 +58,15 @@ public class GameUser : MonoBehaviour
     void OnDestroy()
     {
         _socket.OnDestroy();
+    }
+
+    int _userId = 0;
+    void OnGUI()
+    {
+        if(_battle == null) return;
+
+        GUI.color = Color.black;
+        var hash = _battle.CheckSumMgr.CurrentCheckSum;
+        GUI.Label(new Rect(0, 50 * _userId, 200, 50), hash.ToString());
     }
 }

@@ -66,14 +66,5 @@ public class CheckSum
     public List<List<int>> GetHistoryDetail() => m_HistoryCheckSumsDetail;
     public List<List<Entity>> GetHistoryDetailOrder() => m_HistoryCheckSumsOrder;
 
-    public int GetHistoryCheckSums()
-    {
-        int checksum = 0;
-        foreach (var item in m_HistoryCheckSums)
-        {
-            checksum = CombineHashCode(checksum, item);
-        }
-
-        return checksum;
-    }
+    public int GetHistoryCheckSums() => m_HistoryCheckSums.Count > 0 ? m_HistoryCheckSums.Last() : 0;
 }
