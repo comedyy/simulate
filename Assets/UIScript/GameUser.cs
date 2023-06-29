@@ -14,11 +14,7 @@ public class GameUser : MonoBehaviour
     {
         if(Main.Instance.useRealNetwork)
         {
-            #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             string strIp = RoomUI.ip;
-            #else
-            string strIp = null;
-            #endif
             if(IsLocalClient)
             {
                 strIp = "127.0.0.1";
