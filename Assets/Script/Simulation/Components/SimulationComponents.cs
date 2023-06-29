@@ -83,6 +83,7 @@ public class GameObjectBindingComponent : IComponentData
 {
     public GameObject obj;
     public GameObject objFollow;
+    public Animator animator;
 }
 
 public struct ControllerHolder : IComponentData

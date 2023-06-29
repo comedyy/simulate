@@ -6,7 +6,7 @@ public class VLerpTransformSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        var logicStep = GetSingleton<LogicTime>().deltaTime * 3; // 增加lerp的时间
+        var logicStep = GetSingleton<LogicTime>().deltaTime * 1; // 增加lerp的时间
 
         if(!HasSingleton<ControllerHolder>()) return;
         var userEntity = GetSingleton<ControllerHolder>().controller;
@@ -22,6 +22,9 @@ public class VLerpTransformSystem : ComponentSystem
                 lerp.lerpBeginPos = obj.transform.position;
                 lerp.lerpBeginRotation = obj.transform.rotation;
             }
+
+            var isMoving = lerp.lerpTime < logicStep;
+            if(binding.animator != null) binding.animator.SetBool("Run", isMoving);
 
             lerp.lerpTime = math.min(lerp.lerpTime + Time.DeltaTime, logicStep);
             var lerpValue = lerp.lerpTime / logicStep;

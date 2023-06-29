@@ -33,6 +33,12 @@ public class VSpawnTargetSystem : ComponentSystem
             var com = new GameObjectBindingComponent(){
                 obj = GameObject.Instantiate(prefab, lTransformCom.position, Quaternion.LookRotation(lTransformCom.rotation, Vector3.up)),
             };
+
+            var animator = com.obj.GetComponent<Animator>();
+            if(animator != null)
+            {
+                com.animator = animator;
+            }
             EntityManager.SetComponentData(ev.entity, com);
 
             if(isController)
