@@ -69,7 +69,8 @@ public class GameUser : MonoBehaviour
 
         GUI.color = Color.black;
         var hash = _battle.CheckSumMgr.CurrentCheckSum;
-        GUI.Label(new Rect(0, 50 * _userId, 200, 50), hash.ToString());
+        GUI.Label(new Rect(0, 50 * _userId, 100, 50), hash.ToString());
+        GUI.Label(new Rect(100 , 50 * _userId, 100, 50), $"cout:{MoveByDirSystem.Count}");
     }
 
     internal void Init(bool isLocalClient, bool userAutoMove)

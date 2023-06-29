@@ -45,6 +45,7 @@ public class CircleSkillSystem : JobComponentSystem
     List<Entity> tempEntities = new List<Entity>();
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
+        return default;
         LogicTime logic = GetSingleton<LogicTime>();
         EnemyHurtUser(logic.escaped, inputDeps);
         UserHurtEnemy(logic.escaped, this.GetSingletonObject<RvoSimulatorComponet>().id);

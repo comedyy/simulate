@@ -5,10 +5,14 @@ using Unity.Mathematics;
 
 public class MoveByDirSystem : ComponentSystem
 {
+    static EntityQuery _query;
     protected override void OnCreate()
     {
+        _query = GetEntityQuery(typeof(LMoveByDirComponent));
         base.OnCreate();
     }
+
+    public static int Count => _query.CalculateEntityCount();
 
     protected override void OnUpdate()
     {
