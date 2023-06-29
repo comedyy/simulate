@@ -23,9 +23,6 @@ public class VLerpTransformSystem : ComponentSystem
                 lerp.lerpBeginRotation = obj.transform.rotation;
             }
 
-            var isMoving = lerp.lerpTime < logicStep;
-            if(binding.animator != null) binding.animator.SetBool("Run", isMoving);
-
             lerp.lerpTime = math.min(lerp.lerpTime + Time.DeltaTime, logicStep);
             var lerpValue = lerp.lerpTime / logicStep;
             var pos = math.lerp(lerp.lerpBeginPos, lTransformCom.position, lerpValue);
@@ -34,5 +31,14 @@ public class VLerpTransformSystem : ComponentSystem
 
             obj.transform.SetPositionAndRotation(pos, rotation);
         });
+
+        // var listUser = GetSingleton<UserListComponent>().allUser;
+        // for(int i = 0; i < listUser.length; i++)
+        // {
+        //     var animator = EntityManager.GetComponentData<GameObjectBindingComponent>(listUser[i]).animator;
+        //     var lerpTime = EntityManager.GetComponentData<VLerpTransformCopmnet>(listUser[i]).lerpTime;
+        //     var isMoving = lerpTime < logicStep * 2;
+        //     if(animator != null) animator.SetBool("Run", isMoving);
+        // }
     }
 }

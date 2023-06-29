@@ -9,7 +9,7 @@ public class MonsterSpawnSytem : ComponentSystem
         base.OnCreate();
         var entity = EntityManager.CreateEntity(typeof(SpawnMonsterComponent));
         EntityManager.SetComponentData(entity, new SpawnMonsterComponent(){
-            maxCount = 999, interval = fp.Create(0), spawnCountPerInterval = 10
+            maxCount = 0, interval = fp.Create(0), spawnCountPerInterval = 10
         });
     }
 
