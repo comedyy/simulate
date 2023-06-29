@@ -33,6 +33,7 @@ public class SpawnTargetSystem : ComponentSystem
         typeof(UserComponnet),
         typeof(UserAiComponent),
 
+        typeof(UserMoveState),
         typeof(GameObjectBindingComponent)
 
     };
@@ -117,7 +118,7 @@ public class SpawnTargetSystem : ComponentSystem
             EntityManager.SetComponentData(entity, transform);
 
             EntityManager.SetComponentData<MoveSpeedComponent>(entity, new MoveSpeedComponent(){
-                speed = fp.Create(3)
+                speed = fp.Create(7)
             });
 
             EntityManager.SetComponentData<SizeComponent>(entity, new SizeComponent(){

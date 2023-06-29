@@ -79,6 +79,11 @@ public struct VLerpTransformCopmnet : IComponentData
     public float lerpTime;              // 已经lerp多久了。
 }
 
+public struct UserMoveState : IComponentData
+{
+    public bool isMoving;
+}
+
 public class GameObjectBindingComponent : IComponentData
 {
     public GameObject obj;

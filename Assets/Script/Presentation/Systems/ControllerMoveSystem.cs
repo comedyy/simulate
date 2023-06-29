@@ -8,6 +8,7 @@ public class ControllerMoveSystem : ComponentSystem
     internal LocalFrame localServer;
     public bool userAutoMove;
 
+    bool _isMoving = false;
     protected override void OnUpdate()
     {   
         var userEntity = GetSingleton<ControllerHolder>().controller;
@@ -30,8 +31,26 @@ public class ControllerMoveSystem : ComponentSystem
 
             var angle = GetAngle();
 
-            if(angle < 0) return;
+            if(angle < 0) {
 
+                if(_isMoving)
+                {
+                    localServer.SetData(new MessageItem(){
+                        endMoving = true
+                    });
+                    _isMoving = false;
+                    binding.animator.SetBool("Run", false);
+                }
+                
+                return;
+            }
+            
+            if(!_isMoving)
+            {
+                _isMoving = true;
+                binding.animator.SetBool("Run", true);
+            }
+            
             tranCom.rotation = math.nlerp(tranCom.rotation, quaternion.RotateY(angle), 0.05f);
             var dir = math.mul(tranCom.rotation, new float3(0, 0, 1));
             tranCom.position += (Vector3)(UnityEngine.Time.deltaTime * dir * moveSpeedComponent.speed);
@@ -43,7 +62,7 @@ public class ControllerMoveSystem : ComponentSystem
                                         (int)fp.UnsafeConvert(pos.y).rawValue,
                                         (int)fp.UnsafeConvert(pos.z).rawValue);
             localServer.SetData(new MessageItem(){
-                pos = targetPos, id = controllerId
+                pos = targetPos
             });
             #else
             var targetPos = new int3((int)(pos.x * 100), (int)(pos.y * 100), (int)(pos.z * 100));
@@ -56,6 +75,7 @@ public class ControllerMoveSystem : ComponentSystem
         }
         else    // ai
         {
+            binding.animator.SetBool("Run", true);
             UpdateOtherUser(binding.obj);
         }
     }

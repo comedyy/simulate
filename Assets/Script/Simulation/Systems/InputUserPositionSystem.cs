@@ -22,6 +22,17 @@ public class InputUserPositionSystem : ComponentSystem
                 continue;
             }
 
+            var moveState = EntityManager.GetComponentData<UserMoveState>(entity);
+            if(message.endMoving)
+            {
+                moveState.isMoving = false;
+                EntityManager.SetComponentData(entity, moveState);
+                continue;
+            }
+
+            moveState.isMoving = true;
+            EntityManager.SetComponentData(entity, moveState);
+
             var preTransform = EntityManager.GetComponentData<LTransformComponet>(entity);
             #if FIXED_POINT
                 var pos = new fp3(){
@@ -41,7 +52,7 @@ public class InputUserPositionSystem : ComponentSystem
             var dir = fpMath.normalize(diff);
             EntityManager.SetComponentData(entity, new LTransformComponet(){
                 rotation = dir,
-                position = pos
+                position = pos,
             });
 
             var com = EntityManager.GetComponentData<VLerpTransformCopmnet>(entity);

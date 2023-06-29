@@ -7,4 +7,5 @@ public struct MessageItem
 {
     public int3 pos;
     public int id;
+    public bool endMoving;
 }

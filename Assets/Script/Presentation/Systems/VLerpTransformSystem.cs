@@ -32,13 +32,15 @@ public class VLerpTransformSystem : ComponentSystem
             obj.transform.SetPositionAndRotation(pos, rotation);
         });
 
-        // var listUser = GetSingleton<UserListComponent>().allUser;
-        // for(int i = 0; i < listUser.length; i++)
-        // {
-        //     var animator = EntityManager.GetComponentData<GameObjectBindingComponent>(listUser[i]).animator;
-        //     var lerpTime = EntityManager.GetComponentData<VLerpTransformCopmnet>(listUser[i]).lerpTime;
-        //     var isMoving = lerpTime < logicStep * 2;
-        //     if(animator != null) animator.SetBool("Run", isMoving);
-        // }
+        var listUser = GetSingleton<UserListComponent>().allUser;
+        for(int i = 0; i < listUser.length; i++)
+        {
+            if(listUser[i] == userEntity) continue;
+
+            var animator = EntityManager.GetComponentData<GameObjectBindingComponent>(listUser[i]).animator;
+            var isMoving = EntityManager.GetComponentData<UserMoveState>(listUser[i]).isMoving;
+
+            if(animator != null) animator.SetBool("Run", isMoving);
+        }
     }
 }

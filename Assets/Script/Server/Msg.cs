@@ -141,6 +141,7 @@ public struct PackageItem
         writer.Write(messageItem.pos.x);
         writer.Write(messageItem.pos.y);
         writer.Write(messageItem.pos.z);
+        writer.Write(messageItem.endMoving);
 
         return steam.ToArray();
     }
@@ -153,7 +154,8 @@ public struct PackageItem
         frame = reader.ReadInt32();
         messageItem = new MessageItem(){
             id = reader.ReadInt32(),
-            pos = new int3(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32())
+            pos = new int3(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+            endMoving = reader.ReadBoolean()
         };
     }
 }
@@ -205,6 +207,7 @@ public struct ServerPackageItem
                 writer.Write(messageItem.pos.x);
                 writer.Write(messageItem.pos.y);
                 writer.Write(messageItem.pos.z);
+                writer.Write(messageItem.endMoving);
             }
         }
         else
@@ -229,7 +232,8 @@ public struct ServerPackageItem
             {
                 var messageItem = new MessageItem(){
                     id = reader.ReadInt32(),
-                    pos = new int3(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32())
+                    pos = new int3(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                    endMoving = reader.ReadBoolean()
                 };
                 list.Add(messageItem);
             }
