@@ -10,6 +10,7 @@
 /*.sln
 /Logs
 .idea
+/*.DS_Store
 /ms-client.sln.DotSettings.user
 /Doc/ExcelToCS/obj/Debug/.NETFramework,Version=v4.7.1.AssemblyAttributes.cs
 /Doc/ExcelToCS/obj/Debug/ExcelToCS.csproj.AssemblyReference.cache
