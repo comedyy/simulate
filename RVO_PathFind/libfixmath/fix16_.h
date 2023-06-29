@@ -27,7 +27,7 @@ extern "C"
 #include <stdint.h>
 #endif
 
-typedef int32_t fix16_t;
+typedef int64_t fix16_t;
 
 static const fix16_t FOUR_DIV_PI  = 0x145F3;            /*!< Fix16 value of 4/PI */
 static const fix16_t _FOUR_DIV_PI2 = 0xFFFF9840;        /*!< Fix16 value of -4/PI² */
@@ -49,17 +49,6 @@ static const fix16_t fix16_eps = 1;          /*!< fix16_t epsilon */
  * These are inlined to allow compiler to optimize away constant numbers
  */
 static inline fix16_t fix16_from_int(int a)     { return a * fix16_one; }
-
-static inline int fix16_to_int(fix16_t a)
-{
-#ifdef FIXMATH_NO_ROUNDING
-    return (a >> 16);
-#else
-	if (a >= 0)
-		return (a + (fix16_one >> 1)) / fix16_one;
-	return (a - (fix16_one >> 1)) / fix16_one;
-#endif
-}
 
 /* Macro for defining fix16_t constant values.
    The functions above can't be used from e.g. global variable initializers,
@@ -123,6 +112,7 @@ extern fix16_t fix16_sdiv(fix16_t inArg0, fix16_t inArg1) FIXMATH_FUNC_ATTRS;
 /*! Returns the square root of the given fix16_t.
 */
 extern fix16_t fix16_sqrt(fix16_t inValue) FIXMATH_FUNC_ATTRS;
+extern fix16_t fix16_sqrt_fromLut(fix16_t inValue) FIXMATH_FUNC_ATTRS;
 
 /*! Returns the square of the given fix16_t.
 */

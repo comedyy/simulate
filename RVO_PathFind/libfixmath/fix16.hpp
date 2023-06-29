@@ -16,42 +16,42 @@ public:
 	Fix16& operator=(const Fix16& rhs) { value = rhs.value;             return *this; }
 	Fix16& operator=(const fix16_t rhs) { value = rhs;                   return *this; }
 
-	Fix16& operator+=(const Fix16& rhs) { value = fix16_sadd(value, rhs.value); return *this; }
-	Fix16& operator+=(const fix16_t rhs) { value = fix16_sadd(value, rhs); return *this; }
+	Fix16& operator+=(const Fix16& rhs) { value = fix16_add(value, rhs.value); return *this; }
+	Fix16& operator+=(const fix16_t rhs) { value = fix16_add(value, rhs); return *this; }
 
-	Fix16& operator-=(const Fix16& rhs) { value = fix16_ssub(value, rhs.value); return *this; }
-	Fix16& operator-=(const fix16_t rhs) { value = fix16_ssub(value, rhs); return *this; }
+	Fix16& operator-=(const Fix16& rhs) { value = fix16_sub(value, rhs.value); return *this; }
+	Fix16& operator-=(const fix16_t rhs) { value = fix16_sub(value, rhs); return *this; }
 
-	Fix16& operator*=(const Fix16& rhs) { value = fix16_smul(value, rhs.value); return *this; }
-	Fix16& operator*=(const fix16_t rhs) { value = fix16_smul(value, rhs); return *this; }
+	Fix16& operator*=(const Fix16& rhs) { value = fix16_mul(value, rhs.value); return *this; }
+	Fix16& operator*=(const fix16_t rhs) { value = fix16_mul(value, rhs); return *this; }
 
-	Fix16& operator/=(const Fix16& rhs) { value = fix16_sdiv(value, rhs.value); return *this; }
-	Fix16& operator/=(const fix16_t rhs) { value = fix16_sdiv(value, rhs); return *this; }
+	Fix16& operator/=(const Fix16& rhs) { value = fix16_div(value, rhs.value); return *this; }
+	Fix16& operator/=(const fix16_t rhs) { value = fix16_div(value, rhs); return *this; }
 
 	const Fix16 operator+(const Fix16& other) const { Fix16 ret = *this; ret += other; return ret; }
 	const Fix16 operator+(const fix16_t other) const { Fix16 ret = *this; ret += other; return ret; }
 
-	const Fix16 sadd(const Fix16& other)  const { Fix16 ret = fix16_sadd(value, other.value);             return ret; }
-	const Fix16 sadd(const fix16_t other) const { Fix16 ret = fix16_sadd(value, other);                   return ret; }
+	const Fix16 sadd(const Fix16& other)  const { Fix16 ret = fix16_add(value, other.value);             return ret; }
+	const Fix16 sadd(const fix16_t other) const { Fix16 ret = fix16_add(value, other);                   return ret; }
 
 	const Fix16 operator-(const Fix16& other) const { Fix16 ret = *this; ret -= other; return ret; }
 	const Fix16 operator-(const fix16_t other) const { Fix16 ret = *this; ret -= other; return ret; }
 	const Fix16 operator-() const { return -value; }
 
-	const Fix16 ssub(const Fix16& other)  const { Fix16 ret = fix16_sadd(value, -other.value);             return ret; }
-	const Fix16 ssub(const fix16_t other) const { Fix16 ret = fix16_sadd(value, -other);                   return ret; }
+	const Fix16 ssub(const Fix16& other)  const { Fix16 ret = fix16_add(value, -other.value);             return ret; }
+	const Fix16 ssub(const fix16_t other) const { Fix16 ret = fix16_add(value, -other);                   return ret; }
 
 	const Fix16 operator*(const Fix16& other) const { Fix16 ret = *this; ret *= other; return ret; }
 	const Fix16 operator*(const fix16_t other) const { Fix16 ret = *this; ret *= other; return ret; }
 
-	const Fix16 smul(const Fix16& other)  const { Fix16 ret = fix16_smul(value, other.value);             return ret; }
-	const Fix16 smul(const fix16_t other) const { Fix16 ret = fix16_smul(value, other);                   return ret; }
+	const Fix16 smul(const Fix16& other)  const { Fix16 ret = fix16_mul(value, other.value);             return ret; }
+	const Fix16 smul(const fix16_t other) const { Fix16 ret = fix16_mul(value, other);                   return ret; }
 
 	const Fix16 operator/(const Fix16& other) const { Fix16 ret = *this; ret /= other; return ret; }
 	const Fix16 operator/(const fix16_t other) const { Fix16 ret = *this; ret /= other; return ret; }
 
-	const Fix16 sdiv(const Fix16& other)  const { Fix16 ret = fix16_sdiv(value, other.value);             return ret; }
-	const Fix16 sdiv(const fix16_t other) const { Fix16 ret = fix16_sdiv(value, other);                   return ret; }
+	const Fix16 sdiv(const Fix16& other)  const { Fix16 ret = fix16_div(value, other.value);             return ret; }
+	const Fix16 sdiv(const fix16_t other) const { Fix16 ret = fix16_div(value, other);                   return ret; }
 
 	int operator==(const Fix16& other)  const { return (value == other.value); }
 	int operator==(const fix16_t other) const { return (value == other); }
@@ -71,7 +71,7 @@ public:
 	int operator> (const Fix16& other)  const { return (value > other.value); }
 	int operator> (const fix16_t other) const { return (value > other); }
 
-	Fix16 sqrt() const { return Fix16(fix16_sqrt(value)); }
+	Fix16 sqrt() const { return Fix16(fix16_sqrt_fromLut(value)); }
 	static Fix16 Abs(Fix16 v) { return Fix16(fix_abs(v.value)); }
 	static Fix16 FromRaw(fix16_t t) { return Fix16(t); }
 

@@ -41,6 +41,7 @@
   <ItemGroup>
     <ClInclude Include="..\libfixmath\fix16_.h" />
     <ClInclude Include="..\libfixmath\fix16.hpp" />
+    <ClInclude Include="..\libfixmath\fix16_sqrt_lut.h" />
     <ClInclude Include="..\libfixmath\fixmath.h" />
     <ClInclude Include="..\libfixmath\int64.h" />
     <ClInclude Include="..\RVO_PathFind\Agent.h">
@@ -164,7 +165,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;RVOPATHFIND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;RVOPATHFIND_EXPORTS;_WINDOWS;_USRDLL;FIXMATH_NO_ROUNDING;FIXMATH_NO_OVERFLOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -181,7 +182,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;RVOPATHFIND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;RVOPATHFIND_EXPORTS;_WINDOWS;_USRDLL;FIXMATH_NO_OVERFLOW;FIXMATH_NO_ROUNDING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>

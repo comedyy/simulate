@@ -1,4 +1,5 @@
 #include "fix16_.h"
+#include "fix16_sqrt_lut.h"
 
 /* The square root algorithm is quite directly from
  * http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Binary_numeral_system_.28base_2.29
@@ -82,4 +83,23 @@ fix16_t fix16_sqrt(fix16_t inValue)
 #endif
 
     return (neg ? -(fix16_t)result : (fix16_t)result);
+}
+
+const fix16_t WaterShedSqrt = 4 << 16;
+fix16_t fix16_sqrt_fromLut(fix16_t sValue)
+{
+    if (sValue <= 0) return sValue;
+
+    bool lessThanOne = sValue < fix16_one;
+    int count = 0;
+    if (lessThanOne) sValue <<= 16;
+    while (sValue >= WaterShedSqrt)
+    {
+        count++;
+        sValue >>= 2;
+    }
+    long index = (sValue - fix16_one) / 3L;
+    sValue = fix16_sqrt_lut[index] << count;
+    if (lessThanOne) sValue >>= 8;
+    return sValue;
 }

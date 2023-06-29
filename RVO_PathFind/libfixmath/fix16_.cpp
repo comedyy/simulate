@@ -4,36 +4,7 @@
 /* Subtraction and addition with overflow detection.
  * The versions without overflow detection are inlined in the header.
  */
-#ifndef FIXMATH_NO_OVERFLOW
-fix16_t fix16_add(fix16_t a, fix16_t b)
-{
-	// Use unsigned integers because overflow with signed integers is
-	// an undefined operation (http://www.airs.com/blog/archives/120).
-    uint32_t _a = a;
-    uint32_t _b = b;
-	uint32_t sum = _a + _b;
 
-	// Overflow can only happen if sign of a == sign of b, and then
-	// it causes sign of sum != sign of a.
-	if (!((_a ^ _b) & 0x80000000) && ((_a ^ sum) & 0x80000000))
-		return fix16_overflow;
-	
-	return sum;
-}
-
-fix16_t fix16_sub(fix16_t a, fix16_t b)
-{
-    uint32_t _a = a;
-    uint32_t _b = b;
-	uint32_t diff = _a - _b;
-
-	// Overflow can only happen if sign of a != sign of b, and then
-	// it causes sign of diff != sign of a.
-	if (((_a ^ _b) & 0x80000000) && ((_a ^ diff) & 0x80000000))
-		return fix16_overflow;
-	
-	return diff;
-}
 
 /* Saturating arithmetic */
 fix16_t fix16_sadd(fix16_t a, fix16_t b)
@@ -55,7 +26,6 @@ fix16_t fix16_ssub(fix16_t a, fix16_t b)
 
 	return result;
 }
-#endif
 
 
 
@@ -65,46 +35,11 @@ fix16_t fix16_ssub(fix16_t a, fix16_t b)
  * detection.
  */
  
-#if !defined(FIXMATH_NO_64BIT) && !defined(FIXMATH_OPTIMIZE_8BIT)
 fix16_t fix16_mul(fix16_t inArg0, fix16_t inArg1)
 {
-	int64_t product = (int64_t)inArg0 * inArg1;
-	
-	#ifndef FIXMATH_NO_OVERFLOW
-	// The upper 17 bits should all be the same (the sign).
-	uint32_t upper = (product >> 47);
-	#endif
-	
-	if (product < 0)
-	{
-		#ifndef FIXMATH_NO_OVERFLOW
-		if (~upper)
-				return fix16_overflow;
-		#endif
-		
-		#ifndef FIXMATH_NO_ROUNDING
-		// This adjustment is required in order to round -1/2 correctly
-		product--;
-		#endif
-	}
-	else
-	{
-		#ifndef FIXMATH_NO_OVERFLOW
-		if (upper)
-				return fix16_overflow;
-		#endif
-	}
-	
-	#ifdef FIXMATH_NO_ROUNDING
+	int64_t product = inArg0 * inArg1;
 	return product >> 16;
-	#else
-	fix16_t result = product >> 16;
-	result += (product & 0x8000) >> 15;
-	
-	return result;
-	#endif
 }
-#endif
 
 /* 32-bit implementation of fix16_mul. Potentially fast on 16-bit processors,
  * and this is a relatively good compromise for compilers that do not support
@@ -290,75 +225,8 @@ static uint8_t clz(uint32_t x)
 
 fix16_t fix16_div(fix16_t a, fix16_t b)
 {
-	// This uses a hardware 32/32 bit division multiple times, until we have
-	// computed all the bits in (a<<17)/b. Usually this takes 1-3 iterations.
-	
-	if (b == 0)
-			return fix16_minimum;
-	
-    uint32_t remainder = fix_abs(a);
-    uint32_t divider = fix_abs(b);
-    uint64_t quotient = 0;
-    int bit_pos = 17;
-
-	// Kick-start the division a bit.
-	// This improves speed in the worst-case scenarios where N and D are large
-	// It gets a lower estimate for the result by N/(D >> 17 + 1).
-	if (divider & 0xFFF00000)
-	{
-		uint32_t shifted_div = ((divider >> 17) + 1);
-        quotient = remainder / shifted_div;
-        uint64_t tmp = ((uint64_t)quotient * (uint64_t)divider) >> 17;
-        remainder -= (uint32_t)(tmp);
-    }
-	
-	// If the divider is divisible by 2^n, take advantage of it.
-	while (!(divider & 0xF) && bit_pos >= 4)
-	{
-		divider >>= 4;
-		bit_pos -= 4;
-	}
-	
-	while (remainder && bit_pos >= 0)
-	{
-		// Shift remainder as much as we can without overflowing
-		int shift = clz(remainder);
-		if (shift > bit_pos) shift = bit_pos;
-		remainder <<= shift;
-		bit_pos -= shift;
-		
-		uint32_t div = remainder / divider;
-        remainder = remainder % divider;
-        quotient += (uint64_t)div << bit_pos;
-
-		#ifndef FIXMATH_NO_OVERFLOW
-		if (div & ~(0xFFFFFFFF >> bit_pos))
-				return fix16_overflow;
-		#endif
-		
-		remainder <<= 1;
-		bit_pos--;
-	}
-	
-	#ifndef FIXMATH_NO_ROUNDING
-	// Quotient is always positive so rounding is easy
-	quotient++;
-	#endif
-	
-	fix16_t result = quotient >> 1;
-	
-	// Figure out the sign of the result
-	if ((a ^ b) & 0x80000000)
-	{
-		#ifndef FIXMATH_NO_OVERFLOW
-		if (result == fix16_minimum)
-				return fix16_overflow;
-		#endif
-		
-		result = -result;
-	}
-	
-	return result;
+	if (b <= 0) return 0;
+	return (a << 16) / b;
 }
 #endif
 

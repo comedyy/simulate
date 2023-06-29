@@ -6,8 +6,8 @@ namespace Game.Battle.CommonLib
     [StructLayout(LayoutKind.Sequential)]
     public struct AgentVector2
     {
-        public int x;
-        public int y;
+        public long x;
+        public long y;
     }
 
     public class MSPathSystem
@@ -52,8 +52,8 @@ namespace Game.Battle.CommonLib
         /// <param name="velocityY"> 初始z加速度, 默认都为0. </param>
         /// <returns></returns>
         [DllImport(kFindPathDllName)]
-        public static extern int AddAgent(int id, int posX, int posY, int neighborDist, int maxNeighbors, int timeHorizon, 
-            int timeHorizonObst, int radius, int maxSpeed, int mass, int velocityX, int velocityY, int entityId);
+        public static extern int AddAgent(int id, long posX, long posY, long neighborDist, int maxNeighbors, long timeHorizon, 
+            long timeHorizonObst, long radius, long maxSpeed, long mass, long velocityX, long velocityY, int entityId);
 
         /// <summary>
         /// 移除Agent
@@ -85,7 +85,7 @@ namespace Game.Battle.CommonLib
         /// </summary>
         /// <param name="timeStep"></param>
         [DllImport(kFindPathDllName)]
-        public static extern void SetTimeStep(int id, int timeStep);
+        public static extern void SetTimeStep(int id, long timeStep);
 
         /// <summary>
         /// 设置Agent加速度
@@ -95,7 +95,7 @@ namespace Game.Battle.CommonLib
         /// <param name="x"></param>
         /// <param name="y"></param>
         [DllImport(kFindPathDllName)]
-        public static extern void SetAgentVelocityPref(int id, int agentIndex, int x, int y);
+        public static extern void SetAgentVelocityPref(int id, int agentIndex, long x, long y);
 
 #if false
         /// <summary>
@@ -159,9 +159,9 @@ namespace Game.Battle.CommonLib
         /// 用来查询当前位置的单位数量
         /// </summary>
         [DllImport(kFindPathDllName)]
-        unsafe private static extern int GetNearByAgents(int id, int x, int y, void* ptr, int size, int range);
+        unsafe private static extern int GetNearByAgents(int id, long x, long y, void* ptr, int size, long range);
 
-        public unsafe static int GetNearByAgents(int id, int x, int y, Unity.Collections.NativeArray<int> nativeByteArray, int searchRange)
+        public unsafe static int GetNearByAgents(int id, long x, long y, Unity.Collections.NativeArray<int> nativeByteArray, long searchRange)
         {
             void* ptr = Unity.Collections.LowLevel.Unsafe.NativeArrayUnsafeUtility.GetUnsafePtr(nativeByteArray);
             return GetNearByAgents(id, x, y, ptr, nativeByteArray.Length, searchRange);
