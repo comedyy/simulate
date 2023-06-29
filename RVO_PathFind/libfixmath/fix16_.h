@@ -82,11 +82,14 @@ static inline fix16_t fix16_sub(fix16_t inArg0, fix16_t inArg1) { return (inArg0
 
 /*! Multiplies the two given fix16_t's and returns the result.
 */
-extern fix16_t fix16_mul(fix16_t inArg0, fix16_t inArg1) FIXMATH_FUNC_ATTRS;
+static inline fix16_t fix16_mul(fix16_t inArg0, fix16_t inArg1) { return (inArg0 * inArg1) >> 16; }
 
 /*! Divides the first given fix16_t by the second and returns the result.
 */
-extern fix16_t fix16_div(fix16_t inArg0, fix16_t inArg1) FIXMATH_FUNC_ATTRS;
+static inline fix16_t fix16_div(fix16_t inArg0, fix16_t inArg1) { 
+    if (inArg1 == 0) return 0;
+    return (inArg0 << 16) / inArg1;
+}
 
 #ifndef FIXMATH_NO_OVERFLOW
 /*! Performs a saturated multiplication (overflow-protected) of the two given fix16_t's and returns the result.
