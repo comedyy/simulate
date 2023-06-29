@@ -28,11 +28,12 @@ public class MonsterSpawnSytem : ComponentSystem
             return;
         }
 
-        var spwanEventEntity = EntityManager.CreateEntity(typeof(SpawnEvent));
-        var random = EntityManager.GetComponentObject<RandomComponent>(GetSingletonEntity<RandomComponent>()).random;
 
         for(int i = 0; i < monsterSpwan.spawnCountPerInterval; i++)
         {
+            var spwanEventEntity = EntityManager.CreateEntity(typeof(SpawnEvent));
+            var random = EntityManager.GetComponentObject<RandomComponent>(GetSingletonEntity<RandomComponent>()).random;
+
             var randomAngle = RandomUtils.Random(random, 2 * fpMath.PI);
             var sin = fpMath.sin(randomAngle);
             var cos = fpMath.cos(randomAngle);
@@ -45,9 +46,10 @@ public class MonsterSpawnSytem : ComponentSystem
                 despawnTime = 5 + escaped,
                 hp = 50,atk = 5
             });    
+    
+            monsterSpwan.currentCount++;
         }
 
-        monsterSpwan.currentCount++;
         monsterSpwan.lastSpawnTime = escaped;
 
         SetSingleton(monsterSpwan);
