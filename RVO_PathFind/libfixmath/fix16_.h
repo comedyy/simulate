@@ -75,21 +75,10 @@ static inline fix16_t fix16_clamp(fix16_t x, fix16_t lo, fix16_t hi)
 	{ return fix16_min(fix16_max(x, lo), hi); }
 
 /* Subtraction and addition with (optional) overflow detection. */
-#ifdef FIXMATH_NO_OVERFLOW
 
 static inline fix16_t fix16_add(fix16_t inArg0, fix16_t inArg1) { return (inArg0 + inArg1); }
 static inline fix16_t fix16_sub(fix16_t inArg0, fix16_t inArg1) { return (inArg0 - inArg1); }
 
-#else
-
-extern fix16_t fix16_add(fix16_t a, fix16_t b) FIXMATH_FUNC_ATTRS;
-extern fix16_t fix16_sub(fix16_t a, fix16_t b) FIXMATH_FUNC_ATTRS;
-
-/* Saturating arithmetic */
-extern fix16_t fix16_sadd(fix16_t a, fix16_t b) FIXMATH_FUNC_ATTRS;
-extern fix16_t fix16_ssub(fix16_t a, fix16_t b) FIXMATH_FUNC_ATTRS;
-
-#endif
 
 /*! Multiplies the two given fix16_t's and returns the result.
 */
