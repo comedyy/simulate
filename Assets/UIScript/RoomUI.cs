@@ -13,7 +13,8 @@ public class RoomUI : MonoBehaviour
 
     Room _room;
 
-    public static string ip = "192.168.2.14";
+//    public static string ip = "192.168.2.14";
+    public static string ip = "127.0.0.1";
     public bool userAutoMove = false;
 
     void OnGUI()
