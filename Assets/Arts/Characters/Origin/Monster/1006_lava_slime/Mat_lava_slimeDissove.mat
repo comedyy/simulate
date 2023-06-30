@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_lava_slime
-  m_Shader: {fileID: 4800000, guid: c807fbbb400961b4a98cd1670ed32402, type: 3}
+  m_Name: Mat_lava_slimeDissove
+  m_Shader: {fileID: 4800000, guid: be79f368075e5a8478364a13bd550868, type: 3}
   m_ShaderKeywords: DISSOLVE
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0

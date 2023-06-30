@@ -22,7 +22,6 @@ public class VHpColorSystem : ComponentSystem
             if(EntityManager.HasComponent<UserComponnet>(target))
             {
                 gameObj.GetComponent<HeroHitColor>().HeroHit();
-                Debug.LogError($"target : {target} {gameObj}");
             }
 
             // if(gameObj == null)

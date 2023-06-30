@@ -15,5 +15,7 @@ namespace TextureRendering
         [SerializeField]
         private float m_ModelHeight;
         public float modelHeight => m_ModelHeight;
+
+        public Material material;
     }
 }
