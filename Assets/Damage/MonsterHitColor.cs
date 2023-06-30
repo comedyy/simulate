@@ -33,6 +33,11 @@ namespace Game.Battle.Mono.Hero
                 recoveryTime = 0;
                 _material.SetColor("_ColorHit", Color.black);
             }
+            else
+            {
+                var percent = 1- (recoveryTime - Time.time) / keepWhiteTime;
+                _material.SetColor("_ColorHit", Color.Lerp(colorWhite, Color.black, percent));
+            }
         }
     }
 }
