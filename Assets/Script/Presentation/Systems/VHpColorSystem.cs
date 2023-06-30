@@ -1,5 +1,6 @@
 using System;
 using Game;
+using Game.Battle.Mono.Hero;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -17,6 +18,11 @@ public class VHpColorSystem : ComponentSystem
 
             var gameObj = EntityManager.GetComponentObject<GameObjectBindingComponent>(target).obj;
             DamageNumManager.Instance.ShowDamageNoRecursive((uint)ev.value, gameObj.transform.position);
+
+            if(EntityManager.HasComponent<UserComponnet>(target))
+            {
+                gameObj.GetComponent<HeroHitColor>().HeroHit();
+            }
 
             // if(gameObj == null)
             // {
