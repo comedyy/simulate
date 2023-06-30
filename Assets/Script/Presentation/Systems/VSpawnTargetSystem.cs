@@ -25,8 +25,7 @@ public class VSpawnTargetSystem : ComponentSystem
 
             GameObject prefab = null;
             var isController = ev.id == UserId;
-            if(isController) prefab = Resources.Load<GameObject>("Controller");
-            else if(ev.isUser) prefab = Resources.Load<GameObject>("Role");
+            if(ev.isUser) prefab = Resources.Load<GameObject>("Controller");
             else prefab = Resources.Load<GameObject>("Monster");
 
             var lTransformCom = EntityManager.GetComponentData<LTransformComponet>(ev.entity);
