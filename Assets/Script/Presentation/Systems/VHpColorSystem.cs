@@ -16,7 +16,7 @@ public class VHpColorSystem : ComponentSystem
             if(!EntityManager.Exists(target)) continue;
 
             var gameObj = EntityManager.GetComponentObject<GameObjectBindingComponent>(target).obj;
-            DamageNumManager.Instance.ShowDamage(ev.value, gameObj.transform.position);
+            DamageNumManager.Instance.ShowDamageNoRecursive((uint)ev.value, gameObj.transform.position);
 
             // if(gameObj == null)
             // {

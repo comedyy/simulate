@@ -84,6 +84,7 @@ namespace Game
        private const int VertMaxCount = 2000 * 8;
 
        public Transform damageLayer; // 父节点
+       public Canvas _canvas;
 
 
        private static Color[] _colors = new[]
@@ -98,14 +99,25 @@ namespace Game
        void Awake()
        {
             _instance = this;
-            _instance.Initialize();
        }
 
-       public static DamageNumManager Instance => _instance;
+       static bool hasInited = false;
+       public static DamageNumManager Instance
+       {
+            get
+            {
+                if(!hasInited)
+                {
+                    hasInited  = true;
+                    _instance.Initialize();
+                }
+                return _instance;
+            }
+       }
 
        public void Initialize()
        {
-           var scale = 1;// GameCore.UI.GetScaleFactor();
+           var scale = _canvas.scaleFactor;
 
         //    var configDefine = GameCore.DataTable.QueryRecord<ConfigDefine>(0);
            _dirOffset = 20;// configDefine.hurtFontOffset1;
@@ -168,7 +180,7 @@ namespace Game
     //        _screenHalfHeight = Screen.height * 0.5f;
     //    }
 
-       private void ShowDamageNoRecursive(uint damage, Vector3 worldPos, bool isCrit = false, ColorEnum color = ColorEnum.White, Vector3 hitPosition = default)
+       public void ShowDamageNoRecursive(uint damage, Vector3 worldPos, bool isCrit = false, ColorEnum color = ColorEnum.White, Vector3 hitPosition = default)
        {
            var dir = hitPosition.Equals(default) ? DamageFloatDir.Up : DamageFloatDir.TargetDir;
            if (dir == DamageFloatDir.TargetDir)
@@ -217,6 +229,7 @@ namespace Game
        public void ShowDamageParam(long damage, Vector3 worldPos, bool isCrit = false, ColorEnum color = ColorEnum.White, DamageFloatDir dir = DamageFloatDir.Up, Vector3 dirValue = default)
        {
            var screenPos = Camera.main.WorldToScreenPoint(worldPos);
+           Debug.LogError($"Camera:{Camera.main} {worldPos} -> {screenPos}");
            ShowDamageByScreenPos(damage, screenPos, worldPos, isCrit, color, dir, dirValue);
        }
 
