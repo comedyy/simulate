@@ -742,6 +742,7 @@ GameObject:
   - component: {fileID: 2718278905156203328}
   - component: {fileID: 986642188093282092}
   - component: {fileID: 635136011420719509}
+  - component: {fileID: 4714388490903549339}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
@@ -801,6 +802,21 @@ MonoBehaviour:
   m_DissolveScale: 1.5
   m_ModelHeight: 0
   material: {fileID: 2100000, guid: fb6659ddcdd0fbe44a2d38f4641a89da, type: 2}
+--- !u!114 &4714388490903549339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7835915132105654229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46085b9ea1507804e8e42fc4df7c1fdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skinnedMeshRenderer: {fileID: 8078102334817971731}
+  keepWhiteTime: 0.15
+  colorWhite: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 0}
 --- !u!1 &8006899873822909610
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@
         [HDR]_DissolveEdgeColor("Dissolve Edge Color", Color) = (0.0, 0.0, 0.0, 0.0)
         _Smoothness("Smoothness", Range(0, 1)) = 1.0
         _Clip("Clip", Range(0,1)) = 0
+        _ColorHit("ColorHit", Color) = (0.0,0.0,0.0,0.0)
 
         // _DissolveTime("Dissolve Time (死亡溶解持续时间)", Range(0.1, 10)) = 1
         // _DissolveScale("Dissolve Scale (死亡模型缩放比例)", Range(0, 10)) = 1
@@ -60,6 +61,7 @@
             half4 _DissolveEdgeColor;
             float _Smoothness;
             float _Clip;
+            float4 _ColorHit;
 
             float _DissolveAppearOffset;
             float _DissolveAppearWidth;
@@ -260,8 +262,7 @@
 
                 //color = half4(1.0, 0.0, 0.0, 1.0);
 #endif
-                color.rgb = color.rgb + emissionColor;
-
+                color.rgb = color.rgb + emissionColor + _ColorHit;
                 return color;
                 //return half4(1.0, 0.0, 0.0, 1.0);
             }

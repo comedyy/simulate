@@ -23,6 +23,10 @@ public class VHpColorSystem : ComponentSystem
             {
                 gameObj.GetComponent<HeroHitColor>().HeroHit();
             }
+            else
+            {
+                gameObj.GetComponent<MonsterHitColor>().HeroHit();
+            }
 
             // if(gameObj == null)
             // {
