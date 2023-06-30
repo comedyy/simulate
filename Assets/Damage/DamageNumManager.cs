@@ -99,10 +99,10 @@ namespace Game
            var scale = 1;// GameCore.UI.GetScaleFactor();
 
         //    var configDefine = GameCore.DataTable.QueryRecord<ConfigDefine>(0);
-        //    _dirOffset = configDefine.hurtFontOffset1;
-        //    _critScale = configDefine.hurtFontCritScale;
-        //    _randomXOffset = configDefine.hurtFontLocation * scale;
-        //    _yOffset = configDefine.hurtFontHeight * scale;
+           _dirOffset = 20;// configDefine.hurtFontOffset1;
+           _critScale = 1.33f;//configDefine.hurtFontCritScale;
+           _randomXOffset = 10;// configDefine.hurtFontLocation * scale;
+           _yOffset = 80;// configDefine.hurtFontHeight * scale;
 
            _defaultColor = Color.white;
            _screenHalfWidth = Screen.width * 0.5f;

@@ -64,9 +64,12 @@ public class HurtSystem : ComponentSystem
 
         buffer.Clear();
 
+        var monsterSpwan = GetSingleton<SpawnMonsterComponent>();
         for(int i = 0; i < _deadEntities.Count; i++)
         {
             EntityManager.DestroyEntity(_deadEntities[i]);
+            monsterSpwan.currentCount--;
         }
+        SetSingleton(monsterSpwan);
     }
 }

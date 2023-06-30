@@ -42,10 +42,14 @@ namespace Game
         // Update is called once per frame
         void Update()
         {
-            if (true || Input.GetKeyDown(KeyCode.B))
+            if (Input.GetMouseButtonDown(0))
             {
-                var screenPos = Vector3.zero;
-                manager.ShowDamage(5555, screenPos);
+                Plane p = new Plane();
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                p.Raycast(ray, out var enter);
+                var worldPos = ray.GetPoint(enter);
+
+                manager.ShowDamage(5555, worldPos);
             }
 
             if (Input.GetKeyDown(KeyCode.C))
