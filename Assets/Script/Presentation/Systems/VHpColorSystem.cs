@@ -1,4 +1,5 @@
 using System;
+using Game;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -15,13 +16,15 @@ public class VHpColorSystem : ComponentSystem
             if(!EntityManager.Exists(target)) continue;
 
             var gameObj = EntityManager.GetComponentObject<GameObjectBindingComponent>(target).obj;
-            if(gameObj == null)
-            {
-                UnityEngine.Debug.LogError($"=== not found {target}");
-            }
-            var renderer = gameObj.GetComponentInChildren<Renderer>();
-            var hpComponent = EntityManager.GetComponentData<HpComponent>(target);
-            renderer.material.color = CalHpColor(hpComponent.hp, hpComponent.hpMax);
+            DamageNumManager.Instance.ShowDamage(ev.value, gameObj.transform.position);
+
+            // if(gameObj == null)
+            // {
+            //     UnityEngine.Debug.LogError($"=== not found {target}");
+            // }
+            // var renderer = gameObj.GetComponentInChildren<Renderer>();
+            // var hpComponent = EntityManager.GetComponentData<HpComponent>(target);
+            // renderer.material.color = CalHpColor(hpComponent.hp, hpComponent.hpMax);
         };
     }
 

@@ -94,6 +94,15 @@ namespace Game
            // GameUtility.StringToHtmlColor("#84ea6b")
        };
 
+        static DamageNumManager _instance;
+       void Awake()
+       {
+            _instance = this;
+            _instance.Initialize();
+       }
+
+       public static DamageNumManager Instance => _instance;
+
        public void Initialize()
        {
            var scale = 1;// GameCore.UI.GetScaleFactor();

@@ -26,7 +26,6 @@ namespace Game
         
         void Start()
         {
-            manager.Initialize();
             for (int j = 0; j < loop; j++)
             {
                 randomPos.Add(new Vector3(300, 100+j * 60, 0));
