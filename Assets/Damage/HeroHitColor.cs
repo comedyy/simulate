@@ -63,14 +63,14 @@ namespace Game.Battle.Mono.Hero
                         SetMatColor(_hitColor);
                         _lastRecordTime = Time.time;
                     }
-                    else if (_hitState == HitAniColorStage.Stage2 && timeDiff > 0.1f)
+                    else if (_hitState == HitAniColorStage.Stage2 && timeDiff > 0.05f)
                     {
                         _hitState = HitAniColorStage.Stage3;
                         _lastRecordTime = Time.time;
                     }
                     else if (_hitState == HitAniColorStage.Stage3 )
                     {
-                        if (timeDiff > 0.3)
+                        if (timeDiff > 0.2)
                         {
                             _hitState = HitAniColorStage.None;
                             SetMatColor(Color.white);

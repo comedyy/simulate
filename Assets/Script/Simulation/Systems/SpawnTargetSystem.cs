@@ -56,7 +56,6 @@ public class SpawnTargetSystem : ComponentSystem
 
         Entities.ForEach((Entity evEntity, ref SpawnEvent ev)=>{
             var entity = Entity.Null;
-            var size = fp.one;
             
             if(ev.isUser)
             {
@@ -81,6 +80,10 @@ public class SpawnTargetSystem : ComponentSystem
                 // var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);
                 // move.pos = ev.position;
                 // EntityManager.SetComponentData(entity, move);
+                var size = fp.Create(2);
+                EntityManager.SetComponentData<SizeComponent>(entity, new SizeComponent(){
+                    size = size
+                });
             }
             else
             {
@@ -99,8 +102,13 @@ public class SpawnTargetSystem : ComponentSystem
                     rvoId = rvoObj.AddAgent(new RVO.Vector2(ev.position.x, ev.position.z), fp.Create(5), 3, fp.Create(0, 500), fp.Create(0, 500), fp.Create(0, 9000), 3, new RVO.Vector2(ev.dir.x, ev.dir.z), entity)
                 });
 
+                var size = fp.Create(0, 9000);
                 EntityManager.SetComponentData(entity, new SkillComponent(){
-                    range = fp.one, interval = fp.Create(0, 3000)
+                    range = size, interval = fp.Create(0, 3000)
+                });
+                
+                EntityManager.SetComponentData<SizeComponent>(entity, new SizeComponent(){
+                    size = size
                 });
             }
 
@@ -121,9 +129,7 @@ public class SpawnTargetSystem : ComponentSystem
                 speed = fp.Create(7)
             });
 
-            EntityManager.SetComponentData<SizeComponent>(entity, new SizeComponent(){
-                size = size
-            });
+
 
             var buffer = EntityManager.GetBuffer<SpawnEventComponent>(GetSingletonEntity<SpawnEventComponent>());
             buffer.Add(new SpawnEventComponent(){

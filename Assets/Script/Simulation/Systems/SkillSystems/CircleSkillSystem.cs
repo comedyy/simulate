@@ -13,6 +13,7 @@ struct TempUserPos
 {
     public Entity entity;
     public fp3 pos;
+    public fp radius;
 }
 
 public class CircleSkillSystem : JobComponentSystem
@@ -77,7 +78,10 @@ public class CircleSkillSystem : JobComponentSystem
         for(int i = 0; i < listUser.length; i++)
         {
             var item = listUser[i];
-            userPosList[i] = new TempUserPos(){entity = item, pos = EntityManager.GetComponentData<LTransformComponet>(item).position};
+            userPosList[i] = new TempUserPos(){entity = item, 
+            pos = EntityManager.GetComponentData<LTransformComponet>(item).position,
+            radius = EntityManager.GetComponentData<SizeComponent>(item).size,
+            };
         }
 
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
@@ -133,7 +137,9 @@ public class CircleSkillSystem : JobComponentSystem
                 {
                     var item = userList[i];
                     var pos = item.pos;
-                    if(fpMath.distancesq(myPos, pos) > skill.range * skill.range)
+                    var radius = item.radius + skill.range;
+
+                    if(fpMath.distancesq(myPos, pos) > radius * radius)
                     {
                         continue;
                     }
