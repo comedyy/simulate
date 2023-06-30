@@ -79,6 +79,30 @@ public class fpMath
         return a > b ? a : b;
     }
 
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static fp3 Min(fp3 a, fp3 b)
+    {
+        return new fp3()
+        {
+            x = Min(a.x, b.x),
+            y = Min(a.y, b.y),
+            z = Min(a.z, b.z)
+        };
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static fp3 Max(fp3 a, fp3 b)
+    {
+        return new fp3()
+        {
+            x = Max(a.x, b.x),
+            y = Max(a.y, b.y),
+            z = Max(a.z, b.z)
+        };
+    }
+
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static fp Abs(fp a)
     {

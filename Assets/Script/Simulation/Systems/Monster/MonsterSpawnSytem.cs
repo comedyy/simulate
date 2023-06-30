@@ -1,6 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
-
+using UnityEngine;
 
 public class MonsterSpawnSytem : ComponentSystem
 {
@@ -28,11 +30,13 @@ public class MonsterSpawnSytem : ComponentSystem
             return;
         }
 
-
         for(int i = 0; i < monsterSpwan.spawnCountPerInterval; i++)
         {
-            var spwanEventEntity = EntityManager.CreateEntity(typeof(SpawnEvent));
             var random = EntityManager.GetComponentObject<RandomComponent>(GetSingletonEntity<RandomComponent>()).random;
+            var foundPos = GetRandomSpawnPos(random, out var pos);
+            if(!foundPos) continue;
+
+            var spwanEventEntity = EntityManager.CreateEntity(typeof(SpawnEvent));
 
             var randomAngle = RandomUtils.Random(random, 2 * fpMath.PI);
             var sin = fpMath.sin(randomAngle);
@@ -40,7 +44,7 @@ public class MonsterSpawnSytem : ComponentSystem
 
             EntityManager.SetComponentData(spwanEventEntity, new SpawnEvent(){
                 isUser = false, 
-                position = new fp3(RandomUtils.Random(random, 10), 0, RandomUtils.Random(random, 10)),
+                position = pos,
                 dir = new fp3(cos, 0, sin),
                 aiInterval = fp.Create(1),
                 despawnTime = 5 + escaped,
@@ -53,5 +57,52 @@ public class MonsterSpawnSytem : ComponentSystem
         monsterSpwan.lastSpawnTime = escaped;
 
         SetSingleton(monsterSpwan);
+    }
+
+    List<fp3> list = new List<fp3>();
+    private bool GetRandomSpawnPos(System.Random random, out fp3 p)
+    {
+
+        var listUser = GetSingleton<UserListComponent>().allUser;
+        var pos = EntityManager.GetComponentData<LTransformComponet>(listUser[0]).position;
+        fp3 min = pos;
+        fp3 max = pos;
+        list.Add(pos);
+
+        for(int i = 1; i < listUser.length; i++)
+        {
+            var pos1 = EntityManager.GetComponentData<LTransformComponet>(listUser[i]).position;
+            list.Add(pos1);
+
+            min = fpMath.Min(min, pos1);
+            max = fpMath.Max(max, pos1);
+        }
+
+        var range = 25;
+        min = min - new fp3(range, 0, range);
+        max = max + new fp3(range, 0, range);
+
+        for(int i = 0; i < 10; i++)
+        {
+            var posx = new fp3(RandomUtils.Random(random, min.x, max.x), 0, RandomUtils.Random(random, min.y, max.y));
+            var isError = false;
+            foreach (var userPos in list)
+            {
+                if(fpMath.distancesq(posx, userPos) < 20 * 20) 
+                {
+                    isError = true;
+                    continue;
+                }
+            }
+
+            if(!isError)
+            {
+                p = posx;
+                return true;
+            }
+        }
+
+        p = default;
+        return false;
     }
 }

@@ -15,4 +15,9 @@ public static class RandomUtils
     {
         return random * Random(_random);
     }
+
+    public static fp Random(System.Random _random, fp from, fp to)
+    {
+        return (to - from) * Random(_random) + from;
+    }
 }
