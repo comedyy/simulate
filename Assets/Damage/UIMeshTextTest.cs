@@ -32,7 +32,7 @@ namespace Game
                 randomPos.Add(new Vector3(300, 100+j * 60, 0));
             }    
                 
-            mesh = new UIMeshText(damageLayer.transform, "mymesh", font, 100000, 1500, Vector3.one);
+            mesh = new UIMeshText(damageLayer.transform, "mymesh", font, 100000, 1500, Vector3.one * 0.1f);
             
             _meshes?.Add(mesh);
 

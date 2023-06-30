@@ -24,6 +24,6 @@ public class VCameraFollowSystem : SystemBase
         var obj = EntityManager.GetComponentObject<GameObjectBindingComponent>(userEntity).obj;
         if(obj == null) return;
         var pos = obj.transform.position;
-        _camera.transform.position = new float3(pos) + new float3(0, 10, -10);
+        _camera.transform.position = new float3(pos) + new float3(0, 20, -20);
     }
 }

@@ -84,7 +84,7 @@ public class MonsterSpawnSytem : ComponentSystem
 
         for(int i = 0; i < 10; i++)
         {
-            var posx = new fp3(RandomUtils.Random(random, min.x, max.x), 0, RandomUtils.Random(random, min.y, max.y));
+            var posx = new fp3(RandomUtils.Random(random, min.x, max.x), 0, RandomUtils.Random(random, min.z, max.z));
             var isError = false;
             foreach (var userPos in list)
             {
