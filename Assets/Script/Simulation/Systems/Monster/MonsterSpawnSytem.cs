@@ -65,7 +65,11 @@ public class MonsterSpawnSytem : ComponentSystem
     {
 
         var listUser = GetSingleton<UserListComponent>().allUser;
-        if(listUser.length == 0) return false;
+        if(listUser.length == 0)
+        {
+            p = default;
+            return false;
+        }
 
         var pos = EntityManager.GetComponentData<LTransformComponet>(listUser[0]).position;
         fp3 min = pos;
