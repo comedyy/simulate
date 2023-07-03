@@ -13,13 +13,17 @@ public class RoomUI : MonoBehaviour
 
     Room _room;
 
-//    public static string ip = "192.168.2.14";
-    public static string ip = "127.0.0.1";
+    public static string ip = "192.168.2.14";
+    public static string ipLocal = "127.0.0.1";
     public bool userAutoMove = false;
 
     void OnGUI()
     {
         ip = GUI.TextField(new Rect(100, 100, 100, 100), ip);
+        if(GUI.Button(new Rect(0, 100, 100, 100), "本地IP"))
+        {
+            ip = GUI.TextField(new Rect(100, 100, 100, 100), ipLocal);
+        }
 
         GUI.color = Color.black;
         userAutoMove = GUI.Toggle(new Rect(100, 0, 100, 100), userAutoMove, "ai控制操作");
