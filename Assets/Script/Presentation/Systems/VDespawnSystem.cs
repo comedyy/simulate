@@ -24,17 +24,22 @@ public class VDespawnSystem : ComponentSystem
     IEnumerator DieFunc(GameObject obj)
     {
         var param = obj.GetComponent<DissolveParams>();
-        var material = new Material(param.material);
-        obj.GetComponentInChildren<Renderer>().material = material;
-        obj.GetComponent<Animator>().Play("die");
-        var t = 0f;
-        while(t < param.dissolveTime)
+        if(param != null)
         {
-            var percent = t / param.dissolveTime;
-            t+= Time.DeltaTime;
-            material.SetFloat("_Clip", percent);
-            yield return null;
+            var material = new Material(param.material);
+            obj.GetComponentInChildren<Renderer>().material = material;
+            obj.GetComponent<Animator>().Play("die");
+            var t = 0f;
+            while(t < param.dissolveTime)
+            {
+                var percent = t / param.dissolveTime;
+                t+= Time.DeltaTime;
+                material.SetFloat("_Clip", percent);
+                yield return null;
+            }
         }
+
+        
         
         GameObject.Destroy(obj);
     }

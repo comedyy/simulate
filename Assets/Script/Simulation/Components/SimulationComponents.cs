@@ -7,6 +7,7 @@ using UnityEngine;
 
 public struct LRvoComponent : IComponentData
 {
+    public int idWorld;
     public int rvoId;
 }
 
@@ -48,7 +49,6 @@ public struct SpawnEvent : IComponentData
 public struct SpawnMonsterComponent: IComponentData
 {
     public int maxCount;
-    public int currentCount;
     public fp interval;
     public fp spawnCountPerInterval;
     public fp lastSpawnTime;
@@ -116,4 +116,9 @@ public struct UserComponnet : IComponentData
 public struct UserAiComponent : IComponentData
 {
     public fp3 offsetToController;
+}
+
+public struct Dead : IComponentData
+{
+    
 }

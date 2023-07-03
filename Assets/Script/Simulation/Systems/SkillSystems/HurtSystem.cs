@@ -1,75 +1,130 @@
 using System;
 using System.Collections.Generic;
+using Game.Battle.CommonLib;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 
 
-public class HurtSystem : ComponentSystem
+public class HurtSystem : ComponentSystemBase
 {
-    List<Entity> _deadEntities = new List<Entity>();
-    protected override void OnUpdate()
-    {
-        _deadEntities.Clear();
+    EntityQuery _queryDead;
 
+    public override void Update()
+    {
+        OnUpdate();
+    }
+
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        _queryDead = GetEntityQuery(ComponentType.ReadOnly<Dead>());
+    }
+
+    protected void OnUpdate()
+    {
         var rvoObj = this.GetSingletonObject<RvoSimulatorComponet>();
         var buffer = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
         var bufferVHurt = EntityManager.GetBuffer<VHurtComponent>(GetSingletonEntity<VHurtComponent>());
-        var bufferDead = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>());
 
-        for(int i = 0; i < buffer.Length; i++)
+        HurtJob hurtJob = new HurtJob(){
+            buffer = buffer,
+            bufferVHurt = bufferVHurt,
+            EntityManager = EntityManager
+        };
+        hurtJob.Run();
+
+        var buffer1 = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
+        buffer1.Clear();
+
+        var processDeadJob = new ProcessDeadJob(){
+            entityManager = EntityManager,
+            vDesposeBuffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>()),
+            entityTypeChunk = GetArchetypeChunkEntityType(),
+            rvoComponentChunkType = GetArchetypeChunkComponentType<LRvoComponent>(true),
+            entityUserSington = GetSingletonEntity<UserListComponent>()
+        };
+        processDeadJob.Run(_queryDead);
+    }
+
+    [BurstCompile]
+    struct ProcessDeadJob : IJobChunk
+    {
+        public EntityManager entityManager;
+        internal DynamicBuffer<DeSpawnEventComponent> vDesposeBuffer;
+        [ReadOnly]
+        internal ArchetypeChunkComponentType<LRvoComponent> rvoComponentChunkType;
+        [ReadOnly]
+        internal ArchetypeChunkEntityType entityTypeChunk;
+        public Entity entityUserSington;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
-            var ev = buffer[i];
-            var entity = ev.target;
-            if(!EntityManager.Exists(entity))
+            var entities = chunk.GetNativeArray(entityTypeChunk);
+            for(int i = 0; i < chunk.Count; i++)
             {
-                continue;
-            }
-
-            var hpComponent = EntityManager.GetComponentData<HpComponent>(entity);
-
-            if(hpComponent.hp <= 0) continue;
-
-            hpComponent.hp -= ev.value;
-            EntityManager.SetComponentData(entity, hpComponent);
-            bufferVHurt.Add(new VHurtComponent(){
-                target = entity, value = ev.value
-            });
-
-            if(hpComponent.hp > 0) continue;
-
-            _deadEntities.Add(entity);
-            bufferDead.Add(new DeSpawnEventComponent(){entity = entity});
-
-            if(EntityManager.HasComponent<LRvoComponent>(entity))
-            {
-                var rvoComponent = EntityManager.GetComponentData<LRvoComponent>(entity);
-                rvoObj.RemoveAgent(rvoComponent.rvoId);
-            }
-            else
-            {
-                var list = GetSingleton<UserListComponent>().allUser;
-                for(int j = 0; j < list.length; j++)
+                var entity = entities[i];
+                if(entityManager.HasComponent<LRvoComponent>(entity))
                 {
-                    if(list[j] == entity)
+                    var rvoComponent = entityManager.GetComponentData<LRvoComponent>(entity);
+                    MSPathSystem.RemoveAgent(rvoComponent.idWorld, rvoComponent.rvoId);
+                }
+                else
+                {
+                    var listUser = entityManager.GetComponentData<UserListComponent>(entityUserSington).allUser;
+                    for(int j = 0; j < listUser.length; j++)
                     {
-                        list.RemoveAt(j);
-                        break;
+                        if(listUser[j] == entity)
+                        {
+                            listUser.RemoveAt(j);
+                            entityManager.SetComponentData(entityUserSington, new UserListComponent(){allUser = listUser});
+                            break;
+                        }
                     }
                 }
-                SetSingleton(new UserListComponent(){
-                    allUser = list
-                });
+                
+                vDesposeBuffer.Add(new DeSpawnEventComponent(){entity = entities[i]});
+                entityManager.DestroyEntity(entities[i]);
             }
-        };
-
-        buffer.Clear();
-
-        var monsterSpwan = GetSingleton<SpawnMonsterComponent>();
-        for(int i = 0; i < _deadEntities.Count; i++)
-        {
-            EntityManager.DestroyEntity(_deadEntities[i]);
-            monsterSpwan.currentCount--;
         }
-        SetSingleton(monsterSpwan);
+    }
+
+    [BurstCompile]
+    struct HurtJob : IJob
+    {
+        [ReadOnly]
+        public DynamicBuffer<HurtComponent> buffer;
+        public DynamicBuffer<VHurtComponent> bufferVHurt;
+        public EntityManager EntityManager;
+        public void Execute()
+        {
+            for(int i = 0; i < buffer.Length; i++)
+            {
+                var ev = buffer[i];
+                var entity = ev.target;
+                if(!EntityManager.Exists(entity))
+                {
+                    continue;
+                }
+
+                var hpComponent = EntityManager.GetComponentData<HpComponent>(entity);
+
+                if(hpComponent.hp <= 0) continue;
+
+                hpComponent.hp -= ev.value;
+                EntityManager.SetComponentData(entity, hpComponent);
+                bufferVHurt.Add(new VHurtComponent(){
+                    target = entity, value = ev.value
+                });
+
+                if(hpComponent.hp <= 0)
+                {
+                    EntityManager.AddComponent<Dead>(entity);
+                }
+            }
+        }
     }
 }

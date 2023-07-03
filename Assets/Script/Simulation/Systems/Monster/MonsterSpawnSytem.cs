@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class MonsterSpawnSytem : ComponentSystem
 {
+    EntityQuery _queryEnemyCount;
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -13,6 +14,8 @@ public class MonsterSpawnSytem : ComponentSystem
         EntityManager.SetComponentData(entity, new SpawnMonsterComponent(){
             maxCount = 100, interval = fp.Create(1), spawnCountPerInterval = 10
         });
+
+        _queryEnemyCount = GetEntityQuery(ComponentType.ReadOnly<RvoSimulatorComponet>());
     }
 
     protected override void OnUpdate()
@@ -20,7 +23,7 @@ public class MonsterSpawnSytem : ComponentSystem
         var monsterSpwan = GetSingleton<SpawnMonsterComponent>();
         var escaped = GetSingleton<LogicTime>().escaped;
 
-        if(monsterSpwan.maxCount <= monsterSpwan.currentCount)
+        if(monsterSpwan.maxCount <= _queryEnemyCount.CalculateEntityCount())
         {
             return;
         } 
@@ -50,8 +53,6 @@ public class MonsterSpawnSytem : ComponentSystem
                 despawnTime = 5 + escaped,
                 hp = 50,atk = 5
             });    
-    
-            monsterSpwan.currentCount++;
         }
 
         monsterSpwan.lastSpawnTime = escaped;
@@ -64,6 +65,8 @@ public class MonsterSpawnSytem : ComponentSystem
     {
 
         var listUser = GetSingleton<UserListComponent>().allUser;
+        if(listUser.length == 0) return false;
+
         var pos = EntityManager.GetComponentData<LTransformComponet>(listUser[0]).position;
         fp3 min = pos;
         fp3 max = pos;

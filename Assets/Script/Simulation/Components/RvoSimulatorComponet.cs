@@ -17,7 +17,6 @@ public class RvoSimulatorComponet  : IComponentData
 {
     public int id;
     RVO.Simulator rvoSimulator;
-    Dictionary<int, Entity> _allEntities = new Dictionary<int, Entity>();
 
     public int AddAgent(Vector2 pos, fp neighborDist, int maxNeighbors, fp timeHorizon, fp timeHorizonObst, fp radius, fp maxSpeed, Vector2 velocity, Entity entity)
     {
@@ -28,8 +27,6 @@ public class RvoSimulatorComponet  : IComponentData
         var agentIndex = MSPathSystem.AddAgent(id, pos.x().To32Fp, pos.y().To32Fp, neighborDist.To32Fp, maxNeighbors, timeHorizon.To32Fp, 
             timeHorizonObst.To32Fp, radius.To32Fp, maxSpeed.To32Fp, fp.Create(1).To32Fp, velocity.x().To32Fp, velocity.y().To32Fp, entityID);
         
-        _allEntities.Add(agentIndex, entity);
-
         return agentIndex;
     }
 
@@ -41,18 +38,6 @@ public class RvoSimulatorComponet  : IComponentData
         }
 
         MSPathSystem.SetTimeStep(id, stepTime.To32Fp);
-    }
-
-    public void RemoveAgent(int index)
-    {
-        if(rvoSimulator != null) 
-        {
-            rvoSimulator.removeAgent(index); return;
-        }
-
-        MSPathSystem.RemoveAgent(id, index);
-
-        _allEntities.Remove(index);
     }
 
     public void DoStep()
@@ -102,23 +87,6 @@ public class RvoSimulatorComponet  : IComponentData
         var x = new fp(){rawValue = pos.x};
         var y = new fp(){rawValue = pos.y};
         return new Vector2(x, y);
-    }
-
-    public void FindAgents(Vector2 pos, fp range, List<Entity> list)
-    {
-        if(rvoSimulator != null)
-        {
-            rvoSimulator.FindAgents(pos, range, list); return;
-        }
-
-        NativeArray<int> array = new Unity.Collections.NativeArray<int>(1024, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
-        int count = MSPathSystem.GetNearByAgents(id, pos.x().To32Fp, pos.y().To32Fp, array, range.To32Fp);
-
-        for(int i = 0; i < count; i++)
-        {
-            var x = array[i];
-            list.Add(_allEntities[x]);
-        }
     }
 
     internal void ShutDown()
