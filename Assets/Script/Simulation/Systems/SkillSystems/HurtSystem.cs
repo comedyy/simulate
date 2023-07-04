@@ -36,53 +36,34 @@ public class HurtSystem : ComponentSystemBase
         };
         hurtJob.Run();
 
-
         var buffer1 = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
         buffer1.Clear();
 
-        var processDeadJob = new ProcessDeadJob(){
-            entityManager = EntityManager,
-            entityUserSington = GetSingletonEntity<UserListComponent>(),
-            _lst = _lst
-        };
-        processDeadJob.Run();
-        _lst.Dispose();
-    }
-
-    [BurstCompile]
-    struct ProcessDeadJob : IJob
-    {
-        public EntityManager entityManager;
-        public Entity entityUserSington;
-        internal NativeList<Entity> _lst;
-
-        public void Execute()
+        for(int i = 0; i < _lst.Length; i++)
         {
-            for(int i = 0; i < _lst.Length; i++)
+            var entity = _lst[i];
+            if(EntityManager.HasComponent<LRvoComponent>(entity))
             {
-                var entity = _lst[i];
-                if(entityManager.HasComponent<LRvoComponent>(entity))
+                var rvoComponent = EntityManager.GetComponentData<LRvoComponent>(entity);
+                MSPathSystem.RemoveAgent(rvoComponent.idWorld, rvoComponent.rvoId);
+            }
+            else
+            {
+                var listUser = GetSingleton<UserListComponent>().allUser;
+                for(int j = 0; j < listUser.length; j++)
                 {
-                    var rvoComponent = entityManager.GetComponentData<LRvoComponent>(entity);
-                    MSPathSystem.RemoveAgent(rvoComponent.idWorld, rvoComponent.rvoId);
-                }
-                else
-                {
-                    var listUser = entityManager.GetComponentData<UserListComponent>(entityUserSington).allUser;
-                    for(int j = 0; j < listUser.length; j++)
+                    if(listUser[j] == entity)
                     {
-                        if(listUser[j] == entity)
-                        {
-                            listUser.RemoveAt(j);
-                            entityManager.SetComponentData(entityUserSington, new UserListComponent(){allUser = listUser});
-                            break;
-                        }
+                        listUser.RemoveAt(j);
+                        SetSingleton(new UserListComponent(){allUser = listUser});
+                        break;
                     }
                 }
-                
-                entityManager.DestroyEntity(_lst[i]);
             }
+            
+            EntityManager.DestroyEntity(_lst[i]);
         }
+        _lst.Dispose();
     }
 
     [BurstCompile]
