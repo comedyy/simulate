@@ -30,12 +30,20 @@ public class HurtSystem : ComponentSystemBase
         var buffer = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
         var bufferVHurt = EntityManager.GetBuffer<VHurtComponent>(GetSingletonEntity<VHurtComponent>());
 
+        NativeList<Entity> _lst = new NativeList<Entity>(Allocator.TempJob);
         HurtJob hurtJob = new HurtJob(){
             buffer = buffer,
             bufferVHurt = bufferVHurt,
-            EntityManager = EntityManager
+            EntityManager = EntityManager,
+            _lst = _lst
         };
         hurtJob.Run();
+
+        foreach(var entity in _lst)
+        {
+            EntityManager.AddComponent<Dead>(entity);
+        }
+        _lst.Dispose();
 
         var buffer1 = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
         buffer1.Clear();
@@ -99,6 +107,8 @@ public class HurtSystem : ComponentSystemBase
         public DynamicBuffer<HurtComponent> buffer;
         public DynamicBuffer<VHurtComponent> bufferVHurt;
         public EntityManager EntityManager;
+        internal NativeList<Entity> _lst;
+
         public void Execute()
         {
             for(int i = 0; i < buffer.Length; i++)
@@ -122,7 +132,7 @@ public class HurtSystem : ComponentSystemBase
 
                 if(hpComponent.hp <= 0)
                 {
-                    EntityManager.AddComponent<Dead>(entity);
+                    _lst.Add(entity);
                 }
             }
         }
