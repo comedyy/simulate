@@ -113,11 +113,6 @@ public struct UserComponnet : IComponentData
     public int id;
 }
 
-public struct Dead : IComponentData
-{
-    
-}
-
 public struct TestFloatSync : IComponentData
 {
     public fp result;

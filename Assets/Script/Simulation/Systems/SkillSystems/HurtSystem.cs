@@ -11,8 +11,6 @@ using Unity.Mathematics;
 
 public class HurtSystem : ComponentSystemBase
 {
-    EntityQuery _queryDead;
-
     public override void Update()
     {
         OnUpdate();
@@ -21,7 +19,6 @@ public class HurtSystem : ComponentSystemBase
     protected override void OnCreate()
     {
         base.OnCreate();
-        _queryDead = GetEntityQuery(ComponentType.ReadOnly<Dead>());
     }
 
     protected void OnUpdate()
@@ -39,11 +36,6 @@ public class HurtSystem : ComponentSystemBase
         };
         hurtJob.Run();
 
-        foreach(var entity in _lst)
-        {
-            EntityManager.AddComponent<Dead>(entity);
-        }
-        _lst.Dispose();
 
         var buffer1 = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
         buffer1.Clear();
@@ -53,13 +45,15 @@ public class HurtSystem : ComponentSystemBase
             vDesposeBuffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>()),
             entityTypeChunk = GetArchetypeChunkEntityType(),
             rvoComponentChunkType = GetArchetypeChunkComponentType<LRvoComponent>(true),
-            entityUserSington = GetSingletonEntity<UserListComponent>()
+            entityUserSington = GetSingletonEntity<UserListComponent>(),
+            _lst = _lst
         };
-        processDeadJob.Run(_queryDead);
+        processDeadJob.Run();
+        _lst.Dispose();
     }
 
     [BurstCompile]
-    struct ProcessDeadJob : IJobChunk
+    struct ProcessDeadJob : IJob
     {
         public EntityManager entityManager;
         internal DynamicBuffer<DeSpawnEventComponent> vDesposeBuffer;
@@ -68,13 +62,13 @@ public class HurtSystem : ComponentSystemBase
         [ReadOnly]
         internal ArchetypeChunkEntityType entityTypeChunk;
         public Entity entityUserSington;
+        internal NativeList<Entity> _lst;
 
-        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        public void Execute()
         {
-            var entities = chunk.GetNativeArray(entityTypeChunk);
-            for(int i = 0; i < chunk.Count; i++)
+            for(int i = 0; i < _lst.Length; i++)
             {
-                var entity = entities[i];
+                var entity = _lst[i];
                 if(entityManager.HasComponent<LRvoComponent>(entity))
                 {
                     var rvoComponent = entityManager.GetComponentData<LRvoComponent>(entity);
@@ -94,8 +88,8 @@ public class HurtSystem : ComponentSystemBase
                     }
                 }
                 
-                vDesposeBuffer.Add(new DeSpawnEventComponent(){entity = entities[i]});
-                entityManager.DestroyEntity(entities[i]);
+                vDesposeBuffer.Add(new DeSpawnEventComponent(){entity = _lst[i]});
+                entityManager.DestroyEntity(_lst[i]);
             }
         }
     }
