@@ -23,7 +23,6 @@ public class HurtSystem : ComponentSystemBase
 
     protected void OnUpdate()
     {
-        var rvoObj = this.GetSingletonObject<RvoSimulatorComponet>();
         var buffer = EntityManager.GetBuffer<HurtComponent>(GetSingletonEntity<HurtComponent>());
         var bufferVHurt = EntityManager.GetBuffer<VHurtComponent>(GetSingletonEntity<VHurtComponent>());
 
@@ -43,8 +42,6 @@ public class HurtSystem : ComponentSystemBase
         var processDeadJob = new ProcessDeadJob(){
             entityManager = EntityManager,
             vDesposeBuffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>()),
-            entityTypeChunk = GetArchetypeChunkEntityType(),
-            rvoComponentChunkType = GetArchetypeChunkComponentType<LRvoComponent>(true),
             entityUserSington = GetSingletonEntity<UserListComponent>(),
             _lst = _lst
         };
@@ -57,10 +54,6 @@ public class HurtSystem : ComponentSystemBase
     {
         public EntityManager entityManager;
         internal DynamicBuffer<DeSpawnEventComponent> vDesposeBuffer;
-        [ReadOnly]
-        internal ArchetypeChunkComponentType<LRvoComponent> rvoComponentChunkType;
-        [ReadOnly]
-        internal ArchetypeChunkEntityType entityTypeChunk;
         public Entity entityUserSington;
         internal NativeList<Entity> _lst;
 
