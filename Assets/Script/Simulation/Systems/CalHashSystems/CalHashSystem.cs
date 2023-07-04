@@ -25,8 +25,9 @@ public class CalHashSystem : ComponentSystem
 
         checkSum.positionChecksum.SaveCheckSum();
 
-        Entities.ForEach((Entity entity, ref HpComponent ls)=>{
+        Entities.ForEach((Entity entity, ref HpComponent ls, ref TestFloatSync sync)=>{
             checkSum.hpCheckSum.CheckValue(entity, ls.hp.GetHashCode());
+            checkSum.hpCheckSum.CheckValue(entity, sync.result.GetHashCode());
         });
 
         checkSum.hpCheckSum.SaveCheckSum();

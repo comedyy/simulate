@@ -117,3 +117,13 @@ public struct Dead : IComponentData
 {
     
 }
+
+public struct TestFloatSync : IComponentData
+{
+    public fp result;
+}
+
+public struct EntityRandom : IComponentData
+{
+    public fpRandom random;
+}

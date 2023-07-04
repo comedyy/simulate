@@ -38,8 +38,6 @@ public class VDespawnSystem : ComponentSystem
                 yield return null;
             }
         }
-
-        
         
         GameObject.Destroy(obj);
     }

@@ -8,6 +8,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Burst;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 struct TempUserPos
 {
@@ -47,8 +48,12 @@ public class CircleSkillSystem : JobComponentSystem
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         LogicTime logic = GetSingleton<LogicTime>();
+        Profiler.BeginSample("EnemyHurtUser");
         EnemyHurtUser(logic.escaped, inputDeps);
+        Profiler.EndSample();
+        Profiler.BeginSample("UserHurtEnemy");
         UserHurtEnemy(logic.escaped, this.GetSingletonObject<RvoSimulatorComponet>().id);
+        Profiler.EndSample();
 
         return default;
     }
@@ -73,6 +78,7 @@ public class CircleSkillSystem : JobComponentSystem
 
     private void EnemyHurtUser(fp logicTime, JobHandle dep)
     {
+        Profiler.BeginSample("EnemyHurtUser1");
         var listUser = GetSingleton<UserListComponent>().allUser;
         NativeArray<TempUserPos> userPosList = new NativeArray<TempUserPos>(listUser.length, Allocator.TempJob);
         for(int i = 0; i < listUser.length; i++)
@@ -83,7 +89,9 @@ public class CircleSkillSystem : JobComponentSystem
             radius = EntityManager.GetComponentData<SizeComponent>(item).size,
             };
         }
+        Profiler.EndSample();
 
+        Profiler.BeginSample("EnemyHurtUser2");
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
         var hurtEventEntity = GetSingletonEntity<HurtComponent>();
         var enemyHurtUser = new EnemyHurtUserJob(){
@@ -96,7 +104,11 @@ public class CircleSkillSystem : JobComponentSystem
             logicEscaped = logicTime
         };
         enemyHurtUser.Schedule(_queryAllEnemy, dep).Complete();
+        Profiler.EndSample();
+
+        Profiler.BeginSample("EnemyHurtUser3");
         ecb.Playback(EntityManager);
+        Profiler.EndSample();
         ecb.Dispose();
 
         userPosList.Dispose();

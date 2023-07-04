@@ -16,6 +16,7 @@ public class BattleWorld : World
         });
 
         EntityManager.AddComponentData(EntityManager.CreateEntity(), new BindingComponet());
+        var isPureLogic = localServer.ReceivedServerFrame == int.MaxValue;
 
         // init systems 
         InitiazationSystem.logicFrameInterval = logicFrameInterval;
@@ -27,10 +28,10 @@ public class BattleWorld : World
         InitMoveSystem(userAutoMove, localServer);
 
         // update systems
-        InitSimulationSystem(localServer, randomFixedCount);
+        InitSimulationSystem(localServer, randomFixedCount, isPureLogic);
 
 #if !ONLY_LOGIC
-        InitPresentationSystem(localServer, userId);
+        InitPresentationSystem(localServer, userId, isPureLogic);
 #endif
     }
 
@@ -43,7 +44,7 @@ public class BattleWorld : World
         group.AddSystemToUpdateList(moveSytem);
     }
 
-    public void InitSimulationSystem(LocalFrame frame, bool randomFixedCount)
+    public void InitSimulationSystem(LocalFrame frame, bool randomFixedCount, bool isPureLogic)
     {
         var group = GetOrCreateSystem<FixedTimeSystemGroup>();
         group.InitLogicTime(frame, flag, randomFixedCount);
@@ -63,18 +64,24 @@ public class BattleWorld : World
         
         group.AddSystemToUpdateList(CreateSystem<MoveByDirSystem>());
 
-        var timeoutSystem = CreateSystem<GameTimeoutSystem>();
-        timeoutSystem.flag = flag;
-        group.AddSystemToUpdateList(timeoutSystem);
-
+        if(isPureLogic)
+        {
+            var timeoutSystem = CreateSystem<GameTimeoutSystem>();
+            timeoutSystem.flag = flag;
+            group.AddSystemToUpdateList(timeoutSystem);
+        }
+  
         // Job burst Check
+        group.AddSystemToUpdateList(CreateSystem<FloatBurstJobTestSystem>());
 
         // cal CheckSum
         group.AddSystemToUpdateList(CreateSystem<CalHashSystem>());
     }
 
-    public void InitPresentationSystem(LocalFrame localServer, int userId)
+    public void InitPresentationSystem(LocalFrame localServer, int userId, bool isPureLogic)
     {
+        if(isPureLogic) return;
+
         var group = GetOrCreateSystem<CustomSystems3>();
         GetOrCreateSystem<PresentationSystemGroup>().AddSystemToUpdateList(group);
 

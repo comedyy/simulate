@@ -745,6 +745,7 @@ MonoBehaviour:
   _startButton: {fileID: 0}
   _joinButton: {fileID: 0}
   _info: {fileID: 0}
+  userAutoMove: 0
 --- !u!1 &768067542
 GameObject:
   m_ObjectHideFlags: 0

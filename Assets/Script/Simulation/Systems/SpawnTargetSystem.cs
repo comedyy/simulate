@@ -17,6 +17,8 @@ public class SpawnTargetSystem : ComponentSystem
         typeof(HpComponent),
         typeof(AtkComponent),
         typeof(SkillComponent),
+        typeof(TestFloatSync),
+        typeof(EntityRandom),
 
         typeof(GameObjectBindingComponent),
     };
@@ -31,6 +33,8 @@ public class SpawnTargetSystem : ComponentSystem
         typeof(AtkComponent),
         typeof(SkillComponent),
         typeof(UserComponnet),
+        typeof(TestFloatSync),
+        typeof(EntityRandom),
 
         typeof(UserMoveState),
         typeof(GameObjectBindingComponent)
@@ -51,6 +55,7 @@ public class SpawnTargetSystem : ComponentSystem
     {
         var rvoEntity = GetSingletonEntity<RvoSimulatorComponet>();
         var rvoObj = EntityManager.GetComponentObject<RvoSimulatorComponet>(rvoEntity);
+        var random = GetSingleton<RandomComponent>().random;
 
         Entities.ForEach((Entity evEntity, ref SpawnEvent ev)=>{
             var entity = Entity.Null;
@@ -124,13 +129,15 @@ public class SpawnTargetSystem : ComponentSystem
                 speed = fp.Create(7)
             });
 
-
-
             var buffer = EntityManager.GetBuffer<SpawnEventComponent>(GetSingletonEntity<SpawnEventComponent>());
             buffer.Add(new SpawnEventComponent(){
                 entity = entity,
                 isUser = ev.isUser,
                 id = ev.id
+            });
+
+            EntityManager.SetComponentData(entity, new EntityRandom(){
+                random = new fpRandom((uint)random.NextInt(1000, 200000))
             });
 
             EntityManager.DestroyEntity(evEntity);
