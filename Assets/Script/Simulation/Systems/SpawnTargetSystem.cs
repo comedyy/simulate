@@ -31,7 +31,6 @@ public class SpawnTargetSystem : ComponentSystem
         typeof(AtkComponent),
         typeof(SkillComponent),
         typeof(UserComponnet),
-        typeof(UserAiComponent),
 
         typeof(UserMoveState),
         typeof(GameObjectBindingComponent)
@@ -52,7 +51,6 @@ public class SpawnTargetSystem : ComponentSystem
     {
         var rvoEntity = GetSingletonEntity<RvoSimulatorComponet>();
         var rvoObj = EntityManager.GetComponentObject<RvoSimulatorComponet>(rvoEntity);
-        var random = this.GetSingletonObject<RandomComponent>().random;
 
         Entities.ForEach((Entity evEntity, ref SpawnEvent ev)=>{
             var entity = Entity.Null;
@@ -73,10 +71,6 @@ public class SpawnTargetSystem : ComponentSystem
                     id = ev.id
                 });
 
-                EntityManager.SetComponentData(entity, new UserAiComponent(){
-                    offsetToController = new fp3(RandomUtils.Random(random, 5), 0, RandomUtils.Random(random, 5))
-                });
-                
                 // var move = EntityManager.GetComponentData<LMoveByPosComponent>(entity);
                 // move.pos = ev.position;
                 // EntityManager.SetComponentData(entity, move);

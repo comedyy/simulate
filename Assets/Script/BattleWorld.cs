@@ -67,6 +67,8 @@ public class BattleWorld : World
         timeoutSystem.flag = flag;
         group.AddSystemToUpdateList(timeoutSystem);
 
+        // Job burst Check
+
         // cal CheckSum
         group.AddSystemToUpdateList(CreateSystem<CalHashSystem>());
     }

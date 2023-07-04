@@ -44,7 +44,7 @@ public class InitiazationSystem : ComponentSystemBase
 
         // create random
         EntityManager.AddComponentData(entity, new RandomComponent(){
-            random = new System.Random(1)
+            random = new fpRandom(123456)
         });
 
         // create RVO

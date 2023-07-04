@@ -113,11 +113,6 @@ public struct UserComponnet : IComponentData
     public int id;
 }
 
-public struct UserAiComponent : IComponentData
-{
-    public fp3 offsetToController;
-}
-
 public struct Dead : IComponentData
 {
     

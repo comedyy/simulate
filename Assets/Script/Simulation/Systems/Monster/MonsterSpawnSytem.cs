@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class MonsterSpawnSytem : ComponentSystem
 {
-    EntityQuery _queryEnemyCount;
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -14,8 +13,6 @@ public class MonsterSpawnSytem : ComponentSystem
         EntityManager.SetComponentData(entity, new SpawnMonsterComponent(){
             maxCount = 100, interval = fp.Create(1), spawnCountPerInterval = 10
         });
-
-        _queryEnemyCount = GetEntityQuery(ComponentType.ReadOnly<RvoSimulatorComponet>());
     }
 
     protected override void OnUpdate()
@@ -23,7 +20,7 @@ public class MonsterSpawnSytem : ComponentSystem
         var monsterSpwan = GetSingleton<SpawnMonsterComponent>();
         var escaped = GetSingleton<LogicTime>().escaped;
 
-        if(monsterSpwan.maxCount <= _queryEnemyCount.CalculateEntityCount())
+        if(monsterSpwan.maxCount <= MoveByDirSystem.Count)
         {
             return;
         } 
@@ -33,15 +30,15 @@ public class MonsterSpawnSytem : ComponentSystem
             return;
         }
 
+        var random = GetSingleton<RandomComponent>().random;
         for(int i = 0; i < monsterSpwan.spawnCountPerInterval; i++)
         {
-            var random = EntityManager.GetComponentObject<RandomComponent>(GetSingletonEntity<RandomComponent>()).random;
-            var foundPos = GetRandomSpawnPos(random, out var pos);
+            var foundPos = GetRandomSpawnPos(ref random, out var pos);
             if(!foundPos) continue;
 
             var spwanEventEntity = EntityManager.CreateEntity(typeof(SpawnEvent));
 
-            var randomAngle = RandomUtils.Random(random, 2 * fpMath.PI);
+            var randomAngle = random.NextFp(0, 2 * fpMath.PI);
             var sin = fpMath.sin(randomAngle);
             var cos = fpMath.cos(randomAngle);
 
@@ -54,6 +51,8 @@ public class MonsterSpawnSytem : ComponentSystem
                 hp = 50,atk = 5
             });    
         }
+        
+        SetSingleton(new RandomComponent(){random = random});
 
         monsterSpwan.lastSpawnTime = escaped;
 
@@ -61,9 +60,9 @@ public class MonsterSpawnSytem : ComponentSystem
     }
 
     List<fp3> list = new List<fp3>();
-    private bool GetRandomSpawnPos(System.Random random, out fp3 p)
+    private bool GetRandomSpawnPos(ref fpRandom random, out fp3 p)
     {
-
+        list.Clear();
         var listUser = GetSingleton<UserListComponent>().allUser;
         if(listUser.length == 0)
         {
@@ -91,11 +90,12 @@ public class MonsterSpawnSytem : ComponentSystem
 
         for(int i = 0; i < 10; i++)
         {
-            var posx = new fp3(RandomUtils.Random(random, min.x, max.x), 0, RandomUtils.Random(random, min.z, max.z));
+            var posx = new fp3(random.NextFp(min.x, max.x), 0, random.NextFp(min.z, max.z));
             var isError = false;
             foreach (var userPos in list)
             {
-                if(fpMath.distancesq(posx, userPos) < 20 * 20) 
+                var distanceSq = fpMath.distancesq(posx, userPos);
+                if(distanceSq < 20 * 20) 
                 {
                     isError = true;
                     continue;
