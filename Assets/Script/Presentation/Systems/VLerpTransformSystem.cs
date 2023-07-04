@@ -6,7 +6,8 @@ public class VLerpTransformSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        var logicStep = GetSingleton<LogicTime>().deltaTime * 1; // 增加lerp的时间
+        var logicStep = GetSingleton<LogicTime>().deltaTime * 3; // 增加lerp的时间
+
 
         if(!HasSingleton<ControllerHolder>()) return;
         var userEntity = GetSingleton<ControllerHolder>().controller;
