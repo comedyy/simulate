@@ -29,6 +29,7 @@ public class HurtSystem : ComponentSystemBase
         NativeList<Entity> _lst = new NativeList<Entity>(Allocator.TempJob);
         HurtJob hurtJob = new HurtJob(){
             buffer = buffer,
+            vDesposeBuffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>()),
             bufferVHurt = bufferVHurt,
             EntityManager = EntityManager,
             _lst = _lst
@@ -41,7 +42,6 @@ public class HurtSystem : ComponentSystemBase
 
         var processDeadJob = new ProcessDeadJob(){
             entityManager = EntityManager,
-            vDesposeBuffer = EntityManager.GetBuffer<DeSpawnEventComponent>(GetSingletonEntity<DeSpawnEventComponent>()),
             entityUserSington = GetSingletonEntity<UserListComponent>(),
             _lst = _lst
         };
@@ -53,7 +53,6 @@ public class HurtSystem : ComponentSystemBase
     struct ProcessDeadJob : IJob
     {
         public EntityManager entityManager;
-        internal DynamicBuffer<DeSpawnEventComponent> vDesposeBuffer;
         public Entity entityUserSington;
         internal NativeList<Entity> _lst;
 
@@ -81,7 +80,6 @@ public class HurtSystem : ComponentSystemBase
                     }
                 }
                 
-                vDesposeBuffer.Add(new DeSpawnEventComponent(){entity = _lst[i]});
                 entityManager.DestroyEntity(_lst[i]);
             }
         }
@@ -94,6 +92,7 @@ public class HurtSystem : ComponentSystemBase
         public DynamicBuffer<HurtComponent> buffer;
         public DynamicBuffer<VHurtComponent> bufferVHurt;
         public EntityManager EntityManager;
+        internal DynamicBuffer<DeSpawnEventComponent> vDesposeBuffer;
         internal NativeList<Entity> _lst;
 
         public void Execute()
@@ -120,6 +119,7 @@ public class HurtSystem : ComponentSystemBase
                 if(hpComponent.hp <= 0)
                 {
                     _lst.Add(entity);
+                    vDesposeBuffer.Add(new DeSpawnEventComponent(){entity = entity});
                 }
             }
         }
