@@ -37,7 +37,7 @@ public class BattleWorld : World
 
     private void InitMoveSystem(bool userAutoMove, LocalFrame localServer)
     {
-        var group = GetOrCreateSystem<CustomSystems3>();
+        var group = GetOrCreateSystem<InitializationSystemGroup>();
         var moveSytem = CreateSystem<ControllerMoveSystem>();
         moveSytem.localServer = localServer;
         moveSytem.userAutoMove = userAutoMove;

@@ -25,7 +25,6 @@ public class RoomUI : MonoBehaviour
             ip = GUI.TextField(new Rect(100, 100, 100, 100), ipLocal);
         }
 
-        GUI.color = Color.black;
         userAutoMove = GUI.Toggle(new Rect(100, 0, 100, 100), userAutoMove, "ai控制操作");
     }
 

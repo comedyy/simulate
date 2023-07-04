@@ -25,9 +25,9 @@ public class ControllerMoveSystem : ComponentSystem
 
         var tranCom = binding.obj.transform;
 
+        var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
         if(!userAutoMove)   // 如果是在editor模式，只有id == 1的才是控制者，其他人都是ai
         {
-             var moveSpeedComponent = EntityManager.GetComponentData<MoveSpeedComponent>(controllerEntity);
 
             var angle = GetAngle();
 
@@ -76,26 +76,27 @@ public class ControllerMoveSystem : ComponentSystem
         else    // ai
         {
             binding.animator.SetBool("Run", true);
-            UpdateOtherUser(binding.obj);
+            UpdateOtherUser(binding.obj, moveSpeedComponent.speed);
         }
     }
 
     Vector3 goToPos;
     Vector3? currentPos;
-    private void UpdateOtherUser(GameObject controller)
+    private void UpdateOtherUser(GameObject controller, float speed)
     {
         if(!currentPos.HasValue || Vector3.Distance(currentPos.Value, goToPos) < 1)
         {
-            var randomX = UnityEngine.Random.Range(0, 10);
-            var randomY = UnityEngine.Random.Range(0, 10);
+            var randomX = UnityEngine.Random.Range(-20, 20);
+            var randomY = UnityEngine.Random.Range(-20, 20);
             goToPos = new Vector3(randomX, 0, randomY);   
         } 
 
         if(!currentPos.HasValue) currentPos = controller.transform.position;
 
         var dir = Vector3.Normalize(goToPos - currentPos.Value);
-        currentPos = currentPos.Value + dir * UnityEngine.Time.deltaTime * 3;
+        currentPos = currentPos.Value + dir * UnityEngine.Time.deltaTime * speed;
         controller.transform.position = currentPos.Value;
+        controller.transform.rotation = math.nlerp(controller.transform.rotation, quaternion.LookRotation(dir, new float3(0, 1, 0)), 0.05f);
 
         #if FIXED_POINT
         var targetPos = new int3((int)fp.UnsafeConvert(currentPos.Value.x).rawValue,
