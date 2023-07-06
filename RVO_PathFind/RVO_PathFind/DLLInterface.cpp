@@ -56,7 +56,7 @@ extern "C"
 		position.y = vec.y().value;
 	}
 
-	EXPORT_API void GetAgentDir(int id, int agentIndex, AgentPosition & position)
+	EXPORT_API void GetAgentDir(int id, int agentIndex, AgentPosition& position)
 	{
 		Vector2 vec = pRVOSimulators[id]->getAgentVelocity(agentIndex);
 		position.x = vec.x().value;

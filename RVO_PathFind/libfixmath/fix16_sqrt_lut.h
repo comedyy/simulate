@@ -1,5 +1,6 @@
 #ifndef __fix16_trig_sin_lut_h__
 #define __fix16_trig_sin_lut_h__
+#include <stdint.h>
 
 static int64_t fix16_sqrt_lut[65536] = {
 	65536, 65538, 65539, 65540, 65542, 65544, 65545, 65546,

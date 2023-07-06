@@ -1,9 +1,8 @@
 APP_SHORT_COMMANDS := true
-APP_STL := gnustl_static
+APP_STL := c++_static
 
 APP_CPPFLAGS += -std=c++11
 APP_CPPFLAGS += -Wno-error=format-security
-APP_CPPFLAGS += -Wno-literal-suffix
 
 
 APP_BUILD_SCRIPT := Android.mk
